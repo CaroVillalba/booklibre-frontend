@@ -3,9 +3,13 @@ import { BusquedaLibros } from "../components/BusquedaLibros";
 import { LibroCard } from "../components/LibroCard";
 import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { LibroHome } from "../../../types/Libro.ts";
 
 export const HomeUsuario = () => {
+    const navigate = useNavigate()
+
+    const [tituloBusqueda, setTituloBusqueda] = useState("")
 
     type Orden = "rating" | "estado" | "tipo"
     const [orden, setOrden] = useState<Orden | null>(null)
@@ -53,8 +57,22 @@ export const HomeUsuario = () => {
             tipo: "Con Dedicatoria",
             bibliokarma: 820,
             estado: "Excelente"
+        },
+        {
+            imgUrl: "https://images.cdn3.buscalibre.com/fit-in/360x360/ed/c5/edc5b53333ebd87cfe6256685249673f.jpg",
+            genero: "Literatura",
+            rating: 4.1,
+            titulo: "Moby Dick",
+            autor: "Herman Melville",
+            isbn13: "978-1-85326-008-7",
+            idioma: "Inglés",
+            tipo: "Comun",
+            bibliokarma: 710,
+            estado: "Bueno"
         }
     ]
+
+    const [librosFiltrados, setLibrosFiltrados] = useState<LibroHome[]>(libros)
 
     const ordenadores: Record<Orden, (a: LibroHome, b: LibroHome) => number> = {
         rating: (a: LibroHome, b: LibroHome) => b.rating - a.rating,
@@ -62,9 +80,24 @@ export const HomeUsuario = () => {
         tipo: (a: LibroHome, b: LibroHome) => a.tipo.localeCompare(b.tipo)
     }
 
-    const librosOrdenados = [...libros].sort(
-        orden ? ordenadores[orden] : () => 0
-    )
+    const handleBuscar = () => {
+        if (tituloBusqueda === "") {
+            const resultado = [...libros];
+            if (orden) resultado.sort(ordenadores[orden]);
+            setLibrosFiltrados(resultado);
+        } else {
+            const filtrados = libros.filter(libro =>
+                libro.titulo.toLowerCase().includes(tituloBusqueda.toLowerCase())
+            );
+            setLibrosFiltrados(filtrados)
+        }
+    }
+
+    const handleOrden = (nuevoOrden: Orden) => {
+        setOrden(nuevoOrden);
+        const resultado = [...librosFiltrados].sort(ordenadores[nuevoOrden])
+        setLibrosFiltrados(resultado)
+    }
 
     return (
         <div className="grid">
@@ -75,7 +108,7 @@ export const HomeUsuario = () => {
 
             <div className="col-12 md:col-9">
                 {/* Barra de búsqueda */}
-                <BusquedaLibros />
+                <BusquedaLibros tituloBusqueda={tituloBusqueda} setTituloBusqueda={setTituloBusqueda} onBuscar={handleBuscar} />
 
                 {/* Libros */}
                 <div className="flex justify-content-between align-items-center mt-3">
@@ -86,14 +119,17 @@ export const HomeUsuario = () => {
                         <Dropdown 
                             value={orden}
                             options={opcionesOrden}
-                            onChange={(e) => setOrden(e.value)}
+                            onChange={(e) => handleOrden(e.value)}
                             placeholder="Seleccione..." 
                         />
                     </div>
                 </div>
                 <div className="grid mt-2">
-                    {librosOrdenados.map((libro, index) => (
-                        <div key={index} className="col-12 md:col-6 lg:col-3 xl:col-4">
+                    {librosFiltrados.map((libro, index) => (
+                        <div 
+                            key={index} className="col-12 md:col-6 lg:col-3 xl:col-4"
+                            onClick={() => navigate(`/detalle-libro`)}
+                        >
                             <LibroCard libro={libro}/>
                         </div>
                     ))}
