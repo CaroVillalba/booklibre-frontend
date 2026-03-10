@@ -32,9 +32,9 @@ export const DetalleLibro = () => {
     
 
     return (
-        <div>
+        <div className="flex flex-column gap-4 p-4">
 
-            <div className="flex flex-row align-items-center gap-4 mb-4">
+            <div className="flex flex-row align-items-center gap-4">
                 <Card className="md:w-20rem flex flex-column align-items-center">
                     <Image src="https://http2.mlstatic.com/D_NQ_NP_2X_876004-CBT80927631830_122024-F.webp" alt="Image" width="250"/>
                 </Card>
@@ -49,6 +49,9 @@ export const DetalleLibro = () => {
                     </div>
                 </Card>
             </div>
+
+
+            <div className="flex flex-row align-items-start gap-4">
 
             <Card title="Tu reserva" subTitle="Fechas seleccionadas:" footer= { footer } className= "md:w-20rem">
 
@@ -67,6 +70,59 @@ export const DetalleLibro = () => {
                     <span className="font-bold text-900">14 días</span>
                 </div>
             </Card>
+
+            <Card title="Detalles del libro" className='flex-1' style={{ padding: "1rem"}}>
+                <div className="flex flex-column gap-4">
+                    <div className="flex flex-row justify-content-between align-items-center w-full p-1">
+                        <div className="flex flex-column  gap-2">
+                            <span className="font-bold opacity-70">Tipo</span>
+                            <Tag value="Con dedicatoria" style={{borderRadius: "18px", width:"auto"}}></Tag>
+                        </div>
+                        <div className= "flex flex-column  gap-2 ">
+                            <span className="font-bold opacity-70">BiblioKarmas</span>
+                            <Tag value= "+1234" ></Tag>
+                        </div>
+                    </div>
+                    <div className="flex flex-row justify-content-between align-items-center w-full p-1">
+                        <div className="flex flex-column  gap-2">
+                            <span className='font-bold opacity-70'>Género</span>
+                            <span className="font-bold">Ficción historica</span>
+                        </div>
+                        <div className="flex flex-column mb-4 gap-1">
+                            <span className='font-bold opacity-70'>Páginas</span>
+                            <span className="font-bold">180</span>
+                        </div>
+                        <div className="flex flex-column mb-4 gap-1">
+                            <span className='font-bold opacity-70'>Idioma</span>
+                            <span className="font-bold">Inglés</span>
+                        </div>
+                        <div className="flex flex-column mb-4 gap-1">
+                            <span className='font-bold opacity-70'>Editorial</span>
+                            <span className="font-bold">Scribner</span>
+                        </div>
+                    </div>
+                    <div className="flex flex-row justify-content-between align-items-center w-full p-1">
+                        <div className="flex flex-column mb-4 gap-1">
+                            <span className='font-bold opacity-70'>ISBN-13</span>
+                            <span className="font-bold">123455</span>
+                        </div>
+                        <div className="flex flex-column mb-4 gap-1">
+                            <span className='font-bold opacity-70'>Publicado</span>
+                            <span className="font-bold">10 abril, 1992</span>
+                        </div>
+                        <div className="flex flex-column mb-4 gap-1">
+                            <span className='font-bold opacity-70'>Estado</span>
+                            <span className="font-bold">Bueno</span>
+                        </div>
+                        <div className="flex flex-column mb-4 gap-1">
+                            <span className='font-bold opacity-70'>Ranking</span>
+                            <span className="font-bold">4.5</span>
+                        </div>
+                    </div>  
+                </div>
+            </Card>
+
+            </div>
         </div>
     )
 }   
