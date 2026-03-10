@@ -12,7 +12,7 @@ export const DetalleLibro = () => {
 
     const footer = (
         <>
-        <Button label= " Confirmar reserva " icon= "pi pi-check" iconPos="right" />
+        <Button label= " Confirmar reserva " icon= "pi pi-check" iconPos="right" className="p-button-primary p-button-text" />
         </>
     )
 
