@@ -1,7 +1,8 @@
 import React from "react";
-import { Button } from 'primereact/button';
 
 import { SidebarFiltros } from "../components/SidebarFiltros";
+import { BusquedaLibros } from "../components/BusquedaLibros";
+import { LibroCard } from "../components/LibroCard";
 
 export const HomeUsuario = () => {
 
@@ -13,12 +14,13 @@ export const HomeUsuario = () => {
             <SidebarFiltros />
         </div>
 
+        <BusquedaLibros />
+
         <div className="col-12 md:col-9">
-            {/* acá irán los libros */}
+            <LibroCard />
         </div>
 
         </div>
-            <Button label="Buscar" icon="pi pi-search" severity="info" />
         </>
     )
 }
