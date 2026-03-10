@@ -1,19 +1,22 @@
 import { Card } from "primereact/card";
 import { Tag } from "primereact/tag";
 import { Divider } from "primereact/divider";
+import type { LibroHome } from "../../../types/Libro.ts";
 
-export const LibroCard = () => {
+interface Props {
+    libro: LibroHome
+}
+
+export const LibroCard = ({ libro }: Props) => {
 
     return (
         <>
-            <h2>Libros Populares</h2>
-            
             <Card className="p-0 overflow-hidden">
                 {/* Imagen */}
                 <div className="flex justify-content-center p-4 surface-100">
                     <img 
-                        src="https://http2.mlstatic.com/D_NQ_NP_2X_876004-CBT80927631830_122024-F.webp"
-                        alt="Meridiano de Sangre"
+                        src={libro.imgUrl}
+                        alt={libro.titulo}
                         style={{ height: "220px" }} 
                     />
                 </div>
@@ -23,19 +26,19 @@ export const LibroCard = () => {
 
                     {/* Género + rating */}
                     <div className="flex justify-content-between align-items-center">
-                        <span className="text-primary text-sm">Drama</span>
+                        <span className="text-primary text-sm">{libro.genero}</span>
 
                         <div className="flex align-items-center gap-1">
                             <i className="pi pi-star-fill text-yellow-500"></i>
-                            <span>5.0</span>
+                            <span>{libro.rating}</span>
                         </div>
                     </div>
 
                     {/* Título */}
-                    <h3 className="m-0">Meridiano de Sangre</h3>
+                    <h3 className="m-0 white-space-nowrap overflow-hidden text-overflow-ellipsis">{libro.titulo}</h3>
 
                     {/* Autor */}
-                    <span className="text-500">Cormac McCarthy</span>
+                    <span className="text-500">{libro.autor}</span>
 
                     <Divider />
 
@@ -43,27 +46,27 @@ export const LibroCard = () => {
                     <div className="grid text-sm">
                         <div className="col-6">
                             <div className="text-500">ISBN</div>
-                            <div>978-0-525-55947-4</div>
+                            <div>{libro.isbn13}</div>
                         </div>
 
                         <div className="col-6">
                             <div className="text-500">IDIOMA</div>
-                            <div>Español</div>
+                            <div>{libro.idioma}</div>
                         </div>
 
                         <div className="col-6">
                             <div className="text-500">TIPO</div>
-                            <div>Coleccionable</div>
+                            <div>{libro.tipo}</div>
                         </div>
                     
                         <div className="col-6">
                             <div className="text-500">BIBLIOKARMA</div>
-                            <div>+1000</div>
+                            <div>+{libro.bibliokarma}</div>
                         </div>
                     </div>
 
                     {/* Estado */}
-                    <Tag value="Bueno" severity="success" rounded />
+                    <Tag value={libro.estado} severity="success" rounded />
                 </div>
             </Card>
         </>
