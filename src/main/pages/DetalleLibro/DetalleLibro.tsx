@@ -121,8 +121,51 @@ export const DetalleLibro = () => {
                     </div>  
                 </div>
             </Card>
+            </div>
+            <div className="flex justify-content-between align-items-center mb-4">
+                <h2 className="m-0 text-xl font-bold">Reseñas de la Comunidad</h2>
+                <Button label="Ver las 124 reseñas" icon="pi pi-arrow-right" iconPos="right" className="p-button-link p-0" />
+            </div>
+
+   
+            <div className="flex flex-row gap-4">
+        
+       
+            <Card className="flex-1 surface-card border-round-xl shadow-1">
+                <div className="flex align-items-center gap-3 mb-3">
+               
+                <div className="flex align-items-center justify-content-center border-circle bg-blue-100 text-blue-600 font-bold" style={{ width: '40px', height: '40px' }}>
+                    JD
+                </div>
+                <div className="flex flex-column">
+                    <span className="font-bold text-900">Jane Doe</span>
+                    <Rating value={5} readOnly cancel={false} style={{ fontSize: '0.8rem' }} />
+                </div>
+            </div>
+            <p className="m-0 text-600 line-height-3">
+                Un clásico atemporal. La prosa de Fitzgerald es inigualable, capturando la esencia de la Era del Jazz maravillosamente.
+            </p>
+        </Card>
+
+        
+            <Card className="flex-1 surface-card border-round-xl shadow-1">
+                <div className="flex align-items-center gap-3 mb-3">
+                    <div className="flex align-items-center justify-content-center border-circle bg-green-100 text-green-600 font-bold" style={{ width: '40px', height: '40px' }}>
+                    MS
+                    </div>
+                    <div className="flex flex-column">
+                        <span className="font-bold text-900">Mark Smith</span>
+                        <Rating value={4} readOnly cancel={false} style={{ fontSize: '0.8rem' }} />
+                </div>
+                </div>
+                <p className="m-0 text-600 line-height-3">
+                El simbolismo en este libro es increíble. La luz verde, los ojos del Dr. T.J. Eckleburg...
+                </p>
+            </Card>
 
             </div>
+
+
         </div>
     )
 }   
