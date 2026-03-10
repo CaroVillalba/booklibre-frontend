@@ -18,6 +18,7 @@ export interface LibroHome {
     rating: number
     titulo: string
     autor: string
+    cantidadPaginas: number
     isbn13: string
     idioma: string
     tipo: string

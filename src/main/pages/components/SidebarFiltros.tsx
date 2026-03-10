@@ -6,18 +6,33 @@ import { Divider } from "primereact/divider";
 import {IconField} from "primereact/iconfield";
 import {InputIcon} from "primereact/inputicon";
 import {InputText} from "primereact/inputtext";
-
-import { useState } from "react";
 import { Calendar } from "primereact/calendar";
 
-export const SidebarFiltros = () => {
+interface Props {
+    generosSeleccionados: string[];
+    setGenerosSeleccionados: (generos: string[]) => void;
+    paginasSeleccionadas: [number, number];
+    setPaginasSeleccionadas: (paginas: [number, number]) => void;
+    fechaDesde: Date | null;
+    setFechaDesde: (fecha: Date | null) => void;
+    fechaHasta: Date | null;
+    setFechaHasta: (fecha: Date | null) => void;
+    onAplicarFiltros: () => void;
+}
 
-    const [generos, setGeneros] = useState<string[]>([])
-    const [paginas, setPaginas] = useState<[number, number]>([200, 300])
+export const SidebarFiltros = (props: Props) => {
 
-    const hoy = new Date();
-    const [fechaDesde, setFechaDesde] = useState<Date | null>(hoy)
-    const [fechaHasta, setFechaHasta] = useState<Date | null>(hoy)
+    const generos = props.generosSeleccionados
+    const setGeneros = props.setGenerosSeleccionados
+
+    const paginas = props.paginasSeleccionadas
+    const setPaginas = props.setPaginasSeleccionadas
+
+    const fechaDesde = props.fechaDesde
+    const setFechaDesde = props.setFechaDesde
+
+    const fechaHasta = props.fechaHasta
+    const setFechaHasta = props.setFechaHasta
 
     const toggleGenero = (genero: string) => {
         if (generos.includes(genero)) {
@@ -137,6 +152,7 @@ export const SidebarFiltros = () => {
                         icon="pi pi-sliders-h" 
                         severity="info" 
                         className="w-full" 
+                        onClick={props.onAplicarFiltros}
                     />
                 </div>
             </div>

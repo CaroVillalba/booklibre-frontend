@@ -8,10 +8,13 @@ import type { LibroHome } from "../../../types/Libro.ts";
 
 export const HomeUsuario = () => {
     const navigate = useNavigate()
-
-    const [tituloBusqueda, setTituloBusqueda] = useState("")
-
     type Orden = "rating" | "estado" | "tipo"
+
+    const [generosSeleccionados, setGenerosSeleccionados] = useState<string[]>([])
+    const [paginasSeleccionadas, setPaginasSeleccionadas] = useState<[number, number]>([200, 300])
+    const [fechaDesde, setFechaDesde] = useState<Date | null>(new Date())
+    const [fechaHasta, setFechaHasta] = useState<Date | null>(new Date())
+    const [tituloBusqueda, setTituloBusqueda] = useState("")
     const [orden, setOrden] = useState<Orden | null>(null)
 
     const opcionesOrden: { label: string; value: Orden }[]= [
@@ -28,6 +31,7 @@ export const HomeUsuario = () => {
             rating: 5.0,
             titulo: "Meridiano de Sangre",
             autor: "Cormac McCarthy",
+            cantidadPaginas: 325,
             isbn13: "978-0-679-72875-7",
             idioma: "Español",
             tipo: "Coleccionable",
@@ -40,6 +44,7 @@ export const HomeUsuario = () => {
             rating: 4.4,
             titulo: "El Señor de las Moscas",
             autor: "William Golding",
+            cantidadPaginas: 75,
             isbn13: "978-0-399-50148-7",
             idioma: "Inglés",
             tipo: "Comun",
@@ -52,6 +57,7 @@ export const HomeUsuario = () => {
             rating: 4.7,
             titulo: "No Tengo Boca y Debo Gritar",
             autor: "Harlan Ellison",
+            cantidadPaginas: 11,
             isbn13: "978-1-499-65964-1",
             idioma: "Francés",
             tipo: "Con Dedicatoria",
@@ -64,6 +70,7 @@ export const HomeUsuario = () => {
             rating: 4.1,
             titulo: "Moby Dick",
             autor: "Herman Melville",
+            cantidadPaginas: 500,
             isbn13: "978-1-85326-008-7",
             idioma: "Inglés",
             tipo: "Comun",
@@ -99,11 +106,50 @@ export const HomeUsuario = () => {
         setLibrosFiltrados(resultado)
     }
 
+    const handleAplicarFiltros = () => {
+        let filtrados = [...libros]
+
+        // filtro por título
+        if (tituloBusqueda !== "") {
+            filtrados = filtrados.filter(libro =>
+                libro.titulo.toLowerCase().includes(tituloBusqueda.toLowerCase())
+            )
+        }
+
+        // filtro por género
+        if (generosSeleccionados.length > 0) {
+            filtrados = filtrados.filter(libro =>
+                generosSeleccionados.includes(libro.genero.toLowerCase())
+            )
+        }
+
+        // filtro por páginas
+        filtrados = filtrados.filter(libro =>
+            libro.cantidadPaginas >= paginasSeleccionadas[0] &&
+            libro.cantidadPaginas <= paginasSeleccionadas[1]
+        )
+
+        // filtro por disponibilidad en fechas (necesitobackend)
+        // filtrados = filtrados.filter(libro => estaDisponible(libro, fechaDesde, fechaHasta))
+
+        setLibrosFiltrados(filtrados)
+    }
+
     return (
         <div className="grid">
             {/* Sidebar */}
             <div className="col-12 md:col-3">
-                <SidebarFiltros />
+                <SidebarFiltros 
+                    generosSeleccionados={generosSeleccionados}
+                    setGenerosSeleccionados={setGenerosSeleccionados}
+                    paginasSeleccionadas={paginasSeleccionadas}
+                    setPaginasSeleccionadas={setPaginasSeleccionadas}
+                    fechaDesde={fechaDesde}
+                    setFechaDesde={setFechaDesde}
+                    fechaHasta={fechaHasta}
+                    setFechaHasta={setFechaHasta}
+                    onAplicarFiltros={handleAplicarFiltros}
+                />
             </div>
 
             <div className="col-12 md:col-9">
