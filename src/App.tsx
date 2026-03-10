@@ -5,19 +5,25 @@ import "primeicons/primeicons.css"
 import "primeflex/primeflex.css"
 import './App.css'
 
+import { DetalleLibro } from './main/pages/DetalleLibro/DetalleLibro'
 import { HomeUsuario } from './main/pages/HomeUsuario/HomeUsuario'
 
 
-function App() {
+function AppContent() {
   return (
-    <BrowserRouter>
-      <div className="app-container">
+    <div className="app-container">
         <Routes>
           <Route path="/" element={<HomeUsuario />} />
+          <Route path="/detalle-libro" element={<DetalleLibro />} />
         </Routes>
-      </div>
-    </BrowserRouter>
+    </div>
   )
 }
 
-export default App
+export default function App(){
+  return (
+    <BrowserRouter>
+      <AppContent/>
+    </BrowserRouter>
+  )
+}
