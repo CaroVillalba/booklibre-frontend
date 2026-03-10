@@ -6,21 +6,22 @@ import { LibroCard } from "../components/LibroCard";
 
 export const HomeUsuario = () => {
 
+    
     return (
         <>
-        <div className="grid">
+            <div className="col-12 md:col-3">
+                <SidebarFiltros />
+            </div>
 
-        <div className="col-12 md:col-3">
-            <SidebarFiltros />
-        </div>
+            <BusquedaLibros />
 
-        <BusquedaLibros />
-
-        <div className="col-12 md:col-9">
-            <LibroCard />
-        </div>
-
-        </div>
+            <div className="grid">
+                {Array.from({ length: 10 }).map((_, index) => (
+                    <div key={index} className="col-12 md:col-4 lg:col-3">
+                        <LibroCard />
+                    </div>
+                ))}
+            </div>
         </>
     )
 }
