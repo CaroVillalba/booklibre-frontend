@@ -1,0 +1,14 @@
+.p-card{
+    border-radius: 10px;
+}
+
+.p-tag{
+    background: var(--color-primary);
+    color: var(--color-text-primary);
+    font-weight: 750;
+    font-size: 1rem;
+}
+
+.contenido-card{
+    min-height: 200px;
+}
