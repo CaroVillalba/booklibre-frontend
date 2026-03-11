@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route} from 'react-router-dom'
+/* import { BrowserRouter, Routes, Route} from 'react-router-dom'
 import "primereact/resources/themes/arya-blue/theme.css"
 import "primereact/resources/primereact.min.css"
 import "primeicons/primeicons.css"
@@ -24,6 +24,52 @@ export default function App(){
   return (
     <BrowserRouter>
       <AppContent/>
+    </BrowserRouter>
+  )
+} */
+
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import "primereact/resources/themes/arya-blue/theme.css"
+import "primereact/resources/primereact.min.css"
+import "primeicons/primeicons.css"
+import "primeflex/primeflex.css"
+import './App.css'
+
+import { DetalleLibro } from './main/pages/DetalleLibro/DetalleLibro'
+import { HomeUsuario } from './main/pages/HomeUsuario/HomeUsuario'
+import { Header } from './main/pages/components/Header/Header'
+
+// Rutas donde NO se muestra el header
+const RUTAS_SIN_HEADER = ['/login']
+
+function AppContent() {
+  const location = useLocation()
+  const mostrarHeader = !RUTAS_SIN_HEADER.includes(location.pathname)
+
+  return (
+    <div className="app-container">
+      {mostrarHeader && (
+        <Header
+          bibliokarmas={120}
+          usuarioNombre="Juan"
+          onLogout={() => console.log('Logout')}
+        />
+      )}
+      <Routes>
+        <Route path="/" element={<HomeUsuario />} />
+        <Route path="/detalle-libro" element={<DetalleLibro />} />
+        {/* <Route path="/login" element={<Login />} /> */}
+        {/* <Route path="/mis-libros" element={<MisLibros />} /> */}
+        {/* <Route path="/perfil" element={<Perfil />} /> */}
+      </Routes>
+    </div>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   )
 }
