@@ -1,85 +1,149 @@
 import { Card } from "primereact/card";
 import { Checkbox } from "primereact/checkbox";
 import { Slider } from "primereact/slider";
-import { InputMask } from "primereact/inputmask";
 import { Button } from "primereact/button";
 import { Divider } from "primereact/divider";
 import {IconField} from "primereact/iconfield";
 import {InputIcon} from "primereact/inputicon";
 import {InputText} from "primereact/inputtext";
+import { Calendar } from "primereact/calendar";
 
-import { useState } from "react";
+interface Props {
+    generosSeleccionados: string[];
+    setGenerosSeleccionados: (generos: string[]) => void;
+    paginasSeleccionadas: [number, number];
+    setPaginasSeleccionadas: (paginas: [number, number]) => void;
+    fechaDesde: Date | null;
+    setFechaDesde: (fecha: Date | null) => void;
+    fechaHasta: Date | null;
+    setFechaHasta: (fecha: Date | null) => void;
+    onAplicarFiltros: () => void;
+}
 
-export const SidebarFiltros = () => {
+export const SidebarFiltros = (props: Props) => {
 
-    const [paginas, setPaginas] = useState<[number, number]>([0, 500])
-    const [fechaDesde, setFechaDesde] = useState<string | null>(null)
-    const [fechaHasta, setFechaHasta] = useState<string | null>(null)
+    const generos = props.generosSeleccionados
+    const setGeneros = props.setGenerosSeleccionados
+
+    const paginas = props.paginasSeleccionadas
+    const setPaginas = props.setPaginasSeleccionadas
+
+    const fechaDesde = props.fechaDesde
+    const setFechaDesde = props.setFechaDesde
+
+    const fechaHasta = props.fechaHasta
+    const setFechaHasta = props.setFechaHasta
+
+    const toggleGenero = (genero: string) => {
+        if (generos.includes(genero)) {
+            setGeneros(generos.filter(g => g !== genero))
+        } else {
+            setGeneros([...generos, genero])
+        }
+    }
 
     return (
         <Card>
-            <h3>Género</h3>
+            <h3 className="mt-0">Género</h3>
 
             <div className="flex flex-column gap-2">
-            <div><Checkbox inputId="ciencia" checked={false} /><label htmlFor="ciencia"> Ciencia Ficción</label></div>
-                <div><Checkbox inputId="drama" checked={false} /><label htmlFor="drama"> Drama</label></div>
-                <div><Checkbox inputId="autoayuda" checked={false} /><label htmlFor="autoayuda"> Autoayuda</label></div>
-                <div><Checkbox inputId="romance" checked={false} /><label htmlFor="romance"> Romance</label></div>
-                <div><Checkbox inputId="diseño" checked={false} /><label htmlFor="diseño"> Diseño</label></div>
-                <div><Checkbox inputId="novela" checked={false} /><label htmlFor="novela"> Literatura clásica</label></div>
+            <div>
+                <Checkbox 
+                    inputId="ciencia" 
+                    checked={generos.includes("ciencia")} 
+                    onChange={() => toggleGenero("ciencia")} 
+                />
+                <label htmlFor="ciencia"> Ciencia Ficción</label>
+            </div>
+            <div>
+                <Checkbox
+                    inputId="drama"
+                    checked={generos.includes("drama")}
+                    onChange={() => toggleGenero("drama")}
+                />
+                <label htmlFor="drama"> Drama</label>
+            </div>
+                <div>
+                    <Checkbox 
+                        inputId="autoayuda" 
+                        checked={generos.includes("autoayuda")} 
+                        onChange={() => toggleGenero("autoayuda")} 
+                    />
+                    <label htmlFor="autoayuda"> Autoayuda</label>
+                </div>
+                <div>
+                    <Checkbox 
+                        inputId="romance" 
+                        checked={generos.includes("romance")} 
+                        onChange={() => toggleGenero("romance")} 
+                    />
+                    <label htmlFor="romance"> Romance</label>
+                </div>
+                <div>
+                    <Checkbox 
+                        inputId="diseño" 
+                        checked={generos.includes("diseño")} 
+                        onChange={() => toggleGenero("diseño")} 
+                    />
+                    <label htmlFor="diseño"> Diseño</label>
+                </div>
+                <div>
+                    <Checkbox 
+                        inputId="novela" 
+                        checked={generos.includes("novela")} 
+                        onChange={() => toggleGenero("novela")} 
+                    />
+                    <label htmlFor="novela"> Literatura clásica</label>
+                </div>
             </div>
 
             <Divider />
 
-            <h3>Rango de páginas</h3>
+            <h3 className="mt-0">Rango de páginas</h3>
 
-            <Slider value={paginas} onChange={(e) => setPaginas(e.value as [number, number])} range/>
+            <Slider 
+                value={paginas} 
+                onChange={(e) => setPaginas(e.value as [number, number])} 
+                range
+                min={0}
+                max={500}
+            />
             <p>{paginas[0]} - {paginas[1]}</p>
 
             <Divider />
 
             <h3>Rango de fechas para reservar</h3>
 
-            <div className="flex flex-row gap-1">
+            <div className="flex flex-row gap-2">
                 <div>
                     <label>Desde </label>
-                    <InputMask
-                        mask="99/99/9999"
-                        placeholder="dd/mm/yyyy"
-                        value={fechaDesde || ""}
-                        onChange={(e) => setFechaDesde(e.value ?? null)}
-                    />
+                    <Calendar value={fechaDesde} onChange={(e) => setFechaDesde(e.value ?? null)} dateFormat="dd/mm/yy" />
                 </div>
                 <div>
                     <label>Hasta </label>
-                    <InputMask
-                        mask="99/99/9999"
-                        placeholder="dd/mm/yyyy"
-                        value={fechaHasta || ""}
-                        onChange={(e) => setFechaHasta(e.value ?? null)}
-                    />
+                    <Calendar value={fechaHasta} onChange={(e) => setFechaHasta(e.value ?? null)} dateFormat="dd/mm/yy" />
                 </div>
             </div>
 
             <Divider />
 
-            <div className="flex flex-column gap-3">
+            <div className="flex flex-column gap-1">
 
-                <h3>Detalles</h3>
+                <h3 className="mt-0">Detalles</h3>
 
-                <div className="flex flex-column gap-2">
+                <div className="flex flex-column gap-3">
                     <div>
                         <label>ISBN </label>
                         <IconField iconPosition="left">
                             <InputIcon className="pi pi-barcode" />
-                            <InputText placeholder="978-3-16..." />
+                            <InputText className="w-full" placeholder="978-3-16..." />
                         </IconField>
                     </div>
                     <div>
                         <label>Prestado por </label>
                         <IconField iconPosition="left">
                             <InputIcon className="pi pi-user" />
-                            <InputText placeholder="Usuario..." />
+                            <InputText className="w-full" placeholder="Usuario..." />
                         </IconField>
                     </div>
 
@@ -88,10 +152,10 @@ export const SidebarFiltros = () => {
                         icon="pi pi-sliders-h" 
                         severity="info" 
                         className="w-full" 
+                        onClick={props.onAplicarFiltros}
                     />
                 </div>
             </div>
-
         </Card>
     )
 }
