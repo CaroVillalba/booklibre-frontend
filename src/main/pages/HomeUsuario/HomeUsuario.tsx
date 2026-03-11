@@ -5,6 +5,7 @@ import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { LibroHome } from "../../../types/Libro.ts";
+import "./HomeUsuario.css"
 
 export const HomeUsuario = () => {
     const navigate = useNavigate()
@@ -136,7 +137,7 @@ export const HomeUsuario = () => {
     }
 
     return (
-        <div className="grid">
+        <div className="grid home_content">
             {/* Sidebar */}
             <div className="col-12 md:col-3">
                 <SidebarFiltros 
