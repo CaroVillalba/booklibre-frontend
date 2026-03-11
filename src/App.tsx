@@ -7,6 +7,7 @@ import './App.css'
 
 import { DetalleLibro } from './main/pages/DetalleLibro/DetalleLibro'
 import { HomeUsuario } from './main/pages/HomeUsuario/HomeUsuario'
+import { PerfilUsuario } from './main/pages/PerfilUsuario/PerfilUsuario'
 
 
 function AppContent() {
@@ -15,6 +16,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<HomeUsuario />} />
           <Route path="/detalle-libro" element={<DetalleLibro />} />
+          <Route path="/perfil-usuario" element={<PerfilUsuario/>}/>
         </Routes>
     </div>
   )
