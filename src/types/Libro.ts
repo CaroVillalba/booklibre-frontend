@@ -1,3 +1,6 @@
+import type { Reseña } from "./Reseña";
+import { Rating } from 'primereact/rating';
+
 export interface Libro {
     titulo: string
     tipo: string
@@ -24,4 +27,11 @@ export interface LibroHome {
     tipo: string
     bibliokarma: number
     estado: string
+}
+
+export interface LibroDetalle extends Libro {
+    imgUrl: string,
+    rating: number,
+    cantidadPaginas: number,
+    bibliokarma: number,
 }
