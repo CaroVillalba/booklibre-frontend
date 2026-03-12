@@ -1,7 +1,7 @@
 import { Card } from "primereact/card";
 import { Tag } from "primereact/tag";
 import { Divider } from "primereact/divider";
-import type { LibroHome } from "../../../types/Libro.ts";
+import type { LibroHome } from "../../types/Libro.ts";
 
 interface Props {
     libro: LibroHome

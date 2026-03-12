@@ -1,7 +1,7 @@
-import { UsuarioDatos } from "../components/UsuarioDatos"
-import { UsuarioEstadisticas } from "../components/UsuarioEstadisticas"
-import { UsuarioHeader } from "../components/UsuarioHeader"
-import { UsuarioLibros } from "../components/UsuarioLibros"
+import { UsuarioDatos } from "../../components/UsuarioDatos"
+import { UsuarioEstadisticas } from "../../components/UsuarioEstadisticas"
+import { UsuarioHeader } from "../../components/UsuarioHeader"
+import { UsuarioLibros } from "../../components/UsuarioLibros"
 import "./PerfilUsuario.css"
 
 

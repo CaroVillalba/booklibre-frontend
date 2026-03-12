@@ -2,6 +2,7 @@ import type { Reseña } from "./Reseña";
 import { Rating } from 'primereact/rating';
 
 export interface Libro {
+    id: number
     titulo: string
     tipo: string
     descripcion: string
