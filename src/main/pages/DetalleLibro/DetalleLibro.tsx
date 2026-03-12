@@ -43,6 +43,7 @@ export const DetalleLibro = () => {
         fecha: new Date(),
         autor: "Jane Doe",
         libro: {
+            id: 1,
             genero: "Drama",
             titulo: "Meridiano de Sangre",
             autor: "Cormac McCarthy",
@@ -62,6 +63,7 @@ export const DetalleLibro = () => {
         fecha: new Date(),
         autor: "Jane Doe",
         libro: {
+            id: 1,
             genero: "Drama",
             titulo: "Meridiano de Sangre",
             autor: "Cormac McCarthy",
@@ -81,6 +83,7 @@ export const DetalleLibro = () => {
         fecha: new Date(),
         autor: "Jane Doe",
         libro: {
+            id: 1,
             genero: "Drama",
             titulo: "Meridiano de Sangre",
             autor: "Cormac McCarthy",
@@ -97,6 +100,7 @@ export const DetalleLibro = () => {
     ]
 
     const libro: LibroDetalle = {
+                id: 1,
                 imgUrl: "https://http2.mlstatic.com/D_NQ_NP_2X_876004-CBT80927631830_122024-F.webp",
                 genero: "Drama",
                 rating: 5.0,
@@ -164,7 +168,7 @@ export const DetalleLibro = () => {
 
             <Card title="Tu reserva" subTitle="Fechas seleccionadas:" footer= { footer } className= "md:w-20rem" style={{minHeight:"410px", padding: "1rem"}}>
 
-                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y"/>
+                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y" className='w-full'/>
 
                 <div className="flex justify-content-between align-items-center p-3 surface-100 border-round-lg">
                     <span className="text-600">Recogida</span>

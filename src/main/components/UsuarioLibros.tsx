@@ -1,8 +1,10 @@
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Tag } from "primereact/tag";
+import { useNavigate } from "react-router-dom";
 
 export const UsuarioLibros = () => {
+    const navigate = useNavigate();
     return (
         <div>
             <div>
@@ -13,6 +15,7 @@ export const UsuarioLibros = () => {
                         icon="pi pi-plus"
                         iconPos="left"
                         className="p-button-secondary p-button-outlined text-color"
+                        onClick={() => navigate(`/editar-detalles`)}
                     />
                 </div>
                 <Card className="border-round-2xl shadow-1">
