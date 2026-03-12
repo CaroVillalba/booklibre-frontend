@@ -126,13 +126,6 @@ export const HomeUsuario = () => {
     const handleAplicarFiltros = () => {
         let filtrados = [...libros]
 
-        // filtro por título
-        if (tituloBusqueda !== "") {
-            filtrados = filtrados.filter(libro =>
-                libro.titulo.toLowerCase().includes(tituloBusqueda.toLowerCase())
-            )
-        }
-
         // filtro por género
         if (generosSeleccionados.length > 0) {
             filtrados = filtrados.filter(libro =>
