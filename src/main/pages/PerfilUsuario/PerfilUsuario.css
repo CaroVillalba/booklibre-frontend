@@ -1,0 +1,25 @@
+.perfil-usuario {
+    width: 80%;
+}
+
+.perfil-avatar {
+    width: 6rem;
+    height: 6rem;
+}
+
+.tag-disponible {
+    background: #163c2d !important;
+    color: #7ee2a8 !important;
+}
+
+.tag-prestado {
+    background: #3c2a16 !important;
+    color: #ffb870 !important;
+}
+
+.perfil-libro-img {
+    width: 40px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
