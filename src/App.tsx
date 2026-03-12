@@ -37,7 +37,8 @@ import './App.css'
 
 import { DetalleLibro } from './main/pages/DetalleLibro/DetalleLibro'
 import { HomeUsuario } from './main/pages/HomeUsuario/HomeUsuario'
-import { Header } from './main/components/Header/Header'
+import { Header } from './main/pages/components/Header/Header'
+import { EdicionLibro } from './main/pages/EdicionLibro/EdicionLibro'
 
 // Rutas donde NO se muestra el header
 const RUTAS_SIN_HEADER = ['/login']
@@ -58,6 +59,7 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<HomeUsuario />} />
         <Route path="/detalle-libro" element={<DetalleLibro />} />
+        <Route path="/editar-detalles" element={<EdicionLibro />} />
         {/* <Route path="/login" element={<Login />} /> */}
         {/* <Route path="/mis-libros" element={<MisLibros />} /> */}
         {/* <Route path="/perfil" element={<Perfil />} /> */}
