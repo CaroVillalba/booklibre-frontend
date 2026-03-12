@@ -37,7 +37,7 @@ import './App.css'
 
 import { DetalleLibro } from './main/pages/DetalleLibro/DetalleLibro'
 import { HomeUsuario } from './main/pages/HomeUsuario/HomeUsuario'
-import { Header } from './main/pages/components/Header/Header'
+import { Header } from './main/components/Header/Header'
 
 // Rutas donde NO se muestra el header
 const RUTAS_SIN_HEADER = ['/login']
