@@ -131,6 +131,19 @@ export const DetalleLibro = () => {
         </>
     )
 
+    const formatoFecha = (fecha: Date | null) => {
+        if (!fecha) return "-";
+        return fecha.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+    };
+
+    const calcularDuracion = (dateArray: Nullable<(Date | null)[]>) => {
+        if (!dateArray || !dateArray[0] || !dateArray[1]) return 0;
+        const diffTime = Math.abs(dateArray[1].getTime() - dateArray[0].getTime());
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    };
+
+
+
     return (
         <div className="flex flex-column gap-4 p-4">
 
@@ -149,21 +162,25 @@ export const DetalleLibro = () => {
 
             <div className="flex flex-row align-items-start gap-4">
 
-            <Card title="Tu reserva" subTitle="Fechas seleccionadas:" footer= { footer } className= "md:w-20rem" style={{minHeight:"410px"}}>
+            <Card title="Tu reserva" subTitle="Fechas seleccionadas:" footer= { footer } className= "md:w-20rem" style={{minHeight:"410px", padding: "1rem"}}>
 
-                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" />
+                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y"/>
 
                 <div className="flex justify-content-between align-items-center p-3 surface-100 border-round-lg">
                     <span className="text-600">Recogida</span>
-                    <span className="font-bold text-900">24 Oct, 2023</span>
+                    <span className="font-bold text-900">
+                        {dates && dates[0] ? formatoFecha(dates[0]) : "-"}
+                </span>
                 </div>
                 <div className="flex justify-content-between align-items-center p-3 surface-100 border-round-lg">
                     <span className="text-600">Devolución</span>
-                    <span className="font-bold text-900">24 Oct, 2023</span>
+                    <span className="font-bold text-900">
+                        {dates && dates[1] ? formatoFecha(dates[1]) : "-"}
+                    </span>
                 </div>
                 <div className="flex justify-content-between align-items-center p-3 surface-100 border-round-lg">
                     <span className="text-600">Duración</span>
-                    <span className="font-bold text-900">14 días</span>
+                    <span className="font-bold text-900">{calcularDuracion(dates)} días</span>
                 </div>
             </Card>
 
