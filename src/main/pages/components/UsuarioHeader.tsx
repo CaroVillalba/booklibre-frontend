@@ -6,11 +6,12 @@ export const UsuarioHeader = () => {
     return (
         <Card className="mb-3 border-round-2xl shadow-1">
             <div className="flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-4">
-                <div className="flex flex-column md:flex-row align-items-center md:align-items-start gap-4">
+                <div className="flex flex-column md:flex-row align-items-center md:align-items-center gap-4">
                 <Avatar
                     image="https://i.pravatar.cc/150?img=32"
                     size="xlarge"
                     shape="circle"
+                    className="perfil-avatar"
                 />
 
                 <div>
