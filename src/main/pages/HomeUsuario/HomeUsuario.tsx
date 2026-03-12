@@ -1,11 +1,13 @@
-import { SidebarFiltros } from "../components/SidebarFiltros";
-import { BusquedaLibros } from "../components/BusquedaLibros";
-import { LibroCard } from "../components/LibroCard";
+import { SidebarFiltros } from "../../components/SidebarFiltros.tsx";
+import { BusquedaLibros } from "../../components/BusquedaLibros.tsx";
+import { LibroCard } from "../../components/LibroCard.tsx";
 import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { LibroHome } from "../../../types/Libro.ts";
 import "./HomeUsuario.css"
+//import { libroService } from "../../services/LibroService.ts";
+//import { useOnInit } from "../../hooks/useOnInit.tsx";
 
 export const HomeUsuario = () => {
     const navigate = useNavigate()
@@ -80,7 +82,21 @@ export const HomeUsuario = () => {
         }
     ]
 
+    // const [librosMaster, setLibrosMaster] = useState<LibroHome[]>([])
     const [librosFiltrados, setLibrosFiltrados] = useState<LibroHome[]>(libros)
+
+    /* useOnInit(async () => {
+        try {
+            const data = await libroService.getAll();
+            // Mapeo
+            const librosBack = data as unknown as LibroHome[];
+            
+            setLibrosMaster(librosBack);    // Guarda la copia original
+            setLibrosFiltrados(librosBack); // Inicialmente muestra todos
+        } catch (error) {
+            console.error("Error al cargar libros:", error);
+        }
+    }) */
 
     const ordenadores: Record<Orden, (a: LibroHome, b: LibroHome) => number> = {
         rating: (a: LibroHome, b: LibroHome) => b.rating - a.rating,
