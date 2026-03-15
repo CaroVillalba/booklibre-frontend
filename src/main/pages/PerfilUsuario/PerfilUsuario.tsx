@@ -17,7 +17,7 @@ export const PerfilUsuario = () => {
 	useEffect(()=>{
 		
 		usuarioService.getById(Number(id))
-			.then((usuarioBackend) => setUsuario(usuarioBackend))
+			.then(setUsuario)
 			.catch((error)=> console.error("error al cargar el usuario" , error))
 			.finally(()=> setCargando(false))
 		
