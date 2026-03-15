@@ -1,4 +1,6 @@
 /* ── Contenedor principal ──────────────────────────────────────────── */
+
+
 .mis-prestamos__header {
     margin-bottom: 1.25rem;
 }
@@ -145,6 +147,12 @@
     margin-top: auto;
     padding-top: 0.75rem;
     align-self: flex-start;
+}
+
+/* ── Paginador ─────────────────────────────────────────────────────── */
+.mis-prestamos__paginator {
+    margin-top: 1.5rem;
+    background: transparent;
 }
 
 /* ── Estado vacío ──────────────────────────────────────────────────── */
