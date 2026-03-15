@@ -67,7 +67,7 @@ function AppContent() {
         <Route path="/editar-detalles" element={<EdicionLibro />} />
         {/* <Route path="/login" element={<Login />} /> */}
         <Route path="/prestamos" element={<MisPrestamos />} />
-        <Route path="/perfil" element={<PerfilUsuario />} />
+        <Route path="/perfil/:id" element={<PerfilUsuario />} />
       </Routes>
     </div>
   )
