@@ -1,5 +1,5 @@
-import type { Reseña } from "./Reseña";
-import { Rating } from 'primereact/rating';
+// import type { Reseña } from "./Reseña";
+// import { Rating } from 'primereact/rating';
 
 export interface Libro {
     id: number
@@ -35,4 +35,13 @@ export interface LibroDetalle extends Libro {
     rating: number,
     cantidadPaginas: number,
     bibliokarma: number,
+}
+
+export interface LibroUsuario{
+    id?:number,
+    titulo: string,
+    disponible:boolean,
+    fechaAgregado:string,
+    autor:string,
+    genero: string
 }

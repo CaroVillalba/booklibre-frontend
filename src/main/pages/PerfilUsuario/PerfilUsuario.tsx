@@ -44,7 +44,7 @@ export const PerfilUsuario = () => {
 					</div>
 				</div>
 				<div className="col-12 lg:col-8">
-					<UsuarioLibros/>
+					{usuario.id &&<UsuarioLibros usuarioId={usuario.id}/>}
 				</div>
 			</div>
 		</div>
