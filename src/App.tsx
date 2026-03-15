@@ -42,6 +42,7 @@ import { HomeUsuario } from './main/pages/HomeUsuario/HomeUsuario'
 import { Header } from './main/components/Header/Header'
 import { PerfilUsuario } from './main/pages/PerfilUsuario/PerfilUsuario'
 import { EdicionLibro } from './main/pages/EdicionLibro/EdicionLibro'
+import { MisPrestamos } from './main/pages/Prestamos/DetallePrestamos'
 
 
 // Rutas donde NO se muestra el header
@@ -65,7 +66,7 @@ function AppContent() {
         <Route path="/detalle-libro" element={<DetalleLibro />} />
         <Route path="/editar-detalles" element={<EdicionLibro />} />
         {/* <Route path="/login" element={<Login />} /> */}
-        {/* <Route path="/mis-libros" element={<MisLibros />} /> */}
+        <Route path="/prestamos" element={<MisPrestamos />} />
         <Route path="/perfil" element={<PerfilUsuario />} />
       </Routes>
     </div>
