@@ -82,7 +82,6 @@ export const EdicionLibro = () => {
                                     <div className="flex flex-column align-items-center">
                                         <i className="pi pi-cloud-upload text-4xl mb-2"></i>
                                         <p className="m-0">Subir Portada</p>
-                                        <small>PNG, JPG hasta 5MB</small>
                                     </div>
                                 )}
                             </div>
