@@ -1,11 +1,9 @@
 export interface Libro {
     id: number
-    imgURL: string 
     titulo: string
     tipo: string
     descripcion: string
     genero: string
-    rating: number
     autor: string
     cantidadPaginas: number
     isbn13: string
@@ -24,8 +22,6 @@ export type LibroHome = Libro & {
     rating?: number
     bibliokarma: number
 }
-
-
 
 export interface LibroUsuario{
     id?:number,
