@@ -35,7 +35,7 @@ export function Header({ bibliokarmas = 0, onLogout }: HeaderProps) {
       label: 'Perfil',
       icon: 'pi pi-user',
       className: location.pathname === '/perfil' ? 'nav-item-active' : '',
-      command: () => navigate('/perfil'),
+      command: () => navigate('/perfil/1'),
     },
   ]
 

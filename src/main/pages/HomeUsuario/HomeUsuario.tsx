@@ -1,156 +1,105 @@
-import { SidebarFiltros } from "../../components/SidebarFiltros.tsx";
-import { BusquedaLibros } from "../../components/BusquedaLibros.tsx";
-import { LibroCard } from "../../components/LibroCard.tsx";
-import { Dropdown } from "primereact/dropdown";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import type { LibroHome } from "../../../types/Libro.ts";
+import { SidebarFiltros } from "../../components/SidebarFiltros.tsx"
+import { BusquedaLibros } from "../../components/BusquedaLibros.tsx"
+import { LibroCard } from "../../components/LibroCard.tsx"
+import { Dropdown } from "primereact/dropdown"
+import { ProgressSpinner } from "primereact/progressspinner"
+import { Message } from "primereact/message"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import type { LibroHome } from "../../../types/Libro.ts"
+import { libroService } from "../../services/LibroService.ts"
+import { useOnInit } from "../../hooks/useOnInit.tsx"
 import "./HomeUsuario.css"
-//import { libroService } from "../../services/LibroService.ts";
-//import { useOnInit } from "../../hooks/useOnInit.tsx";
-import type { LibroDetalle } from './../../../types/Libro';
+
+// Convierte un Date a string ISO (YYYY-MM-DD) que espera el back !!! VAMOS A USAR UN DATE 
+const toISODate = (date: Date): string => date.toISOString().split("T")[0]
+
+// Fechas por defecto: hoy y en 30 días !!!!CORREGIRLO : CORREGIDO
+const hoy = new Date()
+
 
 export const HomeUsuario = () => {
     const navigate = useNavigate()
     type Orden = "rating" | "estado" | "tipo"
 
+    // --- Filtros del sidebar ---
     const [generosSeleccionados, setGenerosSeleccionados] = useState<string[]>([])
-    const [paginasSeleccionadas, setPaginasSeleccionadas] = useState<[number, number]>([200, 300])
-    const [fechaDesde, setFechaDesde] = useState<Date | null>(new Date())
-    const [fechaHasta, setFechaHasta] = useState<Date | null>(new Date())
+    const [paginasSeleccionadas, setPaginasSeleccionadas] = useState<[number, number]>([0, 1500])
+    const [fechaDesde, setFechaDesde] = useState<Date | null>(hoy)
+    const [fechaHasta, setFechaHasta] = useState<Date | null>(hoy)
+    const [isbn, setIsbn] = useState("")
+    const [prestadoPorUsuario, setPrestadoPorUsuario] = useState("")
+
+    // --- Búsqueda por título ---
     const [tituloBusqueda, setTituloBusqueda] = useState("")
+
+    // --- Orden ---
     const [orden, setOrden] = useState<Orden | null>(null)
 
-    const opcionesOrden: { label: string; value: Orden }[]= [
-        { label: "Relevancia", value: "rating" },
-        { label: "Estado", value: "estado" },
-        { label: "Tipo de libro", value: "tipo" }
+    // --- Estado de datos ---
+    const [libros, setLibros] = useState<LibroHome[]>([])
+    const [cargando, setCargando] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+
+    const opcionesOrden: { label: string; value: Orden }[] = [
+        { label: "Rating",         value: "rating" },
+        { label: "Estado",         value: "estado" },
+        { label: "Tipo de libro",  value: "tipo"   },
     ]
-
-    // ejemplo de datos (deben venir del back)
-    const libros: LibroHome[] = [
-        {
-            imgUrl: "https://http2.mlstatic.com/D_NQ_NP_2X_876004-CBT80927631830_122024-F.webp",
-            genero: "Drama",
-            rating: 5.0,
-            titulo: "Meridiano de Sangre",
-            autor: "Cormac McCarthy",
-            cantidadPaginas: 325,
-            isbn13: "978-0-679-72875-7",
-            idioma: "Español",
-            tipo: "Coleccionable",
-            bibliokarma: 1000,
-            estado: "Bueno"
-        },
-        {
-            imgUrl: "https://upload.wikimedia.org/wikipedia/en/9/9b/LordOfTheFliesBookCover.jpg",
-            genero: "Literatura",
-            rating: 4.4,
-            titulo: "El Señor de las Moscas",
-            autor: "William Golding",
-            cantidadPaginas: 75,
-            isbn13: "978-0-399-50148-7",
-            idioma: "Inglés",
-            tipo: "Comun",
-            bibliokarma: 650,
-            estado: "Muy Bueno"
-        },
-        {
-            imgUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh7ZHPtvzGtZWcHFR3Ub9bWVfgSAuBdFQ0dOY_R6vCvB99IB0KXxwseXRQk5vXu7S4lTR75mMfZlibmosQlsMZ5uxSeew8bEfZfNy1-5i_Yy4l3K1ACsQwFzTMCX9vFyGugk44h4oqct2A/s1600/Cover.jpg",
-            genero: "Ciencia Ficcion",
-            rating: 4.7,
-            titulo: "No Tengo Boca y Debo Gritar",
-            autor: "Harlan Ellison",
-            cantidadPaginas: 11,
-            isbn13: "978-1-499-65964-1",
-            idioma: "Francés",
-            tipo: "Con Dedicatoria",
-            bibliokarma: 820,
-            estado: "Excelente"
-        },
-        {
-            imgUrl: "https://images.cdn3.buscalibre.com/fit-in/360x360/ed/c5/edc5b53333ebd87cfe6256685249673f.jpg",
-            genero: "Literatura",
-            rating: 4.1,
-            titulo: "Moby Dick",
-            autor: "Herman Melville",
-            cantidadPaginas: 500,
-            isbn13: "978-1-85326-008-7",
-            idioma: "Inglés",
-            tipo: "Comun",
-            bibliokarma: 710,
-            estado: "Bueno"
-        }
-    ]
-
-    // const [librosMaster, setLibrosMaster] = useState<LibroHome[]>([])
-    const [librosFiltrados, setLibrosFiltrados] = useState<LibroHome[]>(libros)
-
-    /* useOnInit(async () => {
-        try {
-            const data = await libroService.getAll();
-            // Mapeo
-            const librosBack = data as unknown as LibroHome[];
-            
-            setLibrosMaster(librosBack);    // Guarda la copia original
-            setLibrosFiltrados(librosBack); // Inicialmente muestra todos
-        } catch (error) {
-            console.error("Error al cargar libros:", error);
-        }
-    }) */
 
     const ordenadores: Record<Orden, (a: LibroHome, b: LibroHome) => number> = {
-        rating: (a: LibroHome, b: LibroHome) => b.rating - a.rating,
-        estado: (a: LibroHome, b: LibroHome) => a.estado.localeCompare(b.estado),
-        tipo: (a: LibroHome, b: LibroHome) => a.tipo.localeCompare(b.tipo)
+        rating: (a, b) => (b.rating ?? 0) - (a.rating ?? 0),
+        estado: (a, b) => a.estado.localeCompare(b.estado),
+        tipo:   (a, b) => a.tipo.localeCompare(b.tipo),
     }
 
-    const handleBuscar = () => {
-        if (tituloBusqueda === "") {
-            const resultado = [...libros];
-            if (orden) resultado.sort(ordenadores[orden]);
-            setLibrosFiltrados(resultado);
-        } else {
-            const filtrados = libros.filter(libro =>
-                libro.titulo.toLowerCase().includes(tituloBusqueda.toLowerCase())
-            );
-            setLibrosFiltrados(filtrados)
+    // Función central que llama al back con los parámetros actuales
+    const fetchLibros = async (tituloOverride?: string) => {
+        setCargando(true)
+        setError(null)
+        try {
+            const resultado = await libroService.search({
+               titulo: (tituloOverride ?? tituloBusqueda) || undefined,
+                generos:            generosSeleccionados.length > 0
+                                        ? generosSeleccionados.join(",")
+                                        : undefined,
+                paginasMin:         paginasSeleccionadas[0] > 0 ? paginasSeleccionadas[0] : undefined,
+                paginasMax:         paginasSeleccionadas[1] < 1500 ? paginasSeleccionadas[1] : undefined,
+                isbn:               isbn || undefined,
+                desde:              toISODate(fechaDesde ?? hoy),
+                hasta:              toISODate(fechaHasta ?? hoy),
+                prestadoPorUsuario: prestadoPorUsuario || undefined,
+            })
+            setLibros(resultado)
+        } catch (e) {
+            setError("No se pudieron cargar los libros. Verificá que el servidor esté activo.")
+            console.error(e)
+        } finally {
+            setCargando(false)
         }
     }
 
-    const handleOrden = (nuevoOrden: Orden) => {
-        setOrden(nuevoOrden);
-        const resultado = [...librosFiltrados].sort(ordenadores[nuevoOrden])
-        setLibrosFiltrados(resultado)
+    // Carga inicial: trae todos los libros disponibles en el rango de fechas por defecto
+    useOnInit(() => { fetchLibros() })
+
+    const handleBuscar = () => {
+        fetchLibros(tituloBusqueda)
     }
 
     const handleAplicarFiltros = () => {
-        let filtrados = [...libros]
+        fetchLibros()
+    }
 
-        // filtro por género
-        if (generosSeleccionados.length > 0) {
-            filtrados = filtrados.filter(libro =>
-                generosSeleccionados.includes(libro.genero.toLowerCase())
-            )
-        }
-
-        // filtro por páginas
-        filtrados = filtrados.filter(libro =>
-            libro.cantidadPaginas >= paginasSeleccionadas[0] &&
-            libro.cantidadPaginas <= paginasSeleccionadas[1]
-        )
-
-        // filtro por disponibilidad en fechas (necesitobackend)
-        // filtrados = filtrados.filter(libro => estaDisponible(libro, fechaDesde, fechaHasta))
-
-        setLibrosFiltrados(filtrados)
+    const handleOrden = (nuevoOrden: Orden) => {
+        setOrden(nuevoOrden)
+        setLibros(prev => [...prev].sort(ordenadores[nuevoOrden]))
     }
 
     return (
         <div className="grid home_content">
             {/* Sidebar */}
             <div className="col-12 md:col-3">
-                <SidebarFiltros 
+                <SidebarFiltros
                     generosSeleccionados={generosSeleccionados}
                     setGenerosSeleccionados={setGenerosSeleccionados}
                     paginasSeleccionadas={paginasSeleccionadas}
@@ -159,38 +108,75 @@ export const HomeUsuario = () => {
                     setFechaDesde={setFechaDesde}
                     fechaHasta={fechaHasta}
                     setFechaHasta={setFechaHasta}
+                    isbn={isbn}
+                    setIsbn={setIsbn}
+                    prestadoPorUsuario={prestadoPorUsuario}
+                    setPrestadoPorUsuario={setPrestadoPorUsuario}
                     onAplicarFiltros={handleAplicarFiltros}
                 />
             </div>
 
             <div className="col-12 md:col-9">
                 {/* Barra de búsqueda */}
-                <BusquedaLibros tituloBusqueda={tituloBusqueda} setTituloBusqueda={setTituloBusqueda} onBuscar={handleBuscar} />
+                <BusquedaLibros
+                    tituloBusqueda={tituloBusqueda}
+                    setTituloBusqueda={setTituloBusqueda}
+                    onBuscar={handleBuscar}
+                />
 
-                {/* Libros */}
+                {/* Encabezado + ordenador */}
                 <div className="flex justify-content-between align-items-center mt-3">
-                    <h2 className="m-0">Libros Populares</h2>
+                    <h2 className="m-0">
+                        Libros disponibles
+                        {!cargando && (
+                            <span className="text-500 text-base ml-2">({libros.length})</span>
+                        )}
+                    </h2>
 
                     <div className="flex align-items-center gap-2">
                         <span>Ordenar por:</span>
-                        <Dropdown 
+                        <Dropdown
                             value={orden}
                             options={opcionesOrden}
                             onChange={(e) => handleOrden(e.value)}
-                            placeholder="Seleccione..." 
+                            placeholder="Seleccione..."
                         />
                     </div>
                 </div>
-                <div className="grid mt-2">
-                    {librosFiltrados.map((libro, index) => (
-                        <div 
-                            key={index} className="col-12 md:col-6 lg:col-3 xl:col-4"
-                            onClick={() => navigate(`/detalle-libro/${libro.id}`)}
-                        >
-                            <LibroCard libro={libro}/>
-                        </div>
-                    ))}
-                </div>
+
+                {/* Estados de carga / error / vacío */}
+                {cargando && (
+                    <div className="flex justify-content-center mt-5">
+                        <ProgressSpinner />
+                    </div>
+                )}
+
+                {!cargando && error && (
+                    <Message severity="error" text={error} className="w-full mt-3" />
+                )}
+
+                {!cargando && !error && libros.length === 0 && (
+                    <Message
+                        severity="info"
+                        text="No se encontraron libros con los filtros seleccionados."
+                        className="w-full mt-3"
+                    />
+                )}
+
+                {/* Grid de libros */}
+                {!cargando && !error && (
+                    <div className="grid mt-2">
+                        {libros.map((libro) => (
+                            <div
+                                key={libro.id}
+                                className="col-12 md:col-6 lg:col-3 xl:col-4"
+                                onClick={() => navigate(`/detalle-libro/${libro.id}`)}
+                            >
+                                <LibroCard libro={libro} />
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     )
