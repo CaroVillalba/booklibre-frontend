@@ -66,5 +66,5 @@ class UsuarioService extends CRUDService<Usuario> {
 
 }
 
-export const usuarioService = new UsuarioService
+export const usuarioService = new UsuarioService()
 
