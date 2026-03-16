@@ -17,11 +17,17 @@ import { useParams } from 'react-router-dom';
 import { useOnInit } from './../../hooks/useOnInit';
 import { libroService } from '../../services/LibroService';
 import { reservaService } from '../../services/ReservaService';
+import { Toast } from '../../components/common/toast';
+import { useToast } from '../../hooks/useToast';
+import '../../../toast.css'
+import { getMensajeError, type ErrorResponse } from '../../../utils/errorHandling'
+
+
 
 
 export const DetalleLibro = () => {
-
     const { id } = useParams()
+    const { toast, showToast } = useToast()
     const [libro, setLibro] = useState<LibroHome>({
         id: 0,
         imgURL: "",
@@ -57,14 +63,14 @@ export const DetalleLibro = () => {
             const libroDetalle = await libroService.getLibroPorId(Number(id))
             setLibro(libroDetalle)
         }
-        catch (error) {
-            console.error("Error al obtener el detalle del libro:", error)
+        catch (error: unknown) {
+            showToast(getMensajeError(error), 'error')
         }
     }
 
     const realizarReserva = async () => {
         if (!dates || !dates[0] || !dates[1]) {
-            console.error("Fechas de reserva no válidas");
+            showToast('Por favor, selecciona un rango de fechas válido', 'warning')
             return;
         }
         try {
@@ -74,9 +80,9 @@ export const DetalleLibro = () => {
                 fechaDesde: dates[0], 
                 fechaHasta: dates[1],
             });
-            console.log("Reserva realizada con éxito");
-        } catch (error) {
-            console.error("Error al realizar la reserva:", error);
+            showToast('Reserva realizada con éxito', 'success')
+        } catch (error: unknown) {
+            showToast(getMensajeError(error), 'error')
         }
 
         
@@ -292,6 +298,10 @@ export const DetalleLibro = () => {
                     className='dataScroller-reseñas'
                 />
             </div>
+            <div id="toast-container">
+                <Toast toast = { toast } />
+            </div>
         </div>
+        
     )
 }
