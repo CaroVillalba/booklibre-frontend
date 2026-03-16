@@ -35,6 +35,8 @@ export const DetalleLibro = () => {
         editorial: "",
         fechaPublicacion: "",
         estado: "",
+        rating: 0,
+        bibliokarma: 0,
         duenioId: null,
         duenioNombre: "",
     })
