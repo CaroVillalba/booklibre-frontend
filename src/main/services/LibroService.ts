@@ -29,6 +29,12 @@ export class LibroService extends CRUDService<LibroHome> {
         const response = await this.api.get<LibroHome[]>('/libros', { params })
         return response.data
     }
+
+    async getLibroPorId(id: number): Promise<LibroDetalle> {
+        const response = await this.api.get<LibroDetalle>(`/detalle-libro/${id}`)
+        return response.data
+    }
+
 }
 
 export const libroService = new LibroService()

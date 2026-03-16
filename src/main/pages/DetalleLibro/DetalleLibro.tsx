@@ -13,9 +13,14 @@ import { ReseñaCard } from './ReseñaCard/ReseñaCard';
 import { DataScroller } from 'primereact/datascroller';
 import { useRef } from 'react';
 import type { LibroDetalle } from '../../../types/Libro';
+import { useParams } from 'react-router-dom';
+import { useOnInit } from './../../hooks/useOnInit';
+import { libroService } from '../../services/LibroService';
 
 
 export const DetalleLibro = () => {
+
+    const { id } = useParams()
 
     const [dates, setDates] = useState<Nullable<(Date | null)[]>>(null);
     const ds = useRef<null>(null);
@@ -35,6 +40,22 @@ export const DetalleLibro = () => {
         </>
     )
 
+
+
+    const getLibroDetalle = async() => {
+        try {
+            const libroDetalle = await libroService.getLibroPorId(Number(id))
+            console.log(libroDetalle)
+        }
+        catch (error) {
+            console.error("Error al obtener el detalle del libro:", error)
+        }
+    }
+
+
+    useOnInit(() => {
+        getLibroDetalle()
+    })
 
     const reseñaEjemplo : Reseña[] = [
         {

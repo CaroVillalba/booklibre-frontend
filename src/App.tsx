@@ -63,7 +63,7 @@ function AppContent() {
       )}
       <Routes>
         <Route path="/" element={<HomeUsuario />} />
-        <Route path="/detalle-libro" element={<DetalleLibro />} />
+        <Route path="/detalle-libro/:id" element={<DetalleLibro />} />
         <Route path="/editar-detalles" element={<EdicionLibro />} />
         {/* <Route path="/login" element={<Login />} /> */}
         <Route path="/prestamos" element={<MisPrestamos />} />
