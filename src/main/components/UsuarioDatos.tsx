@@ -1,7 +1,20 @@
 import { Card } from "primereact/card"
 import { Divider } from "primereact/divider"
 
-export const UsuarioDatos = () => {
+interface UsuarioDatosProps{
+    email:string,
+    celular:string,
+    tipoUsuario:string
+}
+
+export const UsuarioDatos = ({email,celular,tipoUsuario}:UsuarioDatosProps) => {
+
+    const tipoUsuarioLabels: Record<string, string> = {
+	LECTOR: "Lector",
+	PUBLICADOR: "Publicador",
+	LECTOR_PUBLICADOR: "Lector y Publicador",
+    }
+
 
     return (
         <Card className="border-round-2xl shadow-1">
@@ -18,7 +31,7 @@ export const UsuarioDatos = () => {
             Email
             </div>
             <div>
-            emily@example.com
+            {email}
             </div>
         </div>
 
@@ -29,7 +42,7 @@ export const UsuarioDatos = () => {
             Teléfono
             </div>
             <div>
-            +54 (11) 123-4567
+            {celular}
             </div>
         </div>
 
@@ -40,7 +53,7 @@ export const UsuarioDatos = () => {
             Tipo de perfil
             </div>
             <div>
-            Lector / Publicador
+            {tipoUsuarioLabels[tipoUsuario]}
             </div>
         </div>
 
