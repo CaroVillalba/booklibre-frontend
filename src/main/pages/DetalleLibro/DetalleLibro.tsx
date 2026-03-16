@@ -16,6 +16,7 @@ import type { LibroHome } from '../../../types/Libro';
 import { useParams } from 'react-router-dom';
 import { useOnInit } from './../../hooks/useOnInit';
 import { libroService } from '../../services/LibroService';
+import { reservaService } from '../../services/ReservaService';
 
 
 export const DetalleLibro = () => {
@@ -44,22 +45,12 @@ export const DetalleLibro = () => {
     const [dates, setDates] = useState<Nullable<(Date | null)[]>>(null);
     const ds = useRef<null>(null);
 
-    const footer = (
-        <>
-        <Button label= " Confirmar reserva " icon= "pi pi-check" iconPos="right" className="p-button-primary p-button-text boton-ancho" />
-        </>
-    )
-
-   
-
     const headerReseñas = (
         <>
         <h1>Reseñas de la comunidad</h1>
         <Button label="Ver más" icon="pi pi-arrow-right" iconPos="right" className="p-button-link p-0" onClick={() => ds.current.load()} />
         </>
     )
-
-
 
     const getLibroDetalle = async() => {
         try {
@@ -70,6 +61,32 @@ export const DetalleLibro = () => {
             console.error("Error al obtener el detalle del libro:", error)
         }
     }
+
+    const realizarReserva = async () => {
+        if (!dates || !dates[0] || !dates[1]) {
+            console.error("Fechas de reserva no válidas");
+            return;
+        }
+        try {
+            await reservaService.postReserva({
+                tituloLibro: libro.titulo,
+                nombreLector: "Ana García", //useContext ? para obtener el nombre del usuario logeado
+                fechaDesde: dates[0], 
+                fechaHasta: dates[1],
+            });
+            console.log("Reserva realizada con éxito");
+        } catch (error) {
+            console.error("Error al realizar la reserva:", error);
+        }
+
+        
+    }
+
+    const footer = (
+        <>
+        <Button label= " Confirmar reserva " icon= "pi pi-check" iconPos="right" className="p-button-primary p-button-text boton-ancho" onClick={realizarReserva} />
+        </>
+    )
 
 
     useOnInit(() => {
@@ -173,11 +190,11 @@ export const DetalleLibro = () => {
 
 
     return (
-        <div className="flex flex-column gap-4 p-4">
+        <div className="flex flex-column gap-4 p-4 detalle-libro-container">
 
             <div className="flex flex-row align-items-center gap-4">
                 <Card className="md:w-20rem flex flex-column align-items-center">
-                    <Image src={libro.imgUrl} alt="Image" width="250"/>
+                    <Image src={libro.imgUrl} alt="Image" width="250" imageStyle={{minHeight:'420px', objectFit:'cover'}}/>
                 </Card>
                 <Card header = {header} className="flex-1" title={libro.titulo} subTitle={libro.autor} style={{ minHeight: "490px", padding: "1rem",}}>
                     <div className="contenido-card">
@@ -217,7 +234,7 @@ export const DetalleLibro = () => {
                     <div className="flex flex-row justify-content-between align-items-center w-full p-1">
                         <div className="flex flex-column  gap-2">
                             <span className="font-bold opacity-70">Tipo</span>
-                            <Tag value="Con dedicatoria" className="tag-tipo"></Tag>
+                            <Tag value={libro.tipo} className="tag-tipo"></Tag>
                         </div>
                         <div className= "flex flex-column  gap-2 ">
                             <span className="font-bold opacity-70">BiblioKarmas</span>
