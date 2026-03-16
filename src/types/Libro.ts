@@ -21,12 +21,11 @@ export interface Libro {
 }
 
 // LibroHome refleja exactamente lo que devuelve LibroDTO del back.
-// Los campos imgUrl, rating y bibliokarma no existen en el back todavía,
-// por eso se marcan como opcionales.
+// imgUrl y rating se marcan opcionales porque el back aún no los implementa.
 export type LibroHome = Libro & {
     imgUrl?: string
     rating?: number
-    bibliokarma?: number
+    bibliokarma: number
 }
 
 
