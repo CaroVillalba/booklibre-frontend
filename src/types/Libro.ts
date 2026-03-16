@@ -29,16 +29,7 @@ export type LibroHome = Libro & {
     bibliokarma?: number
 }
 
-export interface LibroDetalle extends Libro {
-    imgUrl?: string
-    rating?: number
-    cantidadPaginas: number
-    bibliokarma?: number
-    imgUrl: string,
-    rating: number,
-    cantidadPaginas: number,
-    bibliokarma: number,
-}
+
 
 export interface LibroUsuario{
     id?:number,
