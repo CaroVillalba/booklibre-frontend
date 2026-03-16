@@ -55,3 +55,12 @@
     min-width: calc(100vw - 57px);
 }
 
+.boton-icono .p-datepicker-trigger{
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.boton-icono .p-datepicker-trigger:hover{
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+}
