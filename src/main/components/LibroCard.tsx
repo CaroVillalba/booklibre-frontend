@@ -41,7 +41,7 @@ export const LibroCard = ({ libro }: Props) => {
                 <div className="flex justify-content-between align-items-center">
                     <span className="text-primary text-sm">{formatEnum(libro.genero)}</span>
 
-                    {libro.rating != null && (
+                    {libro.rating > 0 && (
                         <div className="flex align-items-center gap-1">
                             <i className="pi pi-star-fill text-yellow-500" />
                             <span>{libro.rating.toFixed(1)}</span>

@@ -8,6 +8,7 @@ export interface Libro {
     tipo: string
     descripcion: string
     genero: string
+    rating: number
     autor: string
     cantidadPaginas: number
     isbn13: string
