@@ -37,7 +37,7 @@ class UsuarioService extends CRUDService<Usuario> {
     }
   
   async getEstadisticas(id:number): Promise<UsuarioEstadisticasDTO>{
-        const response = await this.api.get<UsuarioEstadisticasDTO>(`/users/${id}/estadisticas`)
+        const response = await this.api.get<UsuarioEstadisticasDTO>(`/usuario/${id}/estadisticas`)
         return response.data
     }
 
@@ -50,7 +50,7 @@ class UsuarioService extends CRUDService<Usuario> {
         estado:string
     ): Promise<PageDTO<LibroUsuario>>{
         const response = await this.api.get<PageDTO<LibroUsuario>>(
-            `/users/${usuarioId}/libros`,
+            `/usuario/${usuarioId}/libros`,
             {
                 params:{
                     page,
@@ -65,4 +65,6 @@ class UsuarioService extends CRUDService<Usuario> {
     }
 
 }
+
+export const usuarioService = new UsuarioService
 
