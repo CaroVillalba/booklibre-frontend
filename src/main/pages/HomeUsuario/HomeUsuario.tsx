@@ -8,6 +8,7 @@ import type { LibroHome } from "../../../types/Libro.ts";
 import "./HomeUsuario.css"
 //import { libroService } from "../../services/LibroService.ts";
 //import { useOnInit } from "../../hooks/useOnInit.tsx";
+import type { LibroDetalle } from './../../../types/Libro';
 
 export const HomeUsuario = () => {
     const navigate = useNavigate()
@@ -184,7 +185,7 @@ export const HomeUsuario = () => {
                     {librosFiltrados.map((libro, index) => (
                         <div 
                             key={index} className="col-12 md:col-6 lg:col-3 xl:col-4"
-                            onClick={() => navigate(`/detalle-libro`)}
+                            onClick={() => navigate(`/detalle-libro/${libro.id}`)}
                         >
                             <LibroCard libro={libro}/>
                         </div>

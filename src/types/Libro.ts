@@ -16,7 +16,7 @@ export interface Libro {
     estado: string
 }
 
-export interface LibroHome {
+export interface LibroHome extends Partial<Libro> {
     imgUrl: string
     genero: string
     rating: number

@@ -1,4 +1,4 @@
-import type { Libro } from '../../types/Libro'
+import type { Libro, LibroDetalle } from '../../types/Libro'
 import { CRUDService } from './CRUDService'
 
 export class LibroService extends CRUDService<Libro> {
@@ -32,6 +32,12 @@ export class LibroService extends CRUDService<Libro> {
     
         return response.data
     }
+
+    async getLibroPorId(id: number): Promise<LibroDetalle> {
+        const response = await this.api.get<LibroDetalle>(`/detalle-libro/${id}`)
+        return response.data
+    }
+
 }
 
 export const libroService = new LibroService()
