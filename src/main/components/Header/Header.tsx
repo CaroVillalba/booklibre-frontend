@@ -28,14 +28,14 @@ export function Header({ bibliokarmas = 0, onLogout }: HeaderProps) {
     {
       label: 'Mis Préstamos',
       icon: 'pi pi-book',
-      /* className: location.pathname === '/reservas' ? 'nav-item-active' : '',
-      command: () => navigate('/reservas'), */
+      className: location.pathname === '/prestamos' ? 'nav-item-active' : '',
+      command: () => navigate('/prestamos'),
     },
     {
       label: 'Perfil',
       icon: 'pi pi-user',
       className: location.pathname === '/perfil' ? 'nav-item-active' : '',
-      command: () => navigate('/perfil'),
+      command: () => navigate('/perfil/1'),
     },
   ]
 

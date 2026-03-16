@@ -12,10 +12,32 @@ import type { Reseña } from '../../../types/Reseña';
 import { ReseñaCard } from './ReseñaCard/ReseñaCard';
 import { DataScroller } from 'primereact/datascroller';
 import { useRef } from 'react';
-import type { LibroDetalle } from '../../../types/Libro';
+import type { LibroHome } from '../../../types/Libro';
+import { useParams } from 'react-router-dom';
+import { useOnInit } from './../../hooks/useOnInit';
+import { libroService } from '../../services/LibroService';
 
 
 export const DetalleLibro = () => {
+
+    const { id } = useParams()
+    const [libro, setLibro] = useState<LibroHome>({
+        id: 0,
+        imgURL: "",
+        titulo: "",
+        tipo: "",
+        descripcion: "",
+        genero: "",
+        autor: "",
+        cantidadPaginas: 0,
+        isbn13: "",
+        idioma: "",
+        editorial: "",
+        fechaPublicacion: "",
+        estado: "",
+        duenioId: null,
+        duenioNombre: "",
+    })
 
     const [dates, setDates] = useState<Nullable<(Date | null)[]>>(null);
     const ds = useRef<null>(null);
@@ -36,6 +58,22 @@ export const DetalleLibro = () => {
     )
 
 
+
+    const getLibroDetalle = async() => {
+        try {
+            const libroDetalle = await libroService.getLibroPorId(Number(id))
+            setLibro(libroDetalle)
+        }
+        catch (error) {
+            console.error("Error al obtener el detalle del libro:", error)
+        }
+    }
+
+
+    useOnInit(() => {
+        getLibroDetalle()
+    })
+
     const reseñaEjemplo : Reseña[] = [
         {
         puntaje: 4,
@@ -43,6 +81,7 @@ export const DetalleLibro = () => {
         fecha: new Date(),
         autor: "Jane Doe",
         libro: {
+            id: 1,
             genero: "Drama",
             titulo: "Meridiano de Sangre",
             autor: "Cormac McCarthy",
@@ -62,6 +101,7 @@ export const DetalleLibro = () => {
         fecha: new Date(),
         autor: "Jane Doe",
         libro: {
+            id: 1,
             genero: "Drama",
             titulo: "Meridiano de Sangre",
             autor: "Cormac McCarthy",
@@ -81,6 +121,7 @@ export const DetalleLibro = () => {
         fecha: new Date(),
         autor: "Jane Doe",
         libro: {
+            id: 1,
             genero: "Drama",
             titulo: "Meridiano de Sangre",
             autor: "Cormac McCarthy",
@@ -96,22 +137,7 @@ export const DetalleLibro = () => {
     }
     ]
 
-    const libro: LibroDetalle = {
-                imgUrl: "https://http2.mlstatic.com/D_NQ_NP_2X_876004-CBT80927631830_122024-F.webp",
-                genero: "Drama",
-                rating: 5.0,
-                descripcion: "Meridiano de Sangre es una novela del escritor estadounidense Cormac McCarthy, publicada en 1985. La historia sigue a un joven conocido como 'El Niño' mientras viaja por el suroeste de Estados Unidos y México con su familia, enfrentándose a la violencia y la brutalidad de la frontera durante la década de 1850. La novela es conocida por su estilo oscuro y poético, así como por su exploración de temas como la violencia, la moralidad y la naturaleza humana.",
-                titulo: "Meridiano de Sangre",
-                autor: "Cormac McCarthy",
-                editorial: "Scribner",
-                fechaPublicacion: "19-04-1985",
-                cantidadPaginas: 325,
-                isbn13: "978-0-679-72875-7",
-                idioma: "Español",
-                tipo: "Coleccionable",
-                bibliokarma: 1000,
-                estado: "Bueno"
-    }
+ 
 
     const itemTemplate = (data: Reseña) => {
         return (
@@ -124,7 +150,7 @@ export const DetalleLibro = () => {
     const header = (
         <>
             <div className="p-3 pb-0 flex flex-row gap-3 align-items-center">
-                <Tag value= "Novela" style={{width: "10%", height: "100%", borderRadius: "18px"}} ></Tag>
+                <Tag value= {libro.genero} style={{width: "10%", height: "100%", borderRadius: "18px"}} ></Tag>
                 <Rating value={libro.rating} readOnly cancel={false}></Rating> <span className="font-bold text-750">{libro.rating}</span>
             </div>
         
@@ -164,7 +190,7 @@ export const DetalleLibro = () => {
 
             <Card title="Tu reserva" subTitle="Fechas seleccionadas:" footer= { footer } className= "md:w-20rem" style={{minHeight:"410px", padding: "1rem"}}>
 
-                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y"/>
+                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y" className='w-full'/>
 
                 <div className="flex justify-content-between align-items-center p-3 surface-100 border-round-lg">
                     <span className="text-600">Recogida</span>

@@ -1,0 +1,212 @@
+/* ── Contenedor principal ──────────────────────────────────────────── */
+
+
+.mis-prestamos__header {
+    margin-bottom: 1.25rem;
+}
+
+.mis-prestamos__titulo {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+}
+
+.mis-prestamos__subtitulo {
+    opacity: 0.65;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* ── Buscador ──────────────────────────────────────────────────────── */
+.mis-prestamos__search {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.mis-prestamos__search .p-inputtext {
+    padding-left: 2.5rem !important;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────── */
+.mis-prestamos__tabs .p-tabview-nav {
+    margin-bottom: 1.25rem;
+}
+
+.mis-prestamos__tabs,
+.mis-prestamos__tabs .p-tabview-panels,
+.mis-prestamos__tabs .p-tabview-panel {
+    width: 100%;
+}
+
+/* ── Grid de tarjetas ──────────────────────────────────────────────── */
+.prestamos-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+}
+
+/* ── Tarjeta individual ────────────────────────────────────────────── */
+.prestamo-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.prestamo-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.prestamo-card__estado-badge {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    z-index: 2;
+}
+
+.prestamo-card__img-wrap {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: var(--surface-ground);
+}
+
+.prestamo-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+}
+
+.prestamo-card__body {
+    padding: 0.85rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.prestamo-card__rating {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    opacity: 0.85;
+}
+
+.prestamo-card__titulo {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin: 0.1rem 0 0;
+    line-height: 1.3;
+}
+
+.prestamo-card__autor {
+    font-size: 0.82rem;
+    opacity: 0.65;
+    margin: 0;
+}
+
+.prestamo-card__meta {
+    margin-top: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.78rem;
+    opacity: 0.75;
+}
+
+.prestamo-card__meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.prestamo-card__meta .pi {
+    font-size: 0.72rem;
+}
+
+.prestamo-card__karma {
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    opacity: 0.8;
+}
+
+.prestamo-card__karma strong {
+    opacity: 1;
+}
+
+.prestamo-card__btn-calificar {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    align-self: flex-start;
+}
+
+/* ── Paginador ─────────────────────────────────────────────────────── */
+.mis-prestamos__paginator {
+    margin-top: 1.5rem;
+    background: transparent;
+}
+
+/* ── Estado vacío ──────────────────────────────────────────────────── */
+.prestamos-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    opacity: 0.5;
+}
+
+.prestamos-empty__icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+/* ── CTA inferior ──────────────────────────────────────────────────── */
+.mis-prestamos__footer-cta {
+    margin-top: 3rem;
+    text-align: center;
+    padding: 2.5rem 1rem;
+    border-top: 1px solid var(--surface-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    opacity: 0.75;
+}
+
+.mis-prestamos__footer-cta p {
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin: 0.5rem 0 0;
+}
+
+.mis-prestamos__footer-cta span {
+    font-size: 0.88rem;
+    max-width: 340px;
+}
+
+/* ── Dialog de calificación ────────────────────────────────────────── */
+.calificacion-dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.calificacion-dialog__label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.calificacion-dialog__chars {
+    text-align: right;
+    opacity: 0.5;
+    font-size: 0.78rem;
+}

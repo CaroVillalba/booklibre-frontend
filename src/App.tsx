@@ -7,6 +7,7 @@ import './App.css'
 
 import { DetalleLibro } from './main/pages/DetalleLibro/DetalleLibro'
 import { HomeUsuario } from './main/pages/HomeUsuario/HomeUsuario'
+import { PerfilUsuario } from './main/pages/PerfilUsuario/PerfilUsuario'
 
 
 function AppContent() {
@@ -15,6 +16,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<HomeUsuario />} />
           <Route path="/detalle-libro" element={<DetalleLibro />} />
+          <Route path="/perfil-usuario" element={<PerfilUsuario/>}/>
         </Routes>
     </div>
   )
@@ -37,9 +39,13 @@ import './App.css'
 
 import { DetalleLibro } from './main/pages/DetalleLibro/DetalleLibro'
 import { HomeUsuario } from './main/pages/HomeUsuario/HomeUsuario'
-import { Header } from './main/pages/components/Header/Header'
 import { Login } from './main/pages/Login/Login'
 import { Register } from './main/pages/Register/Register'
+import { Header } from './main/components/Header/Header'
+import { PerfilUsuario } from './main/pages/PerfilUsuario/PerfilUsuario'
+import { EdicionLibro } from './main/pages/EdicionLibro/EdicionLibro'
+import { MisPrestamos } from './main/pages/Prestamos/DetallePrestamos'
+
 
 // Rutas donde NO se muestra el header
 const RUTAS_SIN_HEADER = ['/login', '/register']
@@ -64,6 +70,10 @@ function AppContent() {
         {<Route path="/register" element={<Register />} />}
         {/* <Route path="/mis-libros" element={<MisLibros />} /> */}
         {/* <Route path="/perfil" element={<Perfil />} /> */}
+        <Route path="/detalle-libro/:id" element={<DetalleLibro />} />
+        <Route path="/editar-detalles" element={<EdicionLibro />} />
+        <Route path="/prestamos" element={<MisPrestamos />} />
+        <Route path="/perfil/:id" element={<PerfilUsuario />} />
       </Routes>
     </div>
   )
