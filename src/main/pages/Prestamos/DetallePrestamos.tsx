@@ -6,10 +6,9 @@ import { Tag } from "primereact/tag";
 import { Rating } from "primereact/rating";
 import { Dialog } from "primereact/dialog";
 import { InputTextarea } from "primereact/inputtextarea";
+import { Paginator } from "primereact/paginator";
 import { useNavigate } from "react-router-dom";
 import "./DetallePrestamos.css";
-import { InputIcon } from "primereact/inputicon";
-import { IconField } from "primereact/iconfield";
 
 // ── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -23,7 +22,7 @@ interface Prestamo {
         imgUrl: string;
         rating: number;
     };
-    contraparte: string; // "Prestado por" o "Prestado a"
+    otroUsuario: string; // quien prestó (en "a mí") o quien recibió (en "por mí")
     rangoDesde: string;
     rangoHasta: string;
     bibliokarma: number;
@@ -43,7 +42,7 @@ const PRESTADOS_A_MI: Prestamo[] = [
             imgUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg/800px-The_Great_Gatsby_Cover_1925_Retouched.jpg",
             rating: 4.8,
         },
-        contraparte: "Juan Pérez",
+        otroUsuario: "Juan Pérez",
         rangoDesde: "01/10/23",
         rangoHasta: "15/10/23",
         bibliokarma: 240,
@@ -57,7 +56,7 @@ const PRESTADOS_A_MI: Prestamo[] = [
             imgUrl: "https://images.cdn3.buscalibre.com/fit-in/360x360/e8/c0/e8c0e9e3c9c3e3e3e3e3e3e3e3e3e3e3.jpg",
             rating: 4.9,
         },
-        contraparte: "Ana García",
+        otroUsuario: "Ana García",
         rangoDesde: "05/10/23",
         rangoHasta: "20/10/23",
         bibliokarma: 240,
@@ -71,7 +70,7 @@ const PRESTADOS_A_MI: Prestamo[] = [
             imgUrl: "https://upload.wikimedia.org/wikipedia/commons/4/4f/To_Kill_a_Mockingbird_%28first_edition_cover%29.jpg",
             rating: 4.7,
         },
-        contraparte: "Carlos Ruiz",
+        otroUsuario: "Carlos Ruiz",
         rangoDesde: "10/10/23",
         rangoHasta: "25/10/23",
         bibliokarma: 240,
@@ -85,12 +84,40 @@ const PRESTADOS_A_MI: Prestamo[] = [
             imgUrl: "https://upload.wikimedia.org/wikipedia/commons/8/89/The_Catcher_in_the_Rye_%281951%2C_first_edition_cover%29.jpg",
             rating: 4.5,
         },
-        contraparte: "Elena Beltrán",
+        otroUsuario: "Elena Beltrán",
         rangoDesde: "12/10/23",
         rangoHasta: "27/10/23",
         bibliokarma: 240,
         estado: "DEVUELTO",
     },
+    {
+        id: 5,
+        libro: {
+            titulo: "The Great Gatsby",
+            autor: "F. Scott Fitzgerald",
+            imgUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg/800px-The_Great_Gatsby_Cover_1925_Retouched.jpg",
+            rating: 4.8,
+        },
+        otroUsuario: "Juan Pérez",
+        rangoDesde: "01/10/23",
+        rangoHasta: "15/10/23",
+        bibliokarma: 240,
+        estado: "ACTIVO",
+    },
+    {
+        id: 6,
+        libro: {
+            titulo: "The Great Gatsby",
+            autor: "F. Scott Fitzgerald",
+            imgUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg/800px-The_Great_Gatsby_Cover_1925_Retouched.jpg",
+            rating: 4.8,
+        },
+        otroUsuario: "Juan Pérez",
+        rangoDesde: "01/10/23",
+        rangoHasta: "15/10/23",
+        bibliokarma: 240,
+        estado: "ACTIVO",
+    }
 ];
 
 const PRESTADOS_POR_MI: Prestamo[] = [
@@ -102,7 +129,7 @@ const PRESTADOS_POR_MI: Prestamo[] = [
             imgUrl: "https://http2.mlstatic.com/D_NQ_NP_2X_876004-CBT80927631830_122024-F.webp",
             rating: 5.0,
         },
-        contraparte: "Sofía Martínez",
+        otroUsuario: "Sofía Martínez",
         rangoDesde: "03/10/23",
         rangoHasta: "18/10/23",
         bibliokarma: 320,
@@ -116,7 +143,7 @@ const PRESTADOS_POR_MI: Prestamo[] = [
             imgUrl: "https://upload.wikimedia.org/wikipedia/en/9/9b/LordOfTheFliesBookCover.jpg",
             rating: 4.4,
         },
-        contraparte: "Lucas Fernández",
+        otroUsuario: "Lucas Fernández",
         rangoDesde: "01/10/23",
         rangoHasta: "12/10/23",
         bibliokarma: 180,
@@ -130,7 +157,7 @@ const PRESTADOS_POR_MI: Prestamo[] = [
             imgUrl: "https://images.cdn3.buscalibre.com/fit-in/360x360/ed/c5/edc5b53333ebd87cfe6256685249673f.jpg",
             rating: 4.1,
         },
-        contraparte: "Valentina López",
+        otroUsuario: "Valentina López",
         rangoDesde: "07/10/23",
         rangoHasta: "22/10/23",
         bibliokarma: 210,
@@ -177,7 +204,7 @@ const PrestamoCard = ({ prestamo, esPrestadoAMi, onCalificar }: PrestamoCardProp
                 <div className="prestamo-card__meta">
                     <span>
                         <i className="pi pi-user" />
-                        {esPrestadoAMi ? `Prestado por: ${prestamo.contraparte}` : `Prestado a: ${prestamo.contraparte}`}
+                        {esPrestadoAMi ? `Prestado por: ${prestamo.otroUsuario}` : `Prestado a: ${prestamo.otroUsuario}`}
                     </span>
                     <span>
                         <i className="pi pi-calendar" />
@@ -204,12 +231,16 @@ const PrestamoCard = ({ prestamo, esPrestadoAMi, onCalificar }: PrestamoCardProp
 
 // ── Componente principal ──────────────────────────────────────────────────────
 
+const ITEMS_POR_PAGINA = 4;
+
 export const MisPrestamos = () => {
     const navigate = useNavigate();
     const [busqueda, setBusqueda] = useState("");
     const [prestamoACalificar, setPrestamoACalificar] = useState<Prestamo | null>(null);
     const [puntaje, setPuntaje] = useState<number>(0);
     const [comentario, setComentario] = useState("");
+    const [paginaAMi, setPaginaAMi] = useState(0);
+    const [paginaPorMi, setPaginaPorMi] = useState(0);
 
     const filtrar = (lista: Prestamo[]) => {
         const q = busqueda.toLowerCase();
@@ -222,7 +253,7 @@ export const MisPrestamos = () => {
     };
 
     const handleConfirmarCalificacion = () => {
-        // Aquí iría la llamada al servicio
+        // Acá iría la llamada al servicio
         console.log("Calificación enviada:", { prestamoACalificar, puntaje, comentario });
         setPrestamoACalificar(null);
         setPuntaje(0);
@@ -238,6 +269,13 @@ export const MisPrestamos = () => {
 
     const renderLista = (lista: Prestamo[], esPrestadoAMi: boolean) => {
         const filtrados = filtrar(lista);
+        const paginaActual = esPrestadoAMi ? paginaAMi : paginaPorMi;
+        const onPageChange = esPrestadoAMi
+            ? (e: { first: number }) => setPaginaAMi(e.first)
+            : (e: { first: number }) => setPaginaPorMi(e.first);
+
+        const paginados = filtrados.slice(paginaActual, paginaActual + ITEMS_POR_PAGINA);
+
         if (filtrados.length === 0) {
             return (
                 <div className="prestamos-empty">
@@ -247,16 +285,27 @@ export const MisPrestamos = () => {
             );
         }
         return (
-            <div className="prestamos-grid">
-                {filtrados.map((p) => (
-                    <PrestamoCard
-                        key={p.id}
-                        prestamo={p}
-                        esPrestadoAMi={esPrestadoAMi}
-                        onCalificar={setPrestamoACalificar}
+            <>
+                <div className="prestamos-grid">
+                    {paginados.map((p) => (
+                        <PrestamoCard
+                            key={p.id}
+                            prestamo={p}
+                            esPrestadoAMi={esPrestadoAMi}
+                            onCalificar={setPrestamoACalificar}
+                        />
+                    ))}
+                </div>
+                {filtrados.length > ITEMS_POR_PAGINA && (
+                    <Paginator
+                        first={paginaActual}
+                        rows={ITEMS_POR_PAGINA}
+                        totalRecords={filtrados.length}
+                        onPageChange={onPageChange}
+                        className="mis-prestamos__paginator"
                     />
-                ))}
-            </div>
+                )}
+            </>
         );
     };
 
@@ -273,21 +322,18 @@ export const MisPrestamos = () => {
             </div>
 
             {/* Buscador */}
-
             <div className="mis-prestamos__search p-input-icon-left">
-                <IconField iconPosition="left" className="flex-grow-1">
-                    <InputIcon className="pi pi-search" />
-                        <InputText 
-                            value={busqueda}
-                            onChange={(e) => setBusqueda(e.target.value)}
-                            placeholder="Buscar por título, autor..."
-                            className="w-full"
-                        />
-                </IconField>
+                <i className="pi pi-search" />
+                <InputText
+                    value={busqueda}
+                    onChange={(e) => setBusqueda(e.target.value)}
+                    placeholder="Buscar por título, autor..."
+                    className="w-full"
+                />
             </div>
 
             {/* Tabs */}
-            <TabView className="mis-prestamos__tabs">
+            <TabView className="mis-prestamos__tabs w-full">
                 <TabPanel header="Prestados a mí">
                     {renderLista(PRESTADOS_A_MI, true)}
                 </TabPanel>

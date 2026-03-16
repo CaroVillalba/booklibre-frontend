@@ -17,3 +17,4 @@ export interface UsuarioEstadisticasDTO{
     librosPrestados: number;
     librosLeidos: number;
 }
+
