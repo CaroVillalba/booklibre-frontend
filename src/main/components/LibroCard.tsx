@@ -7,7 +7,6 @@ interface Props {
     libro: LibroHome
 }
 
-// Mapea el EstadoLibro del back a la severity del Tag de PrimeReact
 const estadoSeverity = (estado: string): "success" | "warning" | "danger" | "info" => {
     switch (estado) {
         case "EXCELENTE":  return "success"
@@ -19,7 +18,6 @@ const estadoSeverity = (estado: string): "success" | "warning" | "danger" | "inf
     }
 }
 
-// Convierte "CIENCIA_FICCION" → "Ciencia Ficción" para mostrar al usuario
 const formatEnum = (value: string): string =>
     value.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())
 
@@ -28,20 +26,12 @@ export const LibroCard = ({ libro }: Props) => {
         <Card className="p-0 overflow-hidden">
             {/* Imagen */}
             <div className="flex justify-content-center p-4 surface-100">
-                {libro.imgUrl ? (
                     <img
                         src={libro.imgUrl}
                         alt={libro.titulo}
                         style={{ height: "220px" }}
                     />
-                ) : (
-                    <div
-                        className="flex align-items-center justify-content-center surface-200 border-round"
-                        style={{ height: "220px", width: "150px" }}
-                    >
-                        <i className="pi pi-book text-4xl text-400" />
-                    </div>
-                )}
+                
             </div>
 
             {/* Contenido */}
@@ -91,6 +81,15 @@ export const LibroCard = ({ libro }: Props) => {
                     <div className="col-6">
                         <div className="text-500">PÁGINAS</div>
                         <div>{libro.cantidadPaginas}</div>
+                    </div>
+
+                    {/* Dueño */}
+                    <div className="col-12">
+                        <div className="text-500">PUBLICADO POR</div>
+                        <div className="flex align-items-center gap-1">
+                            <i className="pi pi-user text-400 text-xs" />
+                            <span>{libro.duenioNombre}</span>
+                        </div>
                     </div>
 
                     {libro.bibliokarma != null && (

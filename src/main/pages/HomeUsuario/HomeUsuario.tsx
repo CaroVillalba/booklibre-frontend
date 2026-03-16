@@ -11,13 +11,12 @@ import { libroService } from "../../services/LibroService.ts"
 import { useOnInit } from "../../hooks/useOnInit.tsx"
 import "./HomeUsuario.css"
 
-// Convierte un Date a string ISO (YYYY-MM-DD) que espera el back
+// Convierte un Date a string ISO (YYYY-MM-DD) que espera el back !!! VAMOS A USAR UN DATE 
 const toISODate = (date: Date): string => date.toISOString().split("T")[0]
 
-// Fechas por defecto: hoy y en 30 días
+// Fechas por defecto: hoy y en 30 días !!!!CORREGIRLO : CORREGIDO
 const hoy = new Date()
-const en30Dias = new Date()
-en30Dias.setDate(hoy.getDate() + 30)
+
 
 export const HomeUsuario = () => {
     const navigate = useNavigate()
@@ -27,7 +26,7 @@ export const HomeUsuario = () => {
     const [generosSeleccionados, setGenerosSeleccionados] = useState<string[]>([])
     const [paginasSeleccionadas, setPaginasSeleccionadas] = useState<[number, number]>([0, 1500])
     const [fechaDesde, setFechaDesde] = useState<Date | null>(hoy)
-    const [fechaHasta, setFechaHasta] = useState<Date | null>(en30Dias)
+    const [fechaHasta, setFechaHasta] = useState<Date | null>(hoy)
     const [isbn, setIsbn] = useState("")
     const [prestadoPorUsuario, setPrestadoPorUsuario] = useState("")
 
@@ -68,7 +67,7 @@ export const HomeUsuario = () => {
                 paginasMax:         paginasSeleccionadas[1] < 1500 ? paginasSeleccionadas[1] : undefined,
                 isbn:               isbn || undefined,
                 desde:              toISODate(fechaDesde ?? hoy),
-                hasta:              toISODate(fechaHasta ?? en30Dias),
+                hasta:              toISODate(fechaHasta ?? hoy),
                 prestadoPorUsuario: prestadoPorUsuario || undefined,
             })
             setLibros(resultado)

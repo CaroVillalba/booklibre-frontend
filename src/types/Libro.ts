@@ -1,5 +1,6 @@
 export interface Libro {
     id: number
+    imgURL: string 
     titulo: string
     tipo: string
     descripcion: string
@@ -12,6 +13,7 @@ export interface Libro {
     fechaPublicacion: string
     estado: string
     duenioId: number | null
+    duenioNombre: string      
 }
 
 // LibroHome refleja exactamente lo que devuelve LibroDTO del back.
