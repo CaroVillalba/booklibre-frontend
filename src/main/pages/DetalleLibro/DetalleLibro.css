@@ -49,3 +49,9 @@
     padding-bottom: 0;
 }
 
+.detalle-libro-container{
+    max-width: 1200px;
+    margin: 0 auto;
+    min-width: calc(100vw - 57px);
+}
+
