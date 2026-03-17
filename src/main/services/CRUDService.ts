@@ -37,7 +37,7 @@ export abstract class CRUDService<T, F = undefined> implements InterfaceService<
     }
 
     async update(item: T): Promise<void> {
-        await this.api.put(`/${this.path}`, item)
+        await this.api.patch(`/${this.path}`, item)
     }
 
     async deleteItem(id: number | string): Promise<void> {

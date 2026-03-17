@@ -31,3 +31,19 @@ export interface LibroUsuario{
     autor:string,
     genero: string
 }
+
+export interface LibroForm  {
+    id?: number
+    imgUrl?: string
+    titulo: string
+    tipo: string
+    descripcion: string
+    genero: string
+    autor: string
+    cantidadPaginas: number | null
+    isbn13: string
+    idioma: string
+    editorial: string
+    fechaPublicacion: Date | null
+    estado: string
+}
