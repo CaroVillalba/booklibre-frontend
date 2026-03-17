@@ -1,20 +1,16 @@
-// import type { Reseña } from "./Reseña";
-// import { Rating } from 'primereact/rating';
-
 export interface Libro {
     id: number
-    imgURL: string 
+    imgUrl?: string
     titulo: string
     tipo: string
     descripcion: string
     genero: string
-    rating: number
     autor: string
-    cantidadPaginas: number
+    cantidadPaginas: number | null
     isbn13: string
     idioma: string
     editorial: string
-    fechaPublicacion: string
+    fechaPublicacion: Date | null
     estado: string
     duenioId: number | null
     duenioNombre: string      
@@ -23,12 +19,9 @@ export interface Libro {
 // LibroHome refleja exactamente lo que devuelve LibroDTO del back.
 // imgUrl y rating se marcan opcionales porque el back aún no los implementa.
 export type LibroHome = Libro & {
-    imgUrl?: string
     rating?: number
     bibliokarma: number
 }
-
-
 
 export interface LibroUsuario{
     id?:number,
@@ -37,4 +30,20 @@ export interface LibroUsuario{
     fechaAgregado:string,
     autor:string,
     genero: string
+}
+
+export interface LibroForm  {
+    id?: number
+    imgUrl?: string
+    titulo: string
+    tipo: string
+    descripcion: string
+    genero: string
+    autor: string
+    cantidadPaginas: number | null
+    isbn13: string
+    idioma: string
+    editorial: string
+    fechaPublicacion: Date | null
+    estado: string
 }

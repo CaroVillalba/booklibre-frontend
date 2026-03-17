@@ -7,35 +7,81 @@ import { Button } from "primereact/button"
 import { Dialog } from "primereact/dialog"
 import { Card } from "primereact/card"
 import { useState } from "react"
+import type { LibroForm } from "../../../types/Libro"
+import { libroService } from "../../services/LibroService"
 
 export const EdicionLibro = () => {
+        const libroVacio: LibroForm = {
+            imgUrl: "",
+            titulo: "",
+            tipo: "",
+            genero: "",
+            autor: "",
+            idioma: "",
+            estado: "",
+            editorial: "",
+            fechaPublicacion: null,
+            cantidadPaginas: null,
+            isbn13: "",
+            descripcion: ""
+        }
+
         const tipos = [
-            { label: "Común", value: "comun" },
-            { label: "Coleccionable", value: "coleccionable" },
-            { label: "Con Dedicatoria", value: "dedicatoria" }
+            { label: "Común", value: "COMUN" },
+            { label: "Con Dedicatoria", value: "DEDICATORIA" },
+            { label: "Coleccionable", value: "COLECCIONABLE" }
         ]
         
         const generos = [
-            { label: "Romance", value: "contemporaneo" },
-            { label: "Drama", value: "drama" },
-            { label: "Ciencia Ficción", value: "ciencia_ficcion" },
-            { label: "Literatura", value: "literatura" }
+            { label: "Drama", value: "DRAMA" },
+            { label: "Ciencia Ficción", value: "CIENCIA_FICCION" },
+            { label: "Romance", value: "ROMANCE" },
+            { label: "Autoayuda", value: "AUTOAYUDA" },
+            { label: "Diseño", value: "DISENO" },
+            { label: "Literatura", value: "LITERATURA" }
         ]
         
         const idiomas = [
-            { label: "Español", value: "es" },
-            { label: "Inglés", value: "en" },
-            { label: "Francés", value: "fr" }
+            { label: "Francés", value: "FRANCES" },
+            { label: "Español", value: "ESPANOL" },
+            { label: "Inglés", value: "INGLES" },
+            { label: "Portugués", value: "PORTUGUES" },
         ]
         
         const estados = [
-            { label: "Excelente", value: "excelente" },
-            { label: "Muy Bueno", value: "muy_bueno" },
-            { label: "Bueno", value: "bueno" },
-            { label: "Malo", value: "malo" }
+            { label: "Excelente", value: "EXCELENTE" },
+            { label: "Muy Bueno", value: "MUY_BUENO" },
+            { label: "Bueno", value: "BUENO" },
+            { label: "Regular", value: "REGULAR" },
+            { label: "Malo", value: "MALO" }
         ]
         const [dialogVisible, setDialogVisible] = useState(false)
         const [urlPortada, setUrlPortada] = useState("")
+
+        const [libro, setLibro] = useState<LibroForm>(libroVacio)
+
+        const handleGuardar = async () => {
+            try {
+                const libroParaEnviar = {
+                    ...libro,
+                    imgUrl: urlPortada,
+                }
+
+                if (libro.id) {
+                    await libroService.update(libroParaEnviar)
+                } else {
+                    await libroService.create(libroParaEnviar)
+                }
+
+            } catch(error) {
+                console.error("Error al guardar el libro:", error)
+            }
+        }
+
+        const handleCancelar = async () => {
+            setLibro(libroVacio)
+            setUrlPortada("")
+        }
 
     return (
         <>
@@ -82,7 +128,6 @@ export const EdicionLibro = () => {
                                     <div className="flex flex-column align-items-center">
                                         <i className="pi pi-cloud-upload text-4xl mb-2"></i>
                                         <p className="m-0">Subir Portada</p>
-                                        <small>PNG, JPG hasta 5MB</small>
                                     </div>
                                 )}
                             </div>
@@ -105,69 +150,117 @@ export const EdicionLibro = () => {
                             {/* TITULO */}
                             <div className="field col-10">
                                 <label htmlFor="titulo">Título</label>
-                                <InputText id="titulo" />
+                                <InputText id="titulo" 
+                                    value={libro.titulo}
+                                    onChange={(e) => setLibro({ ...libro, titulo: e.target.value })}
+                                />
                             </div>
 
                             {/* TIPO */}
                             <div className="field col-10">
                                 <label htmlFor="tipo">Tipo</label>
-                                <Dropdown id="tipo" options={tipos} />
+                                <Dropdown 
+                                    id="tipo" 
+                                    options={tipos} 
+                                    value={libro.tipo}
+                                    onChange={(e) => setLibro({ ...libro, tipo: e.value })}
+                                />
                             </div>
 
                             {/* GENERO + AUTOR */}
                             <div className="field col-12 md:col-5">
                                 <label htmlFor="genero">Género</label>
-                                <Dropdown id="genero" options={generos} />
+                                <Dropdown 
+                                    id="genero" 
+                                    options={generos} 
+                                    value={libro.genero} 
+                                    onChange={(e) => setLibro({ ...libro, genero: e.value })}   
+                                />
                             </div>
 
                             <div className="field col-12 md:col-5">
                                 <label htmlFor="autor">Autor</label>
-                                <InputText id="autor" />
+                                <InputText id="autor" 
+                                    value={libro.autor}
+                                    onChange={(e) => setLibro({ ...libro, autor: e.target.value })}
+                                />
                             </div>
 
                             {/* IDIOMA + ESTADO */}
                             <div className="field col-12 md:col-5">
                                 <label htmlFor="idioma">Idioma</label>
-                                <Dropdown id="idioma" options={idiomas} />
+                                <Dropdown 
+                                    id="idioma" 
+                                    options={idiomas} 
+                                    value={libro.idioma}
+                                    onChange={(e) => setLibro({ ...libro, idioma: e.value })}
+                                />
                             </div>
 
                             <div className="field col-12 md:col-5">
                                 <label htmlFor="estado">Estado</label>
-                                <Dropdown id="estado" options={estados} />
+                                <Dropdown 
+                                    id="estado" 
+                                    options={estados} 
+                                    value={libro.estado}
+                                    onChange={(e) => setLibro({ ...libro, estado: e.value })}
+                                />
                             </div>
 
                             {/* EDITORIAL + FECHA */}
                             <div className="field col-12 md:col-5">
                                 <label htmlFor="editorial">Editorial</label>
-                                <InputText id="editorial" />
+                                <InputText 
+                                    id="editorial" 
+                                    value={libro.editorial}
+                                    onChange={(e) => setLibro({ ...libro, editorial: e.target.value })}
+                                />
                             </div>
 
                             <div className="field col-12 md:col-5">
                                 <label htmlFor="fecha">Fecha de publicación</label>
-                                <Calendar id="fecha" dateFormat="dd/mm/yy" />
+                                <Calendar 
+                                    id="fecha" 
+                                    dateFormat="dd/mm/yy" 
+                                    value={libro.fechaPublicacion}
+                                    onChange={(e) => setLibro({ ...libro, fechaPublicacion: e.value ?? null })}
+                                />
                             </div>
 
                             {/* PAGINAS + ISBN */}
                             <div className="field col-12 md:col-5">
                                 <label htmlFor="paginas">Cantidad de Páginas</label>
-                                <InputNumber id="paginas" />
+                                <InputNumber 
+                                    id="paginas" 
+                                    value={libro.cantidadPaginas}
+                                    onChange={(e) => setLibro({ ...libro, cantidadPaginas: e.value })}
+                                />
                             </div>
 
                             <div className="field col-12 md:col-5">
                                 <label htmlFor="isbn">ISBN</label>
-                                <InputText id="isbn" />
+                                <InputText 
+                                    id="isbn" 
+                                    value={libro.isbn13}
+                                    onChange={(e) => setLibro({ ...libro, isbn13: e.target.value })}
+                                />
                             </div>
 
                             {/* DESCRIPCION */}
                             <div className="field col-10">
                                 <label htmlFor="descripcion">Descripción</label>
-                                <InputTextarea id="descripcion" rows={5} />
+                                <InputTextarea 
+                                    id="descripcion" 
+                                    rows={5} 
+                                    value={libro.descripcion}
+                                    onChange={(e) => setLibro({ ...libro, descripcion: e.target.value })}
+                                />
                             </div>
 
                             {/* BOTONES */}
                             <div className="col-12 flex justify-content-end gap-2">
-                                <Button label="Cancelar" severity="secondary" />
-                                <Button label="Guardar Cambios" icon="pi pi-save" />
+                                <Button label="Cancelar" severity="secondary" onClick={handleCancelar} />
+                                <Button label="Guardar Cambios" icon="pi pi-save" onClick={handleGuardar} />
                             </div>
                         </div>
                     </Card>
