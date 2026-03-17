@@ -18,3 +18,8 @@ export interface UsuarioEstadisticasDTO{
     librosLeidos: number;
 }
 
+export interface RegistroUsuario {
+    nombre: string,
+    email: string,
+    password: string
+}
