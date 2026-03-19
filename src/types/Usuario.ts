@@ -23,3 +23,9 @@ export interface RegistroUsuario {
     email: string,
     password: string
 }
+
+export interface LoginUsuario {
+    email: string,
+    password: string,
+    rememberMe: boolean
+}
