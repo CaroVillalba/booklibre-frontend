@@ -21,7 +21,6 @@ export const UsuarioLibros = ({usuarioId}:UsuarioLibrosProps) => {
     const [estado, setEstado] = useState("TODOS")
     const [totalElements, setTotalElements] = useState(0)
     const [totalPages, setTotalPages] = useState(0)
-    const [cargando, setCargando] = useState(true)
 
     useEffect(() => {
     usuarioService
@@ -33,9 +32,6 @@ export const UsuarioLibros = ({usuarioId}:UsuarioLibrosProps) => {
         })
         .catch((error) => {
             console.error("Error al cargar libros del usuario", error)
-        })
-        .finally(() => {
-            setCargando(false)
         })
     }, [usuarioId, page, size, sortBy, direction, estado])
 
@@ -52,7 +48,6 @@ export const UsuarioLibros = ({usuarioId}:UsuarioLibrosProps) => {
 
         if (nuevoSortBy === sortBy && nuevaDirection === direction && page === 0) return
 
-        setCargando(true)
         setSortBy(nuevoSortBy)
         setDirection(nuevaDirection)
         setPage(0)
@@ -60,21 +55,17 @@ export const UsuarioLibros = ({usuarioId}:UsuarioLibrosProps) => {
 
     const cambiarFiltro = (nuevoEstado: string) => {
         if (estado === nuevoEstado && page === 0) return
-
-        setCargando(true)
         setEstado(nuevoEstado)
         setPage(0)
     }
 
     const irPaginaAnterior = () => {
         if (page === 0) return
-        setCargando(true)
         setPage(page - 1)
     }
 
     const irPaginaSiguiente = () => {
         if (page + 1 >= totalPages) return
-        setCargando(true)
         setPage(page + 1)
     }
 
@@ -86,12 +77,28 @@ export const UsuarioLibros = ({usuarioId}:UsuarioLibrosProps) => {
         })
     }
 
+    const formatearGenero = (genero: string) => {
+    const texto = genero
+        .toLowerCase()
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase())
+
+    const correcciones: Record<string, string> = {
+        "Ciencia Ficcion": "Ciencia Ficción",
+        "Diseno": "Diseño"
+    }
+
+    return correcciones[texto] || texto
+}
+
     const desde = totalElements === 0 ? 0 : page * size + 1
     const hasta = page*size + libros.length
 
-    if(cargando){
-        return <div>Cargando libros...</div>
-    }
+    const getSortIcon = (campo: string) => {
+    if (sortBy !== campo) return "pi pi-sort-alt"
+    return direction === "asc" ? "pi pi-sort-up" : "pi pi-sort-down"
+}
+
 
     return (
         <div>
@@ -106,7 +113,7 @@ export const UsuarioLibros = ({usuarioId}:UsuarioLibrosProps) => {
                         onClick={() => navigate(`/editar-detalles`)}
                     />
                 </div>
-                <Card className="border-round-2xl shadow-1">
+                <Card className="border-round-2xl shadow-1" >
                     {/* tabs */}
                     <div className="flex gap-2">
                         <Button
@@ -132,15 +139,15 @@ export const UsuarioLibros = ({usuarioId}:UsuarioLibrosProps) => {
                     <div className="flex align-items-center px-3 pt-3 pb-2 border-bottom-1 surface-border justify-content-between">
                         <button className="w-5 flex align-items-center gap-2 bg-transparent border-none cursor-pointer flex gap-2" onClick={() => cambiarOrden("titulo")}>
                             <span>TÍTULO Y AUTOR</span>
-                            <i className="pi pi-sort-alt"></i>
+                            <i className={getSortIcon("titulo")}></i>
                         </button>
                         <button className="w-2 flex align-items-center gap-2 bg-transparent border-none cursor-pointer flex gap-2" onClick={() => cambiarOrden("disponibilidad")}>
                             <span>DISPONIBLE</span>
-                            <i className="pi pi-sort-alt"></i>
+                            <i className={getSortIcon("disponibilidad")}></i>
                         </button>
                         <button className="w-2 flex align-items-center gap-2 bg-transparent border-none cursor-pointer flex gap-2" onClick={() => cambiarOrden("fechaAgregado")}>
                             <span>AGREGADO</span>
-                            <i className="pi pi-sort-alt"></i>
+                            <i className={getSortIcon("fechaAgregado")}></i>
                         </button>
                         <div className="w-2 text-center">ACCIONES</div>
                     </div>
@@ -152,7 +159,7 @@ export const UsuarioLibros = ({usuarioId}:UsuarioLibrosProps) => {
                         <div className="w-5">
                             <div className="flex align-items-center gap-3">
                                 <img
-                                    src="https://via.placeholder.com/48x72"
+                                    src={libro.imgUrl}
                                     alt={libro.titulo}
                                     className="perfil-libro-img"
                                 />
@@ -165,7 +172,7 @@ export const UsuarioLibros = ({usuarioId}:UsuarioLibrosProps) => {
                                         {libro.autor}
                                     </span>
                                     <span className="text-xs text-color-secondary">
-                                        {libro.genero}
+                                        {formatearGenero(libro.genero)}
                                     </span>
                                 </div>
                             </div>

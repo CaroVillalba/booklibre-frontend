@@ -23,3 +23,13 @@ export interface RegistroUsuario {
     email: string,
     password: string
 }
+
+export interface UsuarioUpdateRequest {
+    nombre: string
+    descripcion: string
+    email: string
+    celular: string
+    ciudad: string
+    tipoUsuario: TipoUsuario
+    fotoPerfil?: string | null
+}

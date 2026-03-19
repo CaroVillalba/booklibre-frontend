@@ -4,10 +4,11 @@ import { Button } from "primereact/button";
 import type { Usuario } from "../../types/Usuario";
 
 interface UsuarioHeaderProps{
-    usuario: Usuario
+    usuario: Usuario,
+    onEditarPerfil: () => void
 }
 
-export const UsuarioHeader = ({usuario}: UsuarioHeaderProps) => {
+export const UsuarioHeader = ({usuario, onEditarPerfil}: UsuarioHeaderProps) => {
     return (
         <Card className="mb-3 border-round-2xl shadow-1">
             <div className="flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-4">
@@ -49,6 +50,7 @@ export const UsuarioHeader = ({usuario}: UsuarioHeaderProps) => {
                 label="Editar Perfil"
                 icon="pi pi-cog"
                 className="p-button-secondary p-button-text"
+                onClick={onEditarPerfil}
                 />
             </div>
         </Card>
