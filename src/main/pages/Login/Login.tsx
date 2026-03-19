@@ -7,7 +7,7 @@ import { Password } from "primereact/password";
 import { useState } from "react";
 import { loginService } from "../../services/AuthService";
 import { useNavigate } from "react-router-dom";
-
+import { AxiosError } from "axios";
 
 export const Login = () => {
     var [email, setEmail] = useState("")
@@ -34,6 +34,9 @@ export const Login = () => {
 
         var passwordErrorMessage = document.getElementById("password-confirmation-error")
         passwordErrorMessage!.innerText = ""
+        
+        var loginErrorMessage = document.getElementById("account-login-error")
+        loginErrorMessage!.innerText = ""
 
         var frontErrors: string[] = []
 
@@ -57,12 +60,19 @@ export const Login = () => {
             return 
         }
 
-        var res = await loginService.login({"email": email, "password": password, "rememberMe": false})
+        try {
+            var res = await loginService.login({"email": email, "password": password, "rememberMe": false})
 
-        alert("Se inicio la sesion correctamente!!")
-        console.log(`email: ${email}; password: ${password}`)
-
-        navigate("/")
+            navigate("/")
+        }
+        catch (error: AxiosError) {
+            if (error.response.status == 404) {
+                loginErrorMessage!.innerText = "El usuario ingresado no existe."
+            } 
+            if (error.response.status == 401) {
+                loginErrorMessage!.innerText = "La contraseña ingresada es incorrecta."
+            } 
+        }
     }
 
     return (
@@ -87,6 +97,8 @@ export const Login = () => {
                 <p id="password-confirmation-error" className="error-message-label"></p>
 
                 <p><Checkbox checked={rememberme} onClick={handleCheckRememberme}></Checkbox> Recordame</p>
+
+                <p id="account-login-error" className="error-message-label"></p>
 
                 <p><Button className="login-button" onClick={login}>Ingresar</Button></p>
 
