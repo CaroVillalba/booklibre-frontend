@@ -4,7 +4,10 @@ import { UsuarioEstadisticas } from "../../components/UsuarioEstadisticas";
 import { UsuarioHeader } from "../../components/UsuarioHeader";
 import { UsuarioLibros } from "../../components/UsuarioLibros";
 import "./PerfilUsuario.css";
-import { type UsuarioUpdateRequest, type Usuario } from "../../../types/Usuario";
+import {
+    type UsuarioUpdateRequest,
+    type Usuario,
+} from "../../../types/Usuario";
 import { usuarioService } from "../../services/UsuarioService";
 import { useParams } from "react-router-dom";
 import { MensajePublicador } from "../../components/MensajePublicador";
@@ -55,6 +58,28 @@ export const PerfilUsuario = () => {
         setVisibleEditarPerfil(true);
     };
 
+    const cerrarModal = () => {
+        setVisibleEditarPerfil(false);
+        setUsuarioEditado(null);
+    };
+
+    const handleGuardarPerfil = async (
+        usuarioActualizado: UsuarioUpdateRequest,
+    ) => {
+        if (!usuario.id) return;
+
+        try {
+            const usuarioGuardado = await usuarioService.updateUsuario(
+                usuario.id,
+                usuarioActualizado,
+            );
+            setUsuario(usuarioGuardado);
+            cerrarModal();
+        } catch (error) {
+            console.error("error al acutalizar el usuario", error);
+        }
+    };
+
     return (
         <div className="p-2 surface-ground perfil-usuario">
             <UsuarioHeader
@@ -89,7 +114,7 @@ export const PerfilUsuario = () => {
                 onHide={() => setVisibleEditarPerfil(false)}
                 usuarioEditado={usuarioEditado}
                 setUsuarioEditado={setUsuarioEditado}
-                onGuardar={() => console.log(usuarioEditado)}
+                onGuardar={handleGuardarPerfil}
             />
         </div>
     );

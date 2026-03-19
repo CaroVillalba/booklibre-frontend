@@ -10,7 +10,7 @@ interface ModalEditarPerfilProps {
     onHide: () => void
     usuarioEditado: UsuarioUpdateRequest | null
     setUsuarioEditado: Dispatch<SetStateAction<UsuarioUpdateRequest | null>>
-    onGuardar: (usuarioEditado: UsuarioUpdateRequest) => void
+    onGuardar: (usuario: UsuarioUpdateRequest) => Promise<void>
 }
 
 const opcionesTipoUsuario = [
@@ -43,10 +43,9 @@ export const ModalEditarPerfil = ({
         })
     }
 
-    const guardarCambios = () => {
-        onGuardar(usuarioEditado)
-        onHide()
-    }
+    const guardarCambios = async () => {
+    await onGuardar(usuarioEditado)
+}
 
     return (
         <Dialog
@@ -58,7 +57,7 @@ export const ModalEditarPerfil = ({
         >
             <div className="flex flex-column gap-3 pt-2">
 
-                <div className="flex flex-column gap-2">
+                {/* <div className="flex flex-column gap-2">
                     <label htmlFor="nombre">Nombre</label>
                     <InputText
                         id="nombre"
@@ -66,7 +65,7 @@ export const ModalEditarPerfil = ({
                         value={usuarioEditado.nombre}
                         onChange={(e) => cambiarCampo("nombre", e.target.value)}
                     />
-                </div>
+                </div> */}
 
                 <div className="flex flex-column gap-2">
                     <label htmlFor="descripcion">Descripción</label>
