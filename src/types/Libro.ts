@@ -27,6 +27,7 @@ export interface LibroUsuario{
     id?:number,
     titulo: string,
     disponible:boolean,
+    imgUrl: string,
     fechaAgregado:string,
     autor:string,
     genero: string
