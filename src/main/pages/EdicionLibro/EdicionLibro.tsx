@@ -9,6 +9,10 @@ import { Card } from "primereact/card"
 import { useState } from "react"
 import type { LibroForm } from "../../../types/Libro"
 import { libroService } from "../../services/LibroService"
+import { Toast } from '../../components/common/toast';
+import { useToast } from '../../hooks/useToast';
+import '../../../toast.css'
+import { getMensajeError } from '../../../utils/errorHandling'
 
 export const EdicionLibro = () => {
         const libroVacio: LibroForm = {
@@ -60,8 +64,12 @@ export const EdicionLibro = () => {
 
         const [libro, setLibro] = useState<LibroForm>(libroVacio)
 
+        const { toast, showToast } = useToast()
+
         const handleGuardar = async () => {
             try {
+                if (!validarFormulario()) return
+                
                 const libroParaEnviar = {
                     ...libro,
                     imgUrl: urlPortada,
@@ -69,18 +77,59 @@ export const EdicionLibro = () => {
 
                 if (libro.id) {
                     await libroService.update(libroParaEnviar)
+                    showToast("Libro actualizado correctamente", "success")
                 } else {
                     await libroService.create(libroParaEnviar)
+                    showToast("Libro creado correctamente", "success")
                 }
 
             } catch(error) {
-                console.error("Error al guardar el libro:", error)
+                showToast(getMensajeError(error), 'error')
             }
         }
 
         const handleCancelar = async () => {
             setLibro(libroVacio)
             setUrlPortada("")
+        }
+
+        const validarFormulario = () => {
+            if (!libro.titulo.trim()) {
+                showToast("El título es obligatorio", "warning")
+                return false
+            }
+        
+            if (!libro.tipo) {
+                showToast("Seleccioná un tipo de libro", "warning")
+                return false
+            }
+        
+            if (!libro.genero) {
+                showToast("Seleccioná un género", "warning")
+                return false
+            }
+        
+            if (!libro.autor.trim()) {
+                showToast("El autor es obligatorio", "warning")
+                return false
+            }
+        
+            if (!libro.idioma) {
+                showToast("Seleccioná un idioma", "warning")
+                return false
+            }
+        
+            if (!libro.estado) {
+                showToast("Seleccioná el estado del libro", "warning")
+                return false
+            }
+        
+            if (!libro.cantidadPaginas || libro.cantidadPaginas <= 0) {
+                showToast("La cantidad de páginas debe ser mayor a 0", "warning")
+                return false
+            }
+        
+            return true
         }
 
     return (
@@ -265,6 +314,9 @@ export const EdicionLibro = () => {
                         </div>
                     </Card>
                 </div>
+            </div>
+            <div id="toast-container">
+                <Toast toast = { toast } />
             </div>
         </>
     )
