@@ -69,7 +69,7 @@ export const EdicionLibro = () => {
         const handleGuardar = async () => {
             try {
                 if (!validarFormulario()) return
-                
+
                 const libroParaEnviar = {
                     ...libro,
                     imgUrl: urlPortada,
@@ -126,6 +126,21 @@ export const EdicionLibro = () => {
         
             if (!libro.cantidadPaginas || libro.cantidadPaginas <= 0) {
                 showToast("La cantidad de páginas debe ser mayor a 0", "warning")
+                return false
+            }
+
+            if (libro.isbn13.trim() && !/^\d{13}$/.test(libro.isbn13)) {
+                showToast("El ISBN debe tener 13 dígitos numéricos", "warning")
+                return false
+            }
+
+            if (libro.fechaPublicacion && libro.fechaPublicacion > new Date()) {
+                showToast("La fecha de publicación no puede ser futura", "warning")
+                return false
+            }
+
+            if (libro.imgUrl && !/^https?:\/\/.+\.(jpg|jpeg|png|gif|bmp|webp)$/.test(libro.imgUrl)) {
+                showToast("La URL de la imagen debe ser válida y terminar con una extensión de imagen", "warning")
                 return false
             }
         
