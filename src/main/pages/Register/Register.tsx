@@ -56,24 +56,25 @@ export const Register = () => {
             if (email == "") {
                 frontErrors.push("EMPTY_EMAIL")
             }
-
+            if (password == "") {
+                frontErrors.push("EMPTY_PASSWORD")
+            }
         }
 
         
 
         if (frontErrors.length != 0) {
-            console.log(frontErrors)
 
             if (frontErrors.includes("NON_MATCHING_PASSWORDS")) {
-                console.log("Las contraseñas ingresadas no coinciden.")
                 passwordErrorMessage!.innerText = "Las contraseñas ingresadas no coinciden."
             }
+            if (frontErrors.includes("EMPTY_PASSWORD")) {
+                passwordErrorMessage!.innerText = "La contraseña no puede estar vacia."
+            }
             if (frontErrors.includes("EMPTY_USERNAME")) {
-                console.log("El nombre de usuario no puede estar vacio")
                 usernameErrorMessage!.innerText = "El nombre de usuario no puede estar vacio"
             }
             if (frontErrors.includes("EMPTY_EMAIL")) {
-                console.log("El correo electronico no puede estar vacio")
                 emailErrorMessage!.innerText = "El correo electronico no puede estar vacio"
             }
 
