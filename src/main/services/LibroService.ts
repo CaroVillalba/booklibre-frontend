@@ -1,4 +1,4 @@
-import type { LibroHome } from '../../types/Libro'
+import type { LibroHome, LibroForm } from '../../types/Libro'
 import { CRUDService } from './CRUDService'
 
 export interface LibroSearchParams {
@@ -18,11 +18,19 @@ export class LibroService extends CRUDService<LibroHome> {
         super('libros')
     }
 
-    async update(libro: LibroHome): Promise<void> {
+    async update(libro: LibroForm): Promise<void> {
         if (!libro.id) {
             throw new Error('El libro debe tener id para actualizarse')
         }
-        await this.api.put(`/libros/${libro.id}`, libro)
+
+        const data = {
+            ...libro,
+            fechaPublicacion: libro.fechaPublicacion
+                ? libro.fechaPublicacion.toISOString().split("T")[0]
+                : null
+        }
+
+        await this.api.patch(`/libros/${libro.id}`, data)
     }
 
     async search(params: LibroSearchParams): Promise<LibroHome[]> {
@@ -35,6 +43,18 @@ export class LibroService extends CRUDService<LibroHome> {
         return response.data
     }
 
+    async create(libro: LibroForm): Promise<void> {
+        const data = {
+            ...libro,
+            fechaPublicacion: libro.fechaPublicacion
+                ? libro.fechaPublicacion.toISOString().split("T")[0]
+                : null
+        }
+
+        const duenioId = 1 // TODO: Reemplazar con el ID del usuario autenticado
+
+        await this.api.post(`/libros?duenioId=${duenioId}`, data)
+    }
 }
 
 export const libroService = new LibroService()
