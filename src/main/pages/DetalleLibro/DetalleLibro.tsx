@@ -30,7 +30,7 @@ export const DetalleLibro = () => {
     const { toast, showToast } = useToast()
     const [libro, setLibro] = useState<LibroHome>({
         id: 0,
-        imgURL: "",
+        imgUrl: "",
         titulo: "",
         tipo: "",
         descripcion: "",
@@ -40,7 +40,7 @@ export const DetalleLibro = () => {
         isbn13: "",
         idioma: "",
         editorial: "",
-        fechaPublicacion: "",
+        fechaPublicacion: null,
         estado: "",
         rating: 0,
         bibliokarma: 0,
@@ -73,20 +73,29 @@ export const DetalleLibro = () => {
             showToast('Por favor, selecciona un rango de fechas válido', 'warning')
             return;
         }
+
         try {
             await reservaService.postReserva({
                 tituloLibro: libro.titulo,
-                nombreLector: "Ana García", //useContext ? para obtener el nombre del usuario logeado
+                nombreLector: "Ana García",
                 fechaDesde: dates[0], 
                 fechaHasta: dates[1],
             });
+
+            setLibro((prevLibro) => ({
+            ...prevLibro,
+            estado: "Prestado" 
+            }));
+            
             showToast('Reserva realizada con éxito', 'success')
+            setDates(null)
         } catch (error: unknown) {
             showToast(getMensajeError(error), 'error')
         }
 
         
     }
+
 
     const footer = (
         <>
@@ -215,7 +224,7 @@ export const DetalleLibro = () => {
 
             <Card title="Tu reserva" subTitle="Fechas seleccionadas:" footer= { footer } className= "md:w-20rem" style={{minHeight:"410px", padding: "1rem"}}>
 
-                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y" className='w-full boton-icono'/>
+                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y" className='w-full boton-icono' minDate={new Date()}/>
 
                 <div className="flex justify-content-between align-items-center p-3 surface-100 border-round-lg">
                     <span className="text-600">Recogida</span>
