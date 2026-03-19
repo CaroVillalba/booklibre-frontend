@@ -14,6 +14,10 @@ export const Login = () => {
     var [password, setPassword] = useState("")
     var [rememberme, setRememberme] = useState(false)
 
+    var [emailErrorMessage, setEmailErrorMessage] = useState("")
+    var [passwordErrorMessage, setPasswordErrorMessage] = useState("")
+    var [loginErrorMessage, setLoginErrorMessage] = useState("")
+
     var navigate = useNavigate()
 
     const handleCheckRememberme = () => {
@@ -29,14 +33,9 @@ export const Login = () => {
     }
 
     async function login () {
-        var emailErrorMessage = document.getElementById("email-conflict-error")
-        emailErrorMessage!.innerText = ""
-
-        var passwordErrorMessage = document.getElementById("password-confirmation-error")
-        passwordErrorMessage!.innerText = ""
-        
-        var loginErrorMessage = document.getElementById("account-login-error")
-        loginErrorMessage!.innerText = ""
+        setEmailErrorMessage("")
+        setPasswordErrorMessage("")
+        setLoginErrorMessage("")
 
         var frontErrors: string[] = []
 
@@ -50,11 +49,11 @@ export const Login = () => {
 
         if (frontErrors.length > 0) {
             if (frontErrors.includes("EMPTY_EMAIL")) {
-                emailErrorMessage!.innerText = "El correo electronico no puede estar vacio."
+                setEmailErrorMessage("El correo electronico no puede estar vacio.")
             }
 
             if (frontErrors.includes("EMPTY_PASSWORD")) {
-                passwordErrorMessage!.innerText = "La contraseña no puede estar vacia."
+                setPasswordErrorMessage("La contraseña no puede estar vacia.")
             }
 
             return 
@@ -67,10 +66,10 @@ export const Login = () => {
         }
         catch (error: AxiosError) {
             if (error.response.status == 404) {
-                loginErrorMessage!.innerText = "El usuario ingresado no existe."
+                setLoginErrorMessage("El usuario ingresado no existe.")
             } 
             if (error.response.status == 401) {
-                loginErrorMessage!.innerText = "La contraseña ingresada es incorrecta."
+                setLoginErrorMessage("La contraseña ingresada es incorrecta.")
             } 
         }
     }
@@ -89,16 +88,16 @@ export const Login = () => {
                 <p><b>Correo electronico:</b></p>
                 <p><InputText className="block-input-text" value={email} onChange={handleEmailInput}></InputText></p>
                 
-                <p id="email-conflict-error" className="error-message-label"></p>
+                <p id="email-conflict-error" className="error-message-label">{emailErrorMessage}</p>
 
                 <p><b>Contraseña:</b></p>
                 <p><Password className="block-input-text" value={password} onChange={handlePasswordInput} toggleMask></Password></p>
 
-                <p id="password-confirmation-error" className="error-message-label"></p>
+                <p id="password-confirmation-error" className="error-message-label">{passwordErrorMessage}</p>
 
                 <p><Checkbox checked={rememberme} onClick={handleCheckRememberme}></Checkbox> Recordame</p>
 
-                <p id="account-login-error" className="error-message-label"></p>
+                <p id="account-login-error" className="error-message-label">{loginErrorMessage}</p>
 
                 <p><Button className="login-button" onClick={login}>Ingresar</Button></p>
 
