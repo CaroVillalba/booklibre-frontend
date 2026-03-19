@@ -32,6 +32,7 @@ export interface UsuarioUpdateRequest {
     ciudad: string
     tipoUsuario: TipoUsuario
     fotoPerfil?: string | null
+}
 export interface LoginUsuario {
     email: string,
     password: string,
