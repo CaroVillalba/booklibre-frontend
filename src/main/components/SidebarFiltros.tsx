@@ -92,6 +92,7 @@ export const SidebarFiltros = (props: Props) => {
                         value={fechaDesde}
                         onChange={(e) => setFechaDesde(e.value ?? null)}
                         dateFormat="dd/mm/yy"
+                        minDate={new Date()}
                     />
                 </div>
                 <div>
@@ -100,6 +101,7 @@ export const SidebarFiltros = (props: Props) => {
                         value={fechaHasta}
                         onChange={(e) => setFechaHasta(e.value ?? null)}
                         dateFormat="dd/mm/yy"
+                        minDate={new Date()}
                     />
                 </div>
             </div>

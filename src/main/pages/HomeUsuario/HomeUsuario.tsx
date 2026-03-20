@@ -20,7 +20,7 @@ const hoy = new Date()
 
 export const HomeUsuario = () => {
     const navigate = useNavigate()
-    type Orden = "rating" | "estado" | "tipo"
+    type Orden = "titulo" | "usuario" | "autor"
 
     // --- Filtros del sidebar ---
     const [generosSeleccionados, setGenerosSeleccionados] = useState<string[]>([])
@@ -42,15 +42,15 @@ export const HomeUsuario = () => {
     const [error, setError] = useState<string | null>(null)
 
     const opcionesOrden: { label: string; value: Orden }[] = [
-        { label: "Rating",         value: "rating" },
-        { label: "Estado",         value: "estado" },
-        { label: "Tipo de libro",  value: "tipo"   },
+        { label: "Titulo",         value: "titulo" },
+        { label: "Usuario",         value: "usuario" },
+        { label: "Autor",  value: "autor"   },
     ]
 
     const ordenadores: Record<Orden, (a: LibroHome, b: LibroHome) => number> = {
-        rating: (a, b) => (b.rating ?? 0) - (a.rating ?? 0),
-        estado: (a, b) => a.estado.localeCompare(b.estado),
-        tipo:   (a, b) => a.tipo.localeCompare(b.tipo),
+        titulo: (a, b) => a.titulo.localeCompare(b.titulo),
+        usuario: (a, b) => a.duenioNombre.localeCompare(b.duenioNombre),
+        autor:   (a, b) => a.autor.localeCompare(b.autor),
     }
 
     // Función central que llama al back con los parámetros actuales

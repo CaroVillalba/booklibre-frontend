@@ -18,14 +18,19 @@ import { useOnInit } from './../../hooks/useOnInit';
 import { libroService } from '../../services/LibroService';
 import { reseñaService } from '../../services/ReseñaService';
 import { NoReseñasCard } from './ReseñaCard/NoReseñasCard';
+import { reservaService } from '../../services/ReservaService';
+import { Toast } from '../../components/common/toast';
+import { useToast } from '../../hooks/useToast';
+import '../../../toast.css'
+import { getMensajeError, type ErrorResponse } from '../../../utils/errorHandling'
 
 
 export const DetalleLibro = () => {
-
     const { id } = useParams()
+    const { toast, showToast } = useToast()
     const [libro, setLibro] = useState<LibroHome>({
         id: 0,
-        imgURL: "",
+        imgUrl: "",
         titulo: "",
         tipo: "",
         descripcion: "",
@@ -35,8 +40,10 @@ export const DetalleLibro = () => {
         isbn13: "",
         idioma: "",
         editorial: "",
-        fechaPublicacion: "",
+        fechaPublicacion: null,
         estado: "",
+        rating: 0,
+        bibliokarma: 0,
         duenioId: null,
         duenioNombre: "",
     })
@@ -55,12 +62,6 @@ export const DetalleLibro = () => {
     //que se supone que es ds lol
     const ds = useRef<null>(null);
 
-    const footer = (
-        <>
-        <Button label= " Confirmar reserva " icon= "pi pi-check" iconPos="right" className="p-button-primary p-button-text boton-ancho" />
-        </>
-    )
-
     const headerReseñas = (
         <>
         <h1>Reseñas de la comunidad</h1>
@@ -74,10 +75,11 @@ export const DetalleLibro = () => {
             const libroDetalle = await libroService.getLibroPorId(Number(id))
             setLibro(libroDetalle)
         }
-        catch (error) {
-            console.error("Error al obtener el detalle del libro:", error)
+        catch (error: unknown) {
+            showToast(getMensajeError(error), 'error')
         }
     }
+
 
     const getReseñas = async() => {
         try {
@@ -90,6 +92,42 @@ export const DetalleLibro = () => {
             console.error("Error al obtener las reseñas del libro:", error)
         }
     }
+
+    const realizarReserva = async () => {
+        if (!dates || !dates[0] || !dates[1]) {
+            showToast('Por favor, selecciona un rango de fechas válido', 'warning')
+            return;
+        }
+
+        try {
+            await reservaService.postReserva({
+                tituloLibro: libro.titulo,
+                nombreLector: "Ana García",
+                fechaDesde: dates[0], 
+                fechaHasta: dates[1],
+            });
+
+            setLibro((prevLibro) => ({
+            ...prevLibro,
+            estado: "Prestado" 
+            }));
+            
+            showToast('Reserva realizada con éxito', 'success')
+            setDates(null)
+        } catch (error: unknown) {
+            showToast(getMensajeError(error), 'error')
+        }
+
+        
+    }
+
+
+    const footer = (
+        <>
+        <Button label= " Confirmar reserva " icon= "pi pi-check" iconPos="right" className="p-button-primary p-button-text boton-ancho" onClick={realizarReserva} />
+        </>
+    )
+
 
     useOnInit(() => {
         getLibroDetalle()
@@ -128,11 +166,11 @@ export const DetalleLibro = () => {
 
 
     return (
-        <div className="flex flex-column gap-4 p-4">
+        <div className="flex flex-column gap-4 p-4 detalle-libro-container">
 
             <div className="flex flex-row align-items-center gap-4">
                 <Card className="md:w-20rem flex flex-column align-items-center">
-                    <Image src={libro.imgUrl} alt="Image" width="250"/>
+                    <Image src={libro.imgUrl} alt="Image" width="250" imageStyle={{minHeight:'420px', objectFit:'cover'}}/>
                 </Card>
                 <Card header = {header} className="flex-1" title={libro.titulo} subTitle={libro.autor} style={{ minHeight: "490px", padding: "1rem",}}>
                     <div className="contenido-card">
@@ -147,7 +185,7 @@ export const DetalleLibro = () => {
 
             <Card title="Tu reserva" subTitle="Fechas seleccionadas:" footer= { footer } className= "md:w-20rem" style={{minHeight:"410px", padding: "1rem"}}>
 
-                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y" className='w-full'/>
+                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y" className='w-full boton-icono' minDate={new Date()}/>
 
                 <div className="flex justify-content-between align-items-center p-3 surface-100 border-round-lg">
                     <span className="text-600">Recogida</span>
@@ -172,7 +210,7 @@ export const DetalleLibro = () => {
                     <div className="flex flex-row justify-content-between align-items-center w-full p-1">
                         <div className="flex flex-column  gap-2">
                             <span className="font-bold opacity-70">Tipo</span>
-                            <Tag value="Con dedicatoria" className="tag-tipo"></Tag>
+                            <Tag value={libro.tipo} className="tag-tipo"></Tag>
                         </div>
                         <div className= "flex flex-column  gap-2 ">
                             <span className="font-bold opacity-70">BiblioKarmas</span>
@@ -231,6 +269,10 @@ export const DetalleLibro = () => {
                     emptyMessage={NoReseñasCard}
                 />
             </div>
+            <div id="toast-container">
+                <Toast toast = { toast } />
+            </div>
         </div>
+        
     )
 }
