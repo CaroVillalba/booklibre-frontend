@@ -7,7 +7,7 @@ export class ReseñaService extends CRUDService<Reseña> {
     }
 
     async getReseñasPorLibro(libroId: number): Promise<Reseña[]> {
-        const response = await this.api.get<Reseña[]>(`libro/${libroId}`)
+        const response = await this.api.get<Reseña[]>(`${this.path}/libro/${libroId}`)
         return response.data
     }
 }

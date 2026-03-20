@@ -7,6 +7,7 @@ import { useState } from "react";
 import { registerService } from "../../services/AuthService";
 import type { RegistroUsuario } from "../../../types/Usuario";
 import { useNavigate } from "react-router-dom";
+import type { AxiosError } from "axios";
 
 export const Register = () => {
     var [name, setName] = useState("")
@@ -85,7 +86,7 @@ export const Register = () => {
 
             navigate("/login")
         }
-        catch (e) {
+        catch (e: AxiosError) {
             var errors = e.response.data.split(",")
             
             console.log(errors)
