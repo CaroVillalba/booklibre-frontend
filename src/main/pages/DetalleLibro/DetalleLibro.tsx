@@ -16,16 +16,13 @@ import type { LibroHome } from '../../../types/Libro';
 import { useParams } from 'react-router-dom';
 import { useOnInit } from './../../hooks/useOnInit';
 import { libroService } from '../../services/LibroService';
-
 import { reseñaService } from '../../services/ReseñaService';
-
+import { NoReseñasCard } from './ReseñaCard/NoReseñasCard';
 import { reservaService } from '../../services/ReservaService';
 import { Toast } from '../../components/common/toast';
 import { useToast } from '../../hooks/useToast';
 import '../../../toast.css'
 import { getMensajeError, type ErrorResponse } from '../../../utils/errorHandling'
-
-
 
 
 export const DetalleLibro = () => {
@@ -52,6 +49,17 @@ export const DetalleLibro = () => {
     })
 
     const [dates, setDates] = useState<Nullable<(Date | null)[]>>(null);
+
+    const [reseñas, setReseñas] = useState<Array<Reseña>>([{
+        id: 0,
+        puntaje: 0,
+        texto: "",
+        fecha: new Date(),
+        autor: "",
+        libro: 0
+    }])
+
+    //que se supone que es ds lol
     const ds = useRef<null>(null);
 
     const headerReseñas = (
@@ -61,6 +69,7 @@ export const DetalleLibro = () => {
         </>
     )
 
+
     const getLibroDetalle = async() => {
         try {
             const libroDetalle = await libroService.getLibroPorId(Number(id))
@@ -68,6 +77,19 @@ export const DetalleLibro = () => {
         }
         catch (error: unknown) {
             showToast(getMensajeError(error), 'error')
+        }
+    }
+
+
+    const getReseñas = async() => {
+        try {
+            const reseñasObtenidas = await reseñaService.getReseñasPorLibro(Number(id))
+
+            setReseñas(reseñasObtenidas)
+
+        }
+        catch (error) {
+            console.error("Error al obtener las reseñas del libro:", error)
         }
     }
 
@@ -118,72 +140,8 @@ export const DetalleLibro = () => {
 
     useOnInit(() => {
         getLibroDetalle()
+        getReseñas()
     })
-
-    const reseñaEjemplo : Reseña[] = [
-        {
-        puntaje: 4,
-        texto: "Un clásico atemporal. La prosa de Fitzgerald es inigualable, capturando la esencia de la Era del Jazz maravillosamente.",
-        fecha: new Date(),
-        autor: "Jane Doe",
-        libro: {
-            id: 1,
-            genero: "Drama",
-            titulo: "Meridiano de Sangre",
-            autor: "Cormac McCarthy",
-            cantidadPaginas: 325,
-            descripcion: "hola:",
-            editorial: "Scribner",
-            fechaPublicacion: "19-04-1992",
-            isbn13: "978-0-679-72875-7",
-            idioma: "Español",
-            tipo: "Coleccionable",
-            estado: "Bueno"
-        }
-    },
-    {
-        puntaje: 4,
-        texto: "Un clásico atemporal. La prosa de Fitzgerald es inigualable, capturando la esencia de la Era del Jazz maravillosamente.",
-        fecha: new Date(),
-        autor: "Jane Doe",
-        libro: {
-            id: 1,
-            genero: "Drama",
-            titulo: "Meridiano de Sangre",
-            autor: "Cormac McCarthy",
-            cantidadPaginas: 325,
-            descripcion: "hola:",
-            editorial: "Scribner",
-            fechaPublicacion: "19-04-1992",
-            isbn13: "978-0-679-72875-7",
-            idioma: "Español",
-            tipo: "Coleccionable",
-            estado: "Bueno"
-        }
-    },
-    {
-        puntaje: 4,
-        texto: "Un clásico atemporal. La prosa de Fitzgerald es inigualable, capturando la esencia de la Era del Jazz maravillosamente.",
-        fecha: new Date(),
-        autor: "Jane Doe",
-        libro: {
-            id: 1,
-            genero: "Drama",
-            titulo: "Meridiano de Sangre",
-            autor: "Cormac McCarthy",
-            cantidadPaginas: 325,
-            descripcion: "hola:",
-            editorial: "Scribner",
-            fechaPublicacion: "19-04-1992",
-            isbn13: "978-0-679-72875-7",
-            idioma: "Español",
-            tipo: "Coleccionable",
-            estado: "Bueno"
-        }
-    }
-    ]
-
- 
 
     const itemTemplate = (data: Reseña) => {
         return (
@@ -311,12 +269,13 @@ export const DetalleLibro = () => {
             <div className="surface-ground border-round-xl">
                 <DataScroller
                     ref={ds}
-                    value={reseñaEjemplo} 
+                    value={reseñas} 
                     itemTemplate={itemTemplate} 
                     rows={2}
                     loader
                     header={headerReseñas}
                     className='dataScroller-reseñas'
+                    emptyMessage={NoReseñasCard}
                 />
             </div>
             <div id="toast-container">

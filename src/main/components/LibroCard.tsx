@@ -2,6 +2,7 @@ import { Card } from "primereact/card"
 import { Tag } from "primereact/tag"
 import { Divider } from "primereact/divider"
 import type { LibroHome } from "../../types/Libro.ts"
+import "./LibroCard.css"
 
 interface Props {
     libro: LibroHome
@@ -23,7 +24,7 @@ const formatEnum = (value: string): string =>
 
 export const LibroCard = ({ libro }: Props) => {
     return (
-        <Card className="p-0 overflow-hidden">
+        <Card className="p-0 overflow-hidden libroCard">
             {/* Imagen */}
             <div className="flex justify-content-center p-4 surface-100">
                     <img

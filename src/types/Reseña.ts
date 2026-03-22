@@ -1,9 +1,10 @@
 import type { Libro } from './Libro';
 
 export interface Reseña {
-    puntaje: number
-    texto: string
-    fecha: Date
-    autor: string
-    libro: Libro
+    id: number //id del comentario
+    puntaje: number //stars
+    texto: string //mensaje
+    fecha: Date //localdate
+    autor: string //nombre del autor
+    libro: number //id del libro
 }

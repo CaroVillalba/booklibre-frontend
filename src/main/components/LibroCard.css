@@ -1,0 +1,11 @@
+.libroCard {
+    cursor: pointer;
+    position: relative;
+    top: 0px;
+    transition: all 0.3s ease-in-out;
+}
+
+.libroCard:hover {
+    top: -6px;
+    transition: all 0.3s ease-in-out;
+}
