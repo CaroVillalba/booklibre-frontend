@@ -121,6 +121,15 @@ export const DetalleLibro = () => {
         
     }
 
+    const getReseñas = async() => {
+        try {
+            const libroDetalle = await reseñaService.getReseñasPorLibro(Number(id))
+            setLibro(libroDetalle)
+        }
+        catch (error) {
+            console.error("Error al obtener las reseñas del libro:", error)
+        }
+    }
 
     const footer = (
         <>
