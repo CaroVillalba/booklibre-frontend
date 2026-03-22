@@ -14,6 +14,10 @@ export const Register = () => {
     var [password, setPassword] = useState("")
     var [confirmPassword, setConfirmPassword] = useState("")
 
+    var [passwordErrorMessage, setPasswordErrorMessage] = useState("")
+    var [usernameErrorMessage, setUsernameErrorMessage] = useState("")
+    var [emailErrorMessage, setEmailErrorMessage] = useState("")
+
     var navigate = useNavigate()
 
     const handleNameInput = (e: any) => {
@@ -35,14 +39,9 @@ export const Register = () => {
     async function register() {
         var frontErrors: string[] = []
 
-        var passwordErrorMessage = document.getElementById("password-confirmation-error")
-        passwordErrorMessage!.innerText = ""
-
-        var usernameErrorMessage = document.getElementById("username-conflict-error")
-        usernameErrorMessage!.innerText = ""
-
-        var emailErrorMessage = document.getElementById("email-conflict-error")
-        emailErrorMessage!.innerText = ""
+        setPasswordErrorMessage("")
+        setUsernameErrorMessage("")
+        setEmailErrorMessage("")
 
         //toooooooooda la validacion antes de la request
         if (password != confirmPassword) {
@@ -66,16 +65,16 @@ export const Register = () => {
         if (frontErrors.length != 0) {
 
             if (frontErrors.includes("NON_MATCHING_PASSWORDS")) {
-                passwordErrorMessage!.innerText = "Las contraseñas ingresadas no coinciden."
+                setPasswordErrorMessage("Las contraseñas ingresadas no coinciden.")
             }
             if (frontErrors.includes("EMPTY_PASSWORD")) {
-                passwordErrorMessage!.innerText = "La contraseña no puede estar vacia."
+                setPasswordErrorMessage("La contraseña no puede estar vacia.")
             }
             if (frontErrors.includes("EMPTY_USERNAME")) {
-                usernameErrorMessage!.innerText = "El nombre de usuario no puede estar vacio"
+                setUsernameErrorMessage("El nombre de usuario no puede estar vacio")
             }
             if (frontErrors.includes("EMPTY_EMAIL")) {
-                emailErrorMessage!.innerText = "El correo electronico no puede estar vacio"
+                setEmailErrorMessage("El correo electronico no puede estar vacio")
             }
 
             return
@@ -93,12 +92,12 @@ export const Register = () => {
 
             if (errors.includes("USERNAME_ALREADY_EXISTS")) {
                 console.log("Ya hay un usuario con el mismo nombre")
-                usernameErrorMessage!.innerText = "Ya hay un usuario con el mismo nombre"
+                setUsernameErrorMessage("Ya hay un usuario con el mismo nombre")
             }
 
             if (errors.includes("EMAIL_ALREADY_EXISTS")) {
                 console.log("Ya hay un usuario con el mismo email")
-                emailErrorMessage!.innerText = "Ya hay un usuario con el mismo email"
+                setEmailErrorMessage("Ya hay un usuario con el mismo email")
             }
         }
     }
@@ -117,12 +116,12 @@ export const Register = () => {
                 <p><b>Nombre completo:</b></p>
                 <p><InputText className="block-input-text" value={name} onChange={handleNameInput}></InputText></p>
 
-                <p id="username-conflict-error" className="error-message-label"></p>
+                <p id="username-conflict-error" className="error-message-label">{usernameErrorMessage}</p>
 
                 <p><b>Correo electronico:</b></p>
                 <p><InputText className="block-input-text" value={email} onChange={handleEmailInput}></InputText></p>
 
-                <p id="email-conflict-error" className="error-message-label"></p>
+                <p id="email-conflict-error" className="error-message-label">{emailErrorMessage}</p>
 
                 <p><b>Contraseña:</b></p>
                 <p><Password className="block-input-text" value={password} onChange={handlePasswordInput} toggleMask></Password></p>
@@ -130,7 +129,7 @@ export const Register = () => {
                 <p><b>Confirmer contraseña:</b></p>
                 <p><Password className="block-input-text" value={confirmPassword} onChange={handleConfirmPasswordInput} toggleMask></Password></p>
 
-                <p id="password-confirmation-error" className="error-message-label"></p>
+                <p id="password-confirmation-error" className="error-message-label">{passwordErrorMessage}</p>
 
                 <p><Button className="login-button" onClick = {register}>Crear cuenta</Button></p>
 

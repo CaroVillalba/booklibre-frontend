@@ -7,12 +7,16 @@ import { Password } from "primereact/password";
 import { useState } from "react";
 import { loginService } from "../../services/AuthService";
 import { useNavigate } from "react-router-dom";
-
+import { AxiosError } from "axios";
 
 export const Login = () => {
     var [email, setEmail] = useState("")
     var [password, setPassword] = useState("")
     var [rememberme, setRememberme] = useState(false)
+
+    var [emailErrorMessage, setEmailErrorMessage] = useState("")
+    var [passwordErrorMessage, setPasswordErrorMessage] = useState("")
+    var [loginErrorMessage, setLoginErrorMessage] = useState("")
 
     var navigate = useNavigate()
 
@@ -29,11 +33,9 @@ export const Login = () => {
     }
 
     async function login () {
-        var emailErrorMessage = document.getElementById("email-conflict-error")
-        emailErrorMessage!.innerText = ""
-
-        var passwordErrorMessage = document.getElementById("password-confirmation-error")
-        passwordErrorMessage!.innerText = ""
+        setEmailErrorMessage("")
+        setPasswordErrorMessage("")
+        setLoginErrorMessage("")
 
         var frontErrors: string[] = []
 
@@ -47,22 +49,29 @@ export const Login = () => {
 
         if (frontErrors.length > 0) {
             if (frontErrors.includes("EMPTY_EMAIL")) {
-                emailErrorMessage!.innerText = "El correo electronico no puede estar vacio."
+                setEmailErrorMessage("El correo electronico no puede estar vacio.")
             }
 
             if (frontErrors.includes("EMPTY_PASSWORD")) {
-                passwordErrorMessage!.innerText = "La contraseña no puede estar vacia."
+                setPasswordErrorMessage("La contraseña no puede estar vacia.")
             }
 
             return 
         }
 
-        var res = await loginService.login({"email": email, "password": password, "rememberMe": false})
+        try {
+            var res = await loginService.login({"email": email, "password": password, "rememberMe": false})
 
-        alert("Se inicio la sesion correctamente!!")
-        console.log(`email: ${email}; password: ${password}`)
-
-        navigate("/")
+            navigate("/")
+        }
+        catch (error: AxiosError) {
+            if (error.response.status == 404) {
+                setLoginErrorMessage("El usuario ingresado no existe.")
+            } 
+            if (error.response.status == 401) {
+                setLoginErrorMessage("La contraseña ingresada es incorrecta.")
+            } 
+        }
     }
 
     return (
@@ -79,14 +88,16 @@ export const Login = () => {
                 <p><b>Correo electronico:</b></p>
                 <p><InputText className="block-input-text" value={email} onChange={handleEmailInput}></InputText></p>
                 
-                <p id="email-conflict-error" className="error-message-label"></p>
+                <p id="email-conflict-error" className="error-message-label">{emailErrorMessage}</p>
 
                 <p><b>Contraseña:</b></p>
                 <p><Password className="block-input-text" value={password} onChange={handlePasswordInput} toggleMask></Password></p>
 
-                <p id="password-confirmation-error" className="error-message-label"></p>
+                <p id="password-confirmation-error" className="error-message-label">{passwordErrorMessage}</p>
 
                 <p><Checkbox checked={rememberme} onClick={handleCheckRememberme}></Checkbox> Recordame</p>
+
+                <p id="account-login-error" className="error-message-label">{loginErrorMessage}</p>
 
                 <p><Button className="login-button" onClick={login}>Ingresar</Button></p>
 

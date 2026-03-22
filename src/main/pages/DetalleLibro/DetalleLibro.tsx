@@ -16,6 +16,9 @@ import type { LibroHome } from '../../../types/Libro';
 import { useParams } from 'react-router-dom';
 import { useOnInit } from './../../hooks/useOnInit';
 import { libroService } from '../../services/LibroService';
+
+import { reseñaService } from '../../services/ReseñaService';
+
 import { reservaService } from '../../services/ReservaService';
 import { Toast } from '../../components/common/toast';
 import { useToast } from '../../hooks/useToast';
@@ -96,6 +99,15 @@ export const DetalleLibro = () => {
         
     }
 
+    const getReseñas = async() => {
+        try {
+            const libroDetalle = await reseñaService.getReseñasPorLibro(Number(id))
+            setLibro(libroDetalle)
+        }
+        catch (error) {
+            console.error("Error al obtener las reseñas del libro:", error)
+        }
+    }
 
     const footer = (
         <>
