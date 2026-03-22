@@ -25,6 +25,8 @@ import '../../../toast.css'
 import { getMensajeError, type ErrorResponse } from '../../../utils/errorHandling'
 
 
+
+
 export const DetalleLibro = () => {
     const { id } = useParams()
     const { toast, showToast } = useToast()
@@ -72,7 +74,10 @@ export const DetalleLibro = () => {
 
     const getLibroDetalle = async() => {
         try {
-            const libroDetalle = await libroService.getLibroPorId(Number(id))
+            const libroDetalle = await libroService.getLibroPorId(Number(id), {
+                desde: new Date().toISOString().split("T")[0], //traerlo del HomeUsuario con useContext o layout
+                hasta: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split("T")[0]
+            })
             setLibro(libroDetalle)
         }
         catch (error: unknown) {
@@ -120,7 +125,7 @@ export const DetalleLibro = () => {
 
         
     }
-
+/*
     const getReseñas = async() => {
         try {
             const libroDetalle = await reseñaService.getReseñasPorLibro(Number(id))
@@ -130,7 +135,7 @@ export const DetalleLibro = () => {
             console.error("Error al obtener las reseñas del libro:", error)
         }
     }
-
+*/
     const footer = (
         <>
         <Button label= " Confirmar reserva " icon= "pi pi-check" iconPos="right" className="p-button-primary p-button-text boton-ancho" onClick={realizarReserva} />
@@ -194,7 +199,7 @@ export const DetalleLibro = () => {
 
             <Card title="Tu reserva" subTitle="Fechas seleccionadas:" footer= { footer } className= "md:w-20rem" style={{minHeight:"410px", padding: "1rem"}}>
 
-                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y" className='w-full boton-icono' minDate={new Date()}/>
+                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y" className='w-full boton-icono' minDate={new Date() }/>
 
                 <div className="flex justify-content-between align-items-center p-3 surface-100 border-round-lg">
                     <span className="text-600">Recogida</span>

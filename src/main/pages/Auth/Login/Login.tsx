@@ -5,7 +5,7 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { useState } from "react";
-import { loginService } from "../../services/AuthService";
+import { loginService } from "../../../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 

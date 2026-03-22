@@ -4,8 +4,8 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { useState } from "react";
-import { registerService } from "../../services/AuthService";
-import type { RegistroUsuario } from "../../../types/Usuario";
+import { registerService } from "../../../services/AuthService";
+import type { RegistroUsuario } from "../../../../types/Usuario.ts";
 import { useNavigate } from "react-router-dom";
 import type { AxiosError } from "axios";
 

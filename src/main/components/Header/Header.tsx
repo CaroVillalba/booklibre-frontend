@@ -22,8 +22,8 @@ export function Header({ bibliokarmas = 0, onLogout }: HeaderProps) {
     {
       label: 'Inicio',
       icon: 'pi pi-home',
-      className: location.pathname === '/' ? 'nav-item-active' : '',
-      command: () => navigate('/'),
+      className: location.pathname === '/home' ? 'nav-item-active' : '',
+      command: () => navigate('/home'),
     },
     {
       label: 'Mis Préstamos',

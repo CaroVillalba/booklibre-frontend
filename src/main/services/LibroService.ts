@@ -12,6 +12,11 @@ export interface LibroSearchParams {
     prestadoPorUsuario?: string
 }
 
+export interface LibroDetalleParams {
+    desde: string          // ISO date: "2025-01-01"
+    hasta: string          // ISO date: "2025-12-31"
+}
+
 export class LibroService extends CRUDService<LibroHome> {
 
     constructor() {
@@ -38,8 +43,8 @@ export class LibroService extends CRUDService<LibroHome> {
         return response.data
     }
 
-    async getLibroPorId(id: number): Promise<LibroHome> {
-        const response = await this.api.get<LibroHome>(`/libros/detalle-libro/${id}`)
+    async getLibroPorId(id: number, params: LibroDetalleParams ): Promise<LibroHome> {
+        const response = await this.api.get<LibroHome>(`/libros/detalle-libro/${id}`, { params })
         return response.data
     }
 
