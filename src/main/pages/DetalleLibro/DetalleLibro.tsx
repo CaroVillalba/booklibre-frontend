@@ -1,7 +1,7 @@
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Tag } from 'primereact/tag';
 import { Image } from 'primereact/image';
 import './DetalleLibro.css'
@@ -19,17 +19,16 @@ import { libroService } from '../../services/LibroService';
 import { reseñaService } from '../../services/ReseñaService';
 import { NoReseñasCard } from './ReseñaCard/NoReseñasCard';
 import { reservaService } from '../../services/ReservaService';
-import { Toast } from '../../components/common/toast';
-import { useToast } from '../../hooks/useToast';
+
 import '../../../toast.css'
 import { getMensajeError, type ErrorResponse } from '../../../utils/errorHandling'
+import { MainContext } from '../../../types/MainContext';
 
 
 
 
 export const DetalleLibro = () => {
     const { id } = useParams()
-    const { toast, showToast } = useToast()
     const [libro, setLibro] = useState<LibroHome>({
         id: 0,
         imgUrl: "",
@@ -50,6 +49,8 @@ export const DetalleLibro = () => {
         duenioNombre: "",
     })
 
+    const { showToast } = useContext(MainContext)
+    
     const [dates, setDates] = useState<Nullable<(Date | null)[]>>(null);
 
     const [reseñas, setReseñas] = useState<Array<Reseña>>([{
@@ -282,9 +283,6 @@ export const DetalleLibro = () => {
                     className='dataScroller-reseñas'
                     emptyMessage={NoReseñasCard}
                 />
-            </div>
-            <div id="toast-container">
-                <Toast toast = { toast } />
             </div>
         </div>
         
