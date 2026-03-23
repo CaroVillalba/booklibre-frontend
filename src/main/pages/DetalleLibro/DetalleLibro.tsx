@@ -22,11 +22,14 @@ import { reservaService } from '../../services/ReservaService';
 import '../../../toast.css'
 import { getMensajeError, type ErrorResponse } from '../../../utils/errorHandling'
 import { MainContext } from '../../../types/MainContext';
+import { useNavigate } from "react-router-dom";
 
 
 
 
 export const DetalleLibro = () => {
+    const navigate = useNavigate()
+
     const { id } = useParams()
     const [searchParams] = useSearchParams()
 
@@ -125,6 +128,7 @@ export const DetalleLibro = () => {
             }));
             
             showToast('Reserva realizada con éxito', 'success')
+            navigate(`/prestamos`)
             setDates(null)
         } catch (error: unknown) {
             showToast(getMensajeError(error), 'error')
