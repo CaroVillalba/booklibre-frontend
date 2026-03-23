@@ -95,6 +95,7 @@ export const HomeUsuario = () => {
         setLibros(prev => [...prev].sort(ordenadores[nuevoOrden]))
     }
 
+
     return (
         <div className="grid home_content">
             {/* Sidebar */}
@@ -170,7 +171,11 @@ export const HomeUsuario = () => {
                             <div
                                 key={libro.id}
                                 className="col-12 md:col-6 lg:col-3 xl:col-4"
-                                onClick={() => navigate(`/detalle-libro/${libro.id}`)}
+                                onClick={() => {
+                                    const desde = toISODate(fechaDesde ?? hoy)
+                                    const hasta = toISODate(fechaHasta ?? hoy)
+                                    navigate(`/detalle-libro/${libro.id}?desde=${desde}&hasta=${hasta}`)
+                                }}
                             >
                                 <LibroCard libro={libro} />
                             </div>
