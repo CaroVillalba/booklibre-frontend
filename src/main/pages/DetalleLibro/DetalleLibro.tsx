@@ -1,7 +1,7 @@
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Tag } from 'primereact/tag';
 import { Image } from 'primereact/image';
 import './DetalleLibro.css'
@@ -19,15 +19,16 @@ import { libroService } from '../../services/LibroService';
 import { reseñaService } from '../../services/ReseñaService';
 import { NoReseñasCard } from './ReseñaCard/NoReseñasCard';
 import { reservaService } from '../../services/ReservaService';
-import { Toast } from '../../components/common/toast';
-import { useToast } from '../../hooks/useToast';
+
 import '../../../toast.css'
 import { getMensajeError, type ErrorResponse } from '../../../utils/errorHandling'
+import { MainContext } from '../../../types/MainContext';
+
+
 
 
 export const DetalleLibro = () => {
     const { id } = useParams()
-    const { toast, showToast } = useToast()
     const [libro, setLibro] = useState<LibroHome>({
         id: 0,
         imgUrl: "",
@@ -48,6 +49,8 @@ export const DetalleLibro = () => {
         duenioNombre: "",
     })
 
+    const { showToast } = useContext(MainContext)
+    
     const [dates, setDates] = useState<Nullable<(Date | null)[]>>(null);
 
     const [reseñas, setReseñas] = useState<Array<Reseña>>([{
@@ -72,7 +75,10 @@ export const DetalleLibro = () => {
 
     const getLibroDetalle = async() => {
         try {
-            const libroDetalle = await libroService.getLibroPorId(Number(id))
+            const libroDetalle = await libroService.getLibroPorId(Number(id), {
+                desde: new Date().toISOString().split("T")[0], //traerlo del HomeUsuario con useContext o layout
+                hasta: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split("T")[0]
+            })
             setLibro(libroDetalle)
         }
         catch (error: unknown) {
@@ -120,7 +126,7 @@ export const DetalleLibro = () => {
 
         
     }
-
+/*
     const getReseñas = async() => {
         try {
             const libroDetalle = await reseñaService.getReseñasPorLibro(Number(id))
@@ -130,7 +136,7 @@ export const DetalleLibro = () => {
             console.error("Error al obtener las reseñas del libro:", error)
         }
     }
-
+*/
     const footer = (
         <>
         <Button label= " Confirmar reserva " icon= "pi pi-check" iconPos="right" className="p-button-primary p-button-text boton-ancho" onClick={realizarReserva} />
@@ -194,7 +200,7 @@ export const DetalleLibro = () => {
 
             <Card title="Tu reserva" subTitle="Fechas seleccionadas:" footer= { footer } className= "md:w-20rem" style={{minHeight:"410px", padding: "1rem"}}>
 
-                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y" className='w-full boton-icono' minDate={new Date()}/>
+                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y" className='w-full boton-icono' minDate={new Date() }/>
 
                 <div className="flex justify-content-between align-items-center p-3 surface-100 border-round-lg">
                     <span className="text-600">Recogida</span>
@@ -277,9 +283,6 @@ export const DetalleLibro = () => {
                     className='dataScroller-reseñas'
                     emptyMessage={NoReseñasCard}
                 />
-            </div>
-            <div id="toast-container">
-                <Toast toast = { toast } />
             </div>
         </div>
         
