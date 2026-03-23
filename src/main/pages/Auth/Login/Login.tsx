@@ -62,7 +62,7 @@ export const Login = () => {
         try {
             var res = await loginService.login({"email": email, "password": password, "rememberMe": false})
 
-            navigate("/")
+            navigate("/home")
         }
         catch (error: AxiosError) {
             if (error.response.status == 404) {
