@@ -84,11 +84,15 @@ export const DetalleLibro = () => {
     const getLibroDetalle = async() => {
         try {
             const libroDetalle = await libroService.getLibroPorId(Number(id), {
-                desde: desdeParam, //traerlo desde un query string desde el home
+                desde: desdeParam, 
                 hasta: hastaParam,
             })
             setLibro(libroDetalle)
-            setDates([new Date(desdeParam), new Date(hastaParam)])
+
+            const fechaDesdeCorrecta = new Date(desdeParam.replace(/-/g, '/'))
+            const fechaHastaCorrecta = new Date(hastaParam.replace(/-/g, '/'))
+
+            setDates([fechaDesdeCorrecta, fechaHastaCorrecta])
         }
         catch (error: unknown) {
             showToast(getMensajeError(error), 'error')
