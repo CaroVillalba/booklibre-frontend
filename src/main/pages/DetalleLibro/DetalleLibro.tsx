@@ -13,22 +13,30 @@ import { ReseñaCard } from './ReseñaCard/ReseñaCard';
 import { DataScroller } from 'primereact/datascroller';
 import { useRef } from 'react';
 import type { LibroHome } from '../../../types/Libro';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useOnInit } from './../../hooks/useOnInit';
 import { libroService } from '../../services/LibroService';
 import { reseñaService } from '../../services/ReseñaService';
 import { NoReseñasCard } from './ReseñaCard/NoReseñasCard';
 import { reservaService } from '../../services/ReservaService';
-
 import '../../../toast.css'
 import { getMensajeError, type ErrorResponse } from '../../../utils/errorHandling'
 import { MainContext } from '../../../types/MainContext';
+import { useNavigate } from "react-router-dom";
 
 
 
 
 export const DetalleLibro = () => {
+    const navigate = useNavigate()
+
     const { id } = useParams()
+    const [searchParams] = useSearchParams()
+
+
+    const desdeParam = searchParams.get('desde') || new Date().toISOString().split("T")[0]
+    const hastaParam = searchParams.get('hasta') || new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split("T")[0]
+
     const [libro, setLibro] = useState<LibroHome>({
         id: 0,
         imgUrl: "",
@@ -50,7 +58,7 @@ export const DetalleLibro = () => {
     })
 
     const { showToast } = useContext(MainContext)
-    
+
     const [dates, setDates] = useState<Nullable<(Date | null)[]>>(null);
 
     const [reseñas, setReseñas] = useState<Array<Reseña>>([{
@@ -62,7 +70,7 @@ export const DetalleLibro = () => {
         libro: 0
     }])
 
-    //que se supone que es ds lol
+   
     const ds = useRef<null>(null);
 
     const headerReseñas = (
@@ -76,10 +84,15 @@ export const DetalleLibro = () => {
     const getLibroDetalle = async() => {
         try {
             const libroDetalle = await libroService.getLibroPorId(Number(id), {
-                desde: new Date().toISOString().split("T")[0], //traerlo del HomeUsuario con useContext o layout
-                hasta: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split("T")[0]
+                desde: desdeParam, 
+                hasta: hastaParam,
             })
             setLibro(libroDetalle)
+
+            const fechaDesdeCorrecta = new Date(desdeParam.replace(/-/g, '/'))
+            const fechaHastaCorrecta = new Date(hastaParam.replace(/-/g, '/'))
+
+            setDates([fechaDesdeCorrecta, fechaHastaCorrecta])
         }
         catch (error: unknown) {
             showToast(getMensajeError(error), 'error')
@@ -119,6 +132,7 @@ export const DetalleLibro = () => {
             }));
             
             showToast('Reserva realizada con éxito', 'success')
+            navigate(`/prestamos`)
             setDates(null)
         } catch (error: unknown) {
             showToast(getMensajeError(error), 'error')
@@ -200,7 +214,7 @@ export const DetalleLibro = () => {
 
             <Card title="Tu reserva" subTitle="Fechas seleccionadas:" footer= { footer } className= "md:w-20rem" style={{minHeight:"410px", padding: "1rem"}}>
 
-                <Calendar value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y" className='w-full boton-icono' minDate={new Date() }/>
+                <Calendar disabled value={dates} onChange={(e) => setDates(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection showIcon iconPos="left" dateFormat="d M, y" className='w-full boton-icono' minDate={new Date() }/>
 
                 <div className="flex justify-content-between align-items-center p-3 surface-100 border-round-lg">
                     <span className="text-600">Recogida</span>
