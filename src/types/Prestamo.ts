@@ -8,7 +8,7 @@ export interface Prestamo {
     tituloLibro: string;
     autorLibro: string;
     imgUrlLibro: string;
-    ratingLibro: number;
+    ratingLibro: number | null; // null cuando el libro no tiene reseñas
     bibliokarma: number;
     // — Otro usuario —
     otroUsuario: string;

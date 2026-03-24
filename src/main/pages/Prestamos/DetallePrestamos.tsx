@@ -52,7 +52,7 @@ const PrestamoCard = ({ prestamo, esPrestadoAMi, onCalificar }: PrestamoCardProp
             <div className="prestamo-card__body">
                 <div className="prestamo-card__rating">
                     <i className="pi pi-star-fill" style={{ color: "#f59e0b", fontSize: "0.75rem" }} />
-                    <span>{prestamo.ratingLibro.toFixed(1)}</span>
+                    <span>{prestamo.ratingLibro != null ? prestamo.ratingLibro.toFixed(1) : "N/A"}</span>
                 </div>
                 <p className="prestamo-card__titulo">{prestamo.tituloLibro}</p>
                 <p className="prestamo-card__autor">{prestamo.autorLibro}</p>
@@ -149,15 +149,31 @@ export const MisPrestamos = () => {
         );
     };
 
-    // — Calificación —
     const handleConfirmarCalificacion = async () => {
-        if (!prestamoACalificar) return;
-        // TODO: conectar con endpoint de calificación cuando esté implementado en el back
-        console.log("Calificación enviada:", { prestamoACalificar, puntaje, comentario });
+    if (!prestamoACalificar) return;
+
+    try {
+        await reservaService.agregarReseña(
+            prestamoACalificar.id,
+            puntaje,
+            comentario,
+            USUARIO_ID_HARDCODEADO
+        );
+
+        // opcional: actualizar UI local
         setPrestamoACalificar(null);
         setPuntaje(0);
         setComentario("");
-    };
+
+        // recargar préstamos para reflejar calificación
+        const data = await reservaService.misPrestamos(USUARIO_ID_HARDCODEADO);
+        setPrestadosAMi(data.prestadosAMi);
+        setPrestadosPorMi(data.prestadosPorMi);
+
+    } catch (error) {
+        console.error("Error enviando reseña", error);
+    }
+};
 
     const footerDialog = (
         <div className="flex justify-content-end gap-2">

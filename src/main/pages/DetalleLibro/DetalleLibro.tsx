@@ -61,17 +61,10 @@ export const DetalleLibro = () => {
 
     const [dates, setDates] = useState<Nullable<(Date | null)[]>>(null);
 
-    const [reseñas, setReseñas] = useState<Array<Reseña>>([{
-        id: 0,
-        puntaje: 0,
-        texto: "",
-        fecha: new Date(),
-        autor: "",
-        libro: 0
-    }])
+    const [reseñas, setReseñas] = useState<Reseña[]>([])
 
    
-    const ds = useRef<null>(null);
+    const ds = useRef<any>(null); 
 
     const headerReseñas = (
         <>
@@ -173,9 +166,23 @@ export const DetalleLibro = () => {
 
     const header = (
         <>
+
+       {/*  TODO: VER bien el tema de cómo se muestra el género y el rating, porque cuando es CIENCIA_FICCION queda medio "corrido" */}
+
             <div className="p-3 pb-0 flex flex-row gap-3 align-items-center">
-                <Tag value= {libro.genero} style={{width: "10%", height: "100%", borderRadius: "18px"}} ></Tag>
-                <Rating value={libro.rating} readOnly cancel={false}></Rating> <span className="font-bold text-750">{libro.rating}</span>
+                <Tag value={libro.genero} style={{width: "10%", height: "100%", borderRadius: "18px"}} />
+
+                {libro.rating != null ? (
+                    <>
+                        <Rating value={libro.rating} readOnly cancel={false} />
+                        <span className="font-bold text-750">
+                            {libro.rating.toFixed(1)}
+                        </span>
+                    </>
+                ) : (
+                    <span className="font-bold text-750">N/A</span>
+                )}
+
             </div>
         
         </>
@@ -271,7 +278,7 @@ export const DetalleLibro = () => {
                         </div>
                         <div className="flex flex-column mb-4 gap-1">
                             <span className='font-bold opacity-70'>Publicado</span>
-                            <span className="font-bold">{libro.fechaPublicacion}</span>
+                            <span className="font-bold">{libro.fechaPublicacion}</span> {/* //TODO: Ojo este warning (ver que hacer después, tiene que ver con Libro y no con Reseña) */}
                         </div>
                         <div className="flex flex-column mb-4 gap-1">
                             <span className='font-bold opacity-70'>Estado</span>
@@ -295,7 +302,7 @@ export const DetalleLibro = () => {
                     loader
                     header={headerReseñas}
                     className='dataScroller-reseñas'
-                    emptyMessage={NoReseñasCard}
+                    emptyMessage={NoReseñasCard} /* TODO: Acá cuando no haya reseñas, tampoco tendría que poder verse el "ver más" */
                 />
             </div>
         </div>
