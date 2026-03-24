@@ -196,6 +196,7 @@ export const UsuarioLibros = ({usuarioId}:UsuarioLibrosProps) => {
                                 rounded
                                 text
                                 severity="secondary"
+                                onClick={() => navigate(`/editar-libro/${libro.id}`)}
                             />
 
                             <Button
