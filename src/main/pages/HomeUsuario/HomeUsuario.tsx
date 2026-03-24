@@ -61,7 +61,7 @@ export const HomeUsuario = () => {
             const resultado = await libroService.search({
                 titulo: (tituloOverride ?? tituloBusqueda) || undefined,
                 generos: generosSeleccionados.length > 0
-                    ? generosSeleccionados.join(",")
+                    ? generosSeleccionados
                     : undefined,
                 paginasMin: paginasSeleccionadas[0] > 0 ? paginasSeleccionadas[0] : undefined,
                 paginasMax: paginasSeleccionadas[1] < 1500 ? paginasSeleccionadas[1] : undefined,

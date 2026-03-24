@@ -3,7 +3,7 @@ import { CRUDService } from './CRUDService'
 
 export interface LibroSearchParams {
     titulo?: string
-    generos?: string       // CSV: "DRAMA,ROMANCE"
+    generos?: string[]     // Array de géneros: ["DRAMA", "ROMANCE"]
     paginasMin?: number
     paginasMax?: number
     isbn?: string
