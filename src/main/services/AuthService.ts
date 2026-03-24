@@ -3,6 +3,7 @@ import type { RegistroUsuario } from "../../types/Usuario";
 import type { AxiosInstance } from "axios";
 import axios from 'axios'
 import type { LoginUsuario } from "../../types/Usuario";
+import { UserNotLoggedIn } from "../exceptions/exceptions"
 
 
 export class RegisterService extends CRUDService <RegistroUsuario> {
@@ -40,8 +41,18 @@ export class LoginService {
         return Number(res.data) //devuelve el user id
     }
 
+    logout() {
+        sessionStorage.removeItem("SESSION_USER_ID")
+    }
+
     getLoggedUser(): Number {
-        return Number(sessionStorage.getItem("SESSION_USER_ID"))
+        let userId: String | null = sessionStorage.getItem("SESSION_USER_ID")
+        
+        if (userId == null)
+            throw new UserNotLoggedIn()
+
+        return Number()
+        
     }
 }
 
