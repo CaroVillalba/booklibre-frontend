@@ -100,8 +100,8 @@ export const DetalleLibro = () => {
             setReseñas(reseñasObtenidas)
 
         }
-        catch (error) {
-            console.error("Error al obtener las reseñas del libro:", error)
+        catch (error : unknown) {
+            showToast(getMensajeError(error), 'error')
         }
     }
 
@@ -133,17 +133,7 @@ export const DetalleLibro = () => {
 
         
     }
-/*
-    const getReseñas = async() => {
-        try {
-            const libroDetalle = await reseñaService.getReseñasPorLibro(Number(id))
-            setLibro(libroDetalle)
-        }
-        catch (error) {
-            console.error("Error al obtener las reseñas del libro:", error)
-        }
-    }
-*/
+
     const footer = (
         <>
         <Button label= " Confirmar reserva " icon= "pi pi-check" iconPos="right" className="p-button-primary p-button-text boton-ancho" onClick={realizarReserva} />
