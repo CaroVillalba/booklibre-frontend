@@ -33,10 +33,9 @@ function AppContent() {
         <Route path="/" element={<LayoutMain />}>
             <Route path="home" element={<HomeUsuario />} />
             <Route path="detalle-libro" element={<DetalleLibro />} />
-        {/* <Route path="/mis-libros" element={<MisLibros />} /> */}
-        {/* <Route path="/perfil" element={<Perfil />} /> */}
             <Route path="detalle-libro/:id" element={<DetalleLibro />} />
-            <Route path="editar-detalles" element={<EdicionLibro />} />
+            <Route path="editar-libro" element={<EdicionLibro />} />
+            <Route path="editar-libro/:id" element={<EdicionLibro />} />
             <Route path="prestamos" element={<MisPrestamos />} />
             <Route path="perfil/:id" element={<PerfilUsuario />} />
         </Route>
