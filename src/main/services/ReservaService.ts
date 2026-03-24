@@ -26,6 +26,21 @@ export class ReservaService extends CRUDService<Reserva> {
         )
         return response.data
     }
+
+    // POST /v1/reservas/{id}/reseña?autorId={autorId}
+    // autorId es temporal hasta que auth esté implementado
+    async agregarReseña(reservaId: number, rating: number, texto: string, autorId: number): Promise<void> {
+    await this.api.post(
+        `/${this.path}/${reservaId}/reseña`,
+        {
+            rating,
+            texto,
+            fecha: new Date().toISOString(),
+            autorNombre: "Usuario" // TODO: esto es temporal
+        },
+        { params: { autorId } }
+    )
+}
 }
 
 export const reservaService = new ReservaService()
