@@ -19,7 +19,7 @@ export interface Libro {
 // LibroHome refleja exactamente lo que devuelve LibroDTO del back.
 // imgUrl y rating se marcan opcionales porque el back aún no los implementa.
 export type LibroHome = Libro & {
-    rating?: number
+    rating?: number | null  // null cuando el libro no tiene reseñas
     bibliokarma: number
 }
 

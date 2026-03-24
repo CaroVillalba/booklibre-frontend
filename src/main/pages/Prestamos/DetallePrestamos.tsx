@@ -52,7 +52,7 @@ const PrestamoCard = ({ prestamo, esPrestadoAMi, onCalificar }: PrestamoCardProp
             <div className="prestamo-card__body">
                 <div className="prestamo-card__rating">
                     <i className="pi pi-star-fill" style={{ color: "#f59e0b", fontSize: "0.75rem" }} />
-                    <span>{prestamo.ratingLibro.toFixed(1)}</span>
+                    <span>{prestamo.ratingLibro != null ? prestamo.ratingLibro.toFixed(1) : "N/A"}</span>
                 </div>
                 <p className="prestamo-card__titulo">{prestamo.tituloLibro}</p>
                 <p className="prestamo-card__autor">{prestamo.autorLibro}</p>
