@@ -7,10 +7,12 @@ import { Button } from "primereact/button"
 import { Dialog } from "primereact/dialog"
 import { Card } from "primereact/card"
 import { useState } from "react"
+import { useParams } from "react-router-dom"
 import type { LibroForm } from "../../../types/Libro"
 import { libroService } from "../../services/LibroService"
 import { Toast } from '../../components/common/toast';
 import { useToast } from '../../hooks/useToast';
+import { useOnInit } from '../../hooks/useOnInit';
 import '../../../toast.css'
 import { getMensajeError } from '../../../utils/errorHandling'
 
@@ -51,168 +53,189 @@ const validar = <T,>(data: T, reglas: Regla<T>[]) => {
 }
 
 export const EdicionLibro = () => {
-        const tipos = [
-            { label: "Común", value: "COMUN" },
-            { label: "Con Dedicatoria", value: "DEDICATORIA" },
-            { label: "Coleccionable", value: "COLECCIONABLE" }
-        ]
-        
-        const generos = [
-            { label: "Drama", value: "DRAMA" },
-            { label: "Ciencia Ficción", value: "CIENCIA_FICCION" },
-            { label: "Romance", value: "ROMANCE" },
-            { label: "Autoayuda", value: "AUTOAYUDA" },
-            { label: "Diseño", value: "DISENO" },
-            { label: "Literatura", value: "LITERATURA" }
-        ]
-        
-        const idiomas = [
-            { label: "Francés", value: "FRANCES" },
-            { label: "Español", value: "ESPANOL" },
-            { label: "Inglés", value: "INGLES" },
-            { label: "Portugués", value: "PORTUGUES" },
-        ]
-        
-        const estados = [
-            { label: "Excelente", value: "EXCELENTE" },
-            { label: "Muy Bueno", value: "MUY_BUENO" },
-            { label: "Bueno", value: "BUENO" },
-            { label: "Regular", value: "REGULAR" },
-            { label: "Malo", value: "MALO" }
-        ]
-        const [dialogVisible, setDialogVisible] = useState(false)
-        const [libro, setLibro] = useState<LibroForm>(crearLibroVacio())
-        const [errores, setErrores] = useState<ErroresFormulario>({})
-        const [tempImgUrl, setTempImgUrl] = useState("")
+    const { id } = useParams()
 
-        const { toast, showToast } = useToast()
-
-        const reglas: Regla<LibroForm>[] = [
-            {
-                campo: "imgUrl",
-                validar: (v) => typeof v === 'string' && /^(https?:\/\/.*\.(png|jpg|jpeg|gif|svg))$/i.test(v || ""),
-                mensaje: "Debe ser una URL válida de imagen"
-            },
-            {
-                campo: "titulo",
-                validar: (v) => typeof v === 'string' && !!v.trim(),
-                mensaje: "El título es obligatorio"
-            },
-            {
-                campo: "tipo",
-                validar: (v) => !!v,
-                mensaje: "Seleccioná un tipo"
-            },
-            {
-                campo: "genero",
-                validar: (v) => !!v,
-                mensaje: "Seleccioná un género"
-            },
-            {
-                campo: "autor",
-                validar: (v) => typeof v === 'string' && !!v?.trim(),
-                mensaje: "El autor es obligatorio"
-            },
-            {
-                campo: "cantidadPaginas",
-                validar: (v) => typeof v === 'number' && v != null && v > 0,
-                mensaje: "Debe ser mayor a 0"
-            },
-            {
-                campo: "isbn13",
-                validar: (v) => typeof v === 'string' && /^\d{13}$/.test(v || ""),
-                mensaje: "Debe tener 13 dígitos"
-            },
-            {
-                campo: "fechaPublicacion",
-                validar: (v) => v instanceof Date && v != null,
-                mensaje: "La fecha es obligatoria"
-            },
-            {
-                campo: "fechaPublicacion",
-                validar: (v) => v instanceof Date && v <= new Date(),
-                mensaje: "No puede ser futura"
-            },
-            {
-                campo: "editorial",
-                validar: (v) => typeof v === 'string' && !!v?.trim(),
-                mensaje: "La editorial es obligatoria"
-            },
-            {
-                campo: "idioma",
-                validar: (v) => !!v,
-                mensaje: "Seleccioná un idioma"
-            },
-            {
-                campo: "estado",
-                validar: (v) => !!v,
-                mensaje: "Seleccioná un estado"
-            },
-            {
-                campo: "descripcion",
-                validar: (v) => typeof v === 'string' && !!v?.trim(),
-                mensaje: "La descripción es obligatoria"
-            }
-        ]
-
-        const validarFormulario = () => {
-            const erroresValidados = validar(libro, reglas)
-            setErrores(erroresValidados)
+    const tipos = [
+        { label: "Común", value: "COMUN" },
+        { label: "Con Dedicatoria", value: "DEDICATORIA" },
+        { label: "Coleccionable", value: "COLECCIONABLE" }
+    ]
     
-            if (Object.keys(erroresValidados).length > 0) {
-                showToast(
-                    "Revisá:\n• " + Object.values(erroresValidados).join("\n• "),
-                    "warning"
-                )
-                return false
-            }
+    const generos = [
+        { label: "Drama", value: "DRAMA" },
+        { label: "Ciencia Ficción", value: "CIENCIA_FICCION" },
+        { label: "Romance", value: "ROMANCE" },
+        { label: "Autoayuda", value: "AUTOAYUDA" },
+        { label: "Diseño", value: "DISENO" },
+        { label: "Literatura", value: "LITERATURA" }
+    ]
     
-            return true
-        }
+    const idiomas = [
+        { label: "Francés", value: "FRANCES" },
+        { label: "Español", value: "ESPANOL" },
+        { label: "Inglés", value: "INGLES" },
+        { label: "Portugués", value: "PORTUGUES" },
+    ]
+    
+    const estados = [
+        { label: "Excelente", value: "EXCELENTE" },
+        { label: "Muy Bueno", value: "MUY_BUENO" },
+        { label: "Bueno", value: "BUENO" },
+        { label: "Regular", value: "REGULAR" },
+        { label: "Malo", value: "MALO" }
+    ]
+    const [dialogVisible, setDialogVisible] = useState(false)
+    const [libro, setLibro] = useState<LibroForm>(crearLibroVacio())
+    const [errores, setErrores] = useState<ErroresFormulario>({})
+    const [tempImgUrl, setTempImgUrl] = useState("")
 
-        const abrirDialogImagen = () => {
-            setTempImgUrl(libro.imgUrl ?? "")
-            setDialogVisible(true)
-        }
-        
-        const confirmarImagen = () => {
-            updateCampo("imgUrl", tempImgUrl)
-            setDialogVisible(false)
-        }
+    const { toast, showToast } = useToast()
 
-        const handleGuardar = async () => {
-            if (!validarFormulario()) return
+    const reglas: Regla<LibroForm>[] = [
+        {
+            campo: "imgUrl",
+            validar: (v) => typeof v === 'string' && /^(https?:\/\/.*\.(png|jpg|jpeg|gif|svg))$/i.test(v || ""),
+            mensaje: "Debe ser una URL válida de imagen"
+        },
+        {
+            campo: "titulo",
+            validar: (v) => typeof v === 'string' && !!v.trim(),
+            mensaje: "El título es obligatorio"
+        },
+        {
+            campo: "tipo",
+            validar: (v) => !!v,
+            mensaje: "Seleccioná un tipo"
+        },
+        {
+            campo: "genero",
+            validar: (v) => !!v,
+            mensaje: "Seleccioná un género"
+        },
+        {
+            campo: "autor",
+            validar: (v) => typeof v === 'string' && !!v?.trim(),
+            mensaje: "El autor es obligatorio"
+        },
+        {
+            campo: "cantidadPaginas",
+            validar: (v) => typeof v === 'number' && v != null && v > 0,
+            mensaje: "Debe ser mayor a 0"
+        },
+        {
+            campo: "isbn13",
+            validar: (v) => typeof v === 'string' && /^\d{13}$/.test(v || ""),
+            mensaje: "Debe tener 13 dígitos"
+        },
+        {
+            campo: "fechaPublicacion",
+            validar: (v) => v instanceof Date && v != null,
+            mensaje: "La fecha es obligatoria"
+        },
+        {
+            campo: "fechaPublicacion",
+            validar: (v) => v instanceof Date && v <= new Date(),
+            mensaje: "No puede ser futura"
+        },
+        {
+            campo: "editorial",
+            validar: (v) => typeof v === 'string' && !!v?.trim(),
+            mensaje: "La editorial es obligatoria"
+        },
+        {
+            campo: "idioma",
+            validar: (v) => !!v,
+            mensaje: "Seleccioná un idioma"
+        },
+        {
+            campo: "estado",
+            validar: (v) => !!v,
+            mensaje: "Seleccioná un estado"
+        },
+        {
+            campo: "descripcion",
+            validar: (v) => typeof v === 'string' && !!v?.trim(),
+            mensaje: "La descripción es obligatoria"
+        }
+    ]
 
+    const cargarDatosIniciales = async () => {
+        if (id) {
             try {
-                if (libro.id) {
-                    await libroService.update(libro)
-                    showToast("Libro actualizado correctamente", "success")
-                } else {
-                    await libroService.create(libro)
-                    showToast("Libro creado correctamente", "success")
-                }
-
-            } catch(error) {
-                showToast(getMensajeError(error), 'error')
-            }
-        }
-
-        const handleCancelar = async () => {
-            setLibro(crearLibroVacio())
-            setErrores({})
-        }
-
-        const updateCampo = <K extends keyof LibroForm>(campo: K, valor: LibroForm[K]) => {
-            setLibro({ ...libro, [campo]: valor })
-
-            if (errores[campo]) {
-                setErrores(prev => {
-                    const nuevosErrores = { ...prev }
-                    delete nuevosErrores[campo]
-                    return nuevosErrores
+                const data = await libroService.getById(Number(id))
+                setLibro({
+                    ...data,
+                    fechaPublicacion: data.fechaPublicacion ? new Date(data.fechaPublicacion) : null
                 })
+            } catch (error) {
+                showToast("Error al cargar el libro", "error")
             }
+        } else {
+            setLibro(crearLibroVacio())
         }
+
+        
+    }
+    useOnInit(cargarDatosIniciales)
+
+    const validarFormulario = () => {
+        const erroresValidados = validar(libro, reglas)
+        setErrores(erroresValidados)
+
+        if (Object.keys(erroresValidados).length > 0) {
+            showToast(
+                "Revisá:\n• " + Object.values(erroresValidados).join("\n• "),
+                "warning"
+            )
+            return false
+        }
+
+        return true
+    }
+
+    const abrirDialogImagen = () => {
+        setTempImgUrl(libro.imgUrl ?? "")
+        setDialogVisible(true)
+    }
+    
+    const confirmarImagen = () => {
+        updateCampo("imgUrl", tempImgUrl)
+        setDialogVisible(false)
+    }
+
+    const handleGuardar = async () => {
+        if (!validarFormulario()) return
+
+        try {
+            if (libro.id) {
+                await libroService.update(libro)
+                showToast("Libro actualizado correctamente", "success")
+            } else {
+                await libroService.create(libro)
+                showToast("Libro creado correctamente", "success")
+            }
+
+        } catch(error) {
+            showToast(getMensajeError(error), 'error')
+        }
+    }
+
+    const handleCancelar = async () => {
+        setLibro(crearLibroVacio())
+        setErrores({})
+    }
+
+    const updateCampo = <K extends keyof LibroForm>(campo: K, valor: LibroForm[K]) => {
+        setLibro({ ...libro, [campo]: valor })
+
+        if (errores[campo]) {
+            setErrores(prev => {
+                const nuevosErrores = { ...prev }
+                delete nuevosErrores[campo]
+                return nuevosErrores
+            })
+        }
+    }
 
     return (
         <>
