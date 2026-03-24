@@ -6,15 +6,13 @@ import { InputTextarea } from "primereact/inputtextarea"
 import { Button } from "primereact/button"
 import { Dialog } from "primereact/dialog"
 import { Card } from "primereact/card"
-import { useState } from "react"
+import { useState, useContext } from "react"
 import { useParams } from "react-router-dom"
 import type { LibroForm } from "../../../types/Libro"
 import { libroService } from "../../services/LibroService"
-import { Toast } from '../../components/common/toast';
-import { useToast } from '../../hooks/useToast';
 import { useOnInit } from '../../hooks/useOnInit';
-import '../../../toast.css'
 import { getMensajeError } from '../../../utils/errorHandling'
+import { MainContext } from "../../../types/MainContext"
 
 type ErroresFormulario = Partial<Record<keyof LibroForm, string>>
 
@@ -54,7 +52,7 @@ const validar = <T,>(data: T, reglas: Regla<T>[]) => {
 
 export const EdicionLibro = () => {
     const { id } = useParams()
-
+    const { showToast } = useContext(MainContext)
     const tipos = [
         { label: "Común", value: "COMUN" },
         { label: "Con Dedicatoria", value: "DEDICATORIA" },
@@ -88,8 +86,6 @@ export const EdicionLibro = () => {
     const [libro, setLibro] = useState<LibroForm>(crearLibroVacio())
     const [errores, setErrores] = useState<ErroresFormulario>({})
     const [tempImgUrl, setTempImgUrl] = useState("")
-
-    const { toast, showToast } = useToast()
 
     const reglas: Regla<LibroForm>[] = [
         {
@@ -483,7 +479,6 @@ export const EdicionLibro = () => {
                     </Card>
                 </div>
             </div>
-            <Toast toast={toast} />
         </>
     )
 }
