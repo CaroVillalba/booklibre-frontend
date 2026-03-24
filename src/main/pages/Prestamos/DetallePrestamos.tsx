@@ -149,15 +149,31 @@ export const MisPrestamos = () => {
         );
     };
 
-    // — Calificación —
     const handleConfirmarCalificacion = async () => {
-        if (!prestamoACalificar) return;
-        // TODO: conectar con endpoint de calificación cuando esté implementado en el back
-        console.log("Calificación enviada:", { prestamoACalificar, puntaje, comentario });
+    if (!prestamoACalificar) return;
+
+    try {
+        await reservaService.agregarReseña(
+            prestamoACalificar.id,
+            puntaje,
+            comentario,
+            USUARIO_ID_HARDCODEADO
+        );
+
+        // opcional: actualizar UI local
         setPrestamoACalificar(null);
         setPuntaje(0);
         setComentario("");
-    };
+
+        // recargar préstamos para reflejar calificación
+        const data = await reservaService.misPrestamos(USUARIO_ID_HARDCODEADO);
+        setPrestadosAMi(data.prestadosAMi);
+        setPrestadosPorMi(data.prestadosPorMi);
+
+    } catch (error) {
+        console.error("Error enviando reseña", error);
+    }
+};
 
     const footerDialog = (
         <div className="flex justify-content-end gap-2">
