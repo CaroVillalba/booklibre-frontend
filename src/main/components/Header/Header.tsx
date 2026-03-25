@@ -7,17 +7,25 @@ import { Badge } from 'primereact/badge'
 import type { MenuItem } from 'primereact/menuitem'
 import './Header.css'
 import { loginService } from '../../services/AuthService'
+import { usuarioService } from '../../services/UsuarioService'
+import { MainContext } from '../../../types/MainContext';
+import { useContext } from 'react'
+import  { getMensajeError } from './../../../utils/errorHandling';
+import { useOnInit } from '../../hooks/useOnInit'
+import { useState } from 'react'
+import type { Usuario } from '../../../types/Usuario'
 
 interface HeaderProps {
-  bibliokarmas?: number
   usuarioNombre?: string
   onLogout?: () => void
 }
 
-export function Header({ bibliokarmas = 0, onLogout }: HeaderProps) {
+export function Header({ onLogout }: HeaderProps) {
   const navigate = useNavigate()
   const location = useLocation()
   const menuUsuario = useRef<Menu>(null)
+
+  
 
   const navItems: MenuItem[] = [
     {
@@ -53,6 +61,28 @@ export function Header({ bibliokarmas = 0, onLogout }: HeaderProps) {
     navigate("/login")
   }
 
+  const { showToast } = useContext(MainContext)
+  const { usuario, setUsuario } = useContext(MainContext)
+  
+  const obtenerUsuarioHeader = async () =>{
+
+    try {
+      const usuarioId = loginService.getLoggedUser()
+      const usuario = await usuarioService.getUsuarioPorId(usuarioId)
+      setUsuario(usuario)
+    }
+    catch( error : unknown ){
+      showToast(getMensajeError(error), 'error')
+    }
+
+  } 
+
+   useOnInit(() => {
+          obtenerUsuarioHeader()
+  })
+  
+
+
   const start = (
     <div className="header-logo" onClick={() => navigate('/home')}>
       <span className="header-logo-icon">📚</span>
@@ -66,7 +96,7 @@ export function Header({ bibliokarmas = 0, onLogout }: HeaderProps) {
       <div className="bibliokarmas-container">
         <span className="pi pi-star-fill bibliokarmas-icon" />
         <span className="bibliokarmas-label">Bibliokarmas</span>
-        <Badge value={bibliokarmas} severity="warning" />
+        <Badge value={usuario?.biblioKarmas?? 0} severity="warning" />
       </div>
 
       

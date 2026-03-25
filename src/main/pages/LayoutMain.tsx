@@ -6,16 +6,29 @@ import { Header } from "../components/Header/Header";
 import { MainContext } from "../../types/MainContext";
 import type { MainContextType } from "../../types/MainContext";
 import { loginService } from "../services/AuthService";
+import type { Usuario } from "../../types/Usuario";
 //import { routeConfig } from "../config/routeConfig";
+import { useCallback } from "react";
 
 export const LayoutMain = () => {
-    const location = useLocation()
-    const navigate = useNavigate()
     const { toast, showToast } = useToast()
+    const  [ usuario, setUsuario ] = useState<Usuario | null>(null)
 
+    const actualizarBibliokarmas = useCallback((nuevoPuntaje: number) => {
+        setUsuario((prevUsuario) => {
+            if (!prevUsuario) return null;
+            return { ...prevUsuario, biblioKarmas: nuevoPuntaje };
+        });
+    }, []);
+
+    
     const contextValue: MainContextType = useMemo(() => ({
         showToast,
-    }), [showToast])
+        usuario,
+        setUsuario,
+        actualizarBibliokarmas,
+    }), [showToast, usuario, actualizarBibliokarmas]);
+
 
     //check si esta loggeado
     if (!loginService.checkLoggedIn()) {
