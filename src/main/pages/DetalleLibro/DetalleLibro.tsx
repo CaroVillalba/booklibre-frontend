@@ -25,6 +25,8 @@ import { MainContext } from '../../../types/MainContext';
 import { useNavigate } from "react-router-dom";
 import { InfoItem } from '../../components/DetalleLibroComponentes/InfoItem';
 import { SeccionReserva } from '../../components/DetalleLibroComponentes/SeccionReserva';
+import { loginService } from '../../services/AuthService'
+import { usuarioService } from '../../services/UsuarioService'
 
 
 
@@ -116,9 +118,14 @@ export const DetalleLibro = () => {
         }
 
         try {
+            
+            const userId = loginService.getLoggedUser()
+            const usuario = await usuarioService.getUsuarioPorId(userId)
+
+
             await reservaService.postReserva({
                 tituloLibro: libro.titulo,
-                nombreLector: "Ana García",
+                nombreLector: usuario.nombre,
                 fechaDesde: dates[0], 
                 fechaHasta: dates[1],
             });

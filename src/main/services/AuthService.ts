@@ -45,13 +45,13 @@ export class LoginService {
         sessionStorage.removeItem("SESSION_USER_ID")
     }
 
-    getLoggedUser(): Number {
+    getLoggedUser(): number {
         let userId: String | null = sessionStorage.getItem("SESSION_USER_ID")
         
         if (userId == null)
             throw new UserNotLoggedIn()
 
-        return Number()   
+        return Number(userId)   
     }
 
     checkLoggedIn(): Boolean {
