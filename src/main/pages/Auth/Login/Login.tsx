@@ -32,6 +32,14 @@ export const Login = () => {
         setPassword(e.target.value)
     }
 
+    const validateEmail = (email: string): Boolean => {
+        //este es un regex
+        //no le den bola al regex... dejen tranquilo al regex...
+        const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g
+
+        return email.match(emailRegex) != null
+    }
+
     async function login () {
         setEmailErrorMessage("")
         setPasswordErrorMessage("")
@@ -46,6 +54,11 @@ export const Login = () => {
         if(password == "") {
             frontErrors.push("EMPTY_PASSWORD")
         }
+        
+        if (email != "" && !validateEmail(email)) {
+            console.log("MAIL INVALIDO PELOTUDO DE MRD")
+            frontErrors.push("INVALID_EMAIL")
+        }
 
         if (frontErrors.length > 0) {
             if (frontErrors.includes("EMPTY_EMAIL")) {
@@ -54,6 +67,10 @@ export const Login = () => {
 
             if (frontErrors.includes("EMPTY_PASSWORD")) {
                 setPasswordErrorMessage("La contraseña no puede estar vacia.")
+            }
+
+            if (frontErrors.includes("INVALID_EMAIL")) {
+                setEmailErrorMessage("El correo electronico ingresado es invalido.")
             }
 
             return 

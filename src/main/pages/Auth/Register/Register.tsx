@@ -21,6 +21,14 @@ export const Register = () => {
 
     var navigate = useNavigate()
 
+    const validateEmail = (email: string): Boolean => {
+        //este es un regex
+        //no le den bola al regex... dejen tranquilo al regex...
+        const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g
+
+        return email.match(emailRegex) != null
+    }
+
     const handleNameInput = (e: any) => {
         setName(e.target.value)
     }
@@ -60,6 +68,11 @@ export const Register = () => {
                 frontErrors.push("EMPTY_PASSWORD")
             }
         }
+        
+        if (email != "" && !validateEmail(email)) {
+            console.log("MAIL INVALIDO PELOTUDO DE MRD")
+            frontErrors.push("INVALID_EMAIL")
+        }
 
         
 
@@ -72,10 +85,13 @@ export const Register = () => {
                 setPasswordErrorMessage("La contraseña no puede estar vacia.")
             }
             if (frontErrors.includes("EMPTY_USERNAME")) {
-                setUsernameErrorMessage("El nombre de usuario no puede estar vacio")
+                setUsernameErrorMessage("El nombre de usuario no puede estar vacio.")
             }
             if (frontErrors.includes("EMPTY_EMAIL")) {
-                setEmailErrorMessage("El correo electronico no puede estar vacio")
+                setEmailErrorMessage("El correo electronico no puede estar vacio.")
+            }
+            if (frontErrors.includes("INVALID_EMAIL")) {
+                setEmailErrorMessage("El correo electronico ingresado es invalido.")
             }
 
             return
