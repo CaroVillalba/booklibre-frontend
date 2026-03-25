@@ -7,7 +7,7 @@ import { Button } from "primereact/button"
 import { Dialog } from "primereact/dialog"
 import { Card } from "primereact/card"
 import { useState, useContext } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import type { LibroForm } from "../../../types/Libro"
 import { libroService } from "../../services/LibroService"
 import { useOnInit } from '../../hooks/useOnInit';
@@ -52,6 +52,7 @@ const validar = <T,>(data: T, reglas: Regla<T>[]) => {
 
 export const EdicionLibro = () => {
     const { id } = useParams()
+    const navigate = useNavigate()
     const { showToast } = useContext(MainContext)
     const tipos = [
         { label: "Común", value: "COMUN" },
@@ -164,7 +165,7 @@ export const EdicionLibro = () => {
                     fechaPublicacion: data.fechaPublicacion ? new Date(data.fechaPublicacion) : null
                 })
             } catch (error) {
-                showToast("Error al cargar el libro", "error")
+                showToast(`Error al cargar el libro: ${error}`, "error")
             }
         } else {
             setLibro(crearLibroVacio())
@@ -179,7 +180,7 @@ export const EdicionLibro = () => {
 
         if (Object.keys(erroresValidados).length > 0) {
             showToast(
-                "Revisá:\n• " + Object.values(erroresValidados).join("\n• "),
+                "Por favor, revisá los campos marcados en rojo.", 
                 "warning"
             )
             return false
@@ -208,6 +209,7 @@ export const EdicionLibro = () => {
             } else {
                 await libroService.create(libro)
                 showToast("Libro creado correctamente", "success")
+                setLibro(crearLibroVacio())
             }
 
         } catch(error) {
@@ -216,8 +218,12 @@ export const EdicionLibro = () => {
     }
 
     const handleCancelar = async () => {
-        setLibro(crearLibroVacio())
-        setErrores({})
+        if (id) {
+            navigate(-1)
+        } else {
+            setLibro(crearLibroVacio())
+            setErrores({})
+        }
     }
 
     const updateCampo = <K extends keyof LibroForm>(campo: K, valor: LibroForm[K]) => {
@@ -262,8 +268,8 @@ export const EdicionLibro = () => {
                     />
                 </div>
             </Dialog>
-            <div className="grid">
-                <div className="col-12 mb-3">
+            <div className="grid justify-content-center">
+                <div className="col-12 md:col-12 lg:col-10">
                     <h2 className="m-0">Editar detalles del libro</h2>
                     <p className="text-gray-500">
                         Actualiza la información de tu libro listado para ayudar a los lectores a encontrarlo.
@@ -301,11 +307,11 @@ export const EdicionLibro = () => {
                 </div>
 
                 { /* FORMULARIO */ }
-                <div className="col-12 md:col-10 lg:col-9">
+                <div className="col-12 md:col-8 lg:col-7">
                     <Card>
-                        <div className="grid  p-fluid">
+                        <div className="grid p-fluid">
                             {/* TITULO */}
-                            <div className="field col-10">
+                            <div className="field col-12">
                                 <label htmlFor="titulo">Título</label>
                                 <InputText id="titulo" 
                                     value={libro.titulo}
@@ -319,7 +325,7 @@ export const EdicionLibro = () => {
                             </div>
 
                             {/* TIPO */}
-                            <div className="field col-10">
+                            <div className="field col-12">
                                 <label htmlFor="tipo">Tipo</label>
                                 <Dropdown 
                                     id="tipo" 
@@ -335,7 +341,7 @@ export const EdicionLibro = () => {
                             </div>
 
                             {/* GENERO + AUTOR */}
-                            <div className="field col-12 md:col-5">
+                            <div className="field col-12 md:col-6">
                                 <label htmlFor="genero">Género</label>
                                 <Dropdown 
                                     id="genero" 
@@ -350,7 +356,7 @@ export const EdicionLibro = () => {
                                 )}
                             </div>
 
-                            <div className="field col-12 md:col-5">
+                            <div className="field col-12 md:col-6">
                                 <label htmlFor="autor">Autor</label>
                                 <InputText id="autor" 
                                     value={libro.autor}
@@ -364,7 +370,7 @@ export const EdicionLibro = () => {
                             </div>
 
                             {/* IDIOMA + ESTADO */}
-                            <div className="field col-12 md:col-5">
+                            <div className="field col-12 md:col-6">
                                 <label htmlFor="idioma">Idioma</label>
                                 <Dropdown 
                                     id="idioma" 
@@ -379,7 +385,7 @@ export const EdicionLibro = () => {
                                 )}
                             </div>
 
-                            <div className="field col-12 md:col-5">
+                            <div className="field col-12 md:col-6">
                                 <label htmlFor="estado">Estado</label>
                                 <Dropdown 
                                     id="estado" 
@@ -395,7 +401,7 @@ export const EdicionLibro = () => {
                             </div>
 
                             {/* EDITORIAL + FECHA */}
-                            <div className="field col-12 md:col-5">
+                            <div className="field col-12 md:col-6">
                                 <label htmlFor="editorial">Editorial</label>
                                 <InputText 
                                     id="editorial" 
@@ -409,7 +415,7 @@ export const EdicionLibro = () => {
                                 )}
                             </div>
 
-                            <div className="field col-12 md:col-5">
+                            <div className="field col-12 md:col-6">
                                 <label htmlFor="fecha">Fecha de publicación</label>
                                 <Calendar 
                                     id="fecha" 
@@ -425,7 +431,7 @@ export const EdicionLibro = () => {
                             </div>
 
                             {/* PAGINAS + ISBN */}
-                            <div className="field col-12 md:col-5">
+                            <div className="field col-12 md:col-6">
                                 <label htmlFor="paginas">Cantidad de Páginas</label>
                                 <InputNumber 
                                     id="paginas" 
@@ -439,7 +445,7 @@ export const EdicionLibro = () => {
                                 )}
                             </div>
 
-                            <div className="field col-12 md:col-5">
+                            <div className="field col-12 md:col-6">
                                 <label htmlFor="isbn">ISBN</label>
                                 <InputText 
                                     id="isbn" 
@@ -454,7 +460,7 @@ export const EdicionLibro = () => {
                             </div>
 
                             {/* DESCRIPCION */}
-                            <div className="field col-10">
+                            <div className="field col-12">
                                 <label htmlFor="descripcion">Descripción</label>
                                 <InputTextarea 
                                     id="descripcion" 

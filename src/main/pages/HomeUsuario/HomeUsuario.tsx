@@ -56,12 +56,13 @@ export const HomeUsuario = () => {
     ]
 
     // Función central que llama al back con los parámetros actuales
-    const fetchLibros = async (tituloOverride?: string, pagina?: number) => {
+    const fetchLibros = async (pagina?: number) => {
         setCargando(true)
         setError(null)
+        
         try {
             const resultado = await libroService.search({
-                titulo: (tituloOverride ?? tituloBusqueda) || undefined,
+                titulo: tituloBusqueda || undefined,
                 generos: generosSeleccionados.length > 0
                     ? generosSeleccionados
                     : undefined,
@@ -81,9 +82,8 @@ export const HomeUsuario = () => {
             setTotalElementos(resultado.totalElements)
             setTotalPaginas(resultado.totalPages)
             setPaginaActual(resultado.page)
-        } catch (e) {
-            setError("No se pudieron cargar los libros. Verificá que el servidor esté activo.")
-            console.error(e)
+        } catch {
+            setError("No se pudieron cargar los libros.")
         } finally {
             setCargando(false)
         }
@@ -94,20 +94,18 @@ export const HomeUsuario = () => {
 
     // Efecto para re-fetch cuando cambia el orden o dirección
     useEffect(() => {
-        // Solo ejecutar si ya hay datos cargados (evita doble llamada en mount)
-        if (libros.length > 0 || cargando) {
-            fetchLibros(undefined, 0) // Reset a página 0 al cambiar orden
-        }
+        fetchLibros(0) // Reset a página 0 al cambiar orden
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orden, direccion])
 
     const handleBuscar = () => {
         setPaginaActual(0)
-        fetchLibros(tituloBusqueda, 0)
+        fetchLibros(0)
     }
 
     const handleAplicarFiltros = () => {
         setPaginaActual(0)
-        fetchLibros(undefined, 0)
+        fetchLibros(0)
     }
 
     const handleOrden = (nuevoOrden: Orden) => {
@@ -127,7 +125,7 @@ export const HomeUsuario = () => {
     }
 
     const handlePageChange = (event: PaginatorPageChangeEvent) => {
-        fetchLibros(undefined, event.page)
+        fetchLibros(event.page)
     }
 
     return (
