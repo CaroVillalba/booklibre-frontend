@@ -16,6 +16,8 @@ import "./HomeUsuario.css"
 const toISODate = (date: Date): string => date.toISOString().split("T")[0]
 
 const hoy = new Date()
+const maniana = new Date()
+maniana.setDate(hoy.getDate() + 1)
 
 export const HomeUsuario = () => {
     const navigate = useNavigate()
@@ -25,7 +27,7 @@ export const HomeUsuario = () => {
     const [generosSeleccionados, setGenerosSeleccionados] = useState<string[]>([])
     const [paginasSeleccionadas, setPaginasSeleccionadas] = useState<[number, number]>([0, 1500])
     const [fechaDesde, setFechaDesde] = useState<Date | null>(hoy)
-    const [fechaHasta, setFechaHasta] = useState<Date | null>(hoy)
+    const [fechaHasta, setFechaHasta] = useState<Date | null>(maniana)
     const [isbn, setIsbn] = useState("")
     const [prestadoPorUsuario, setPrestadoPorUsuario] = useState("")
 
@@ -211,7 +213,7 @@ export const HomeUsuario = () => {
                                     className="col-12 md:col-6 lg:col-4"
                                     onClick={() => {
                                         const desde = toISODate(fechaDesde ?? hoy)
-                                        const hasta = toISODate(fechaHasta ?? hoy)
+                                        const hasta = toISODate(fechaHasta ?? maniana)
                                         navigate(`/detalle-libro/${libro.id}?desde=${desde}&hasta=${hasta}`)
                                     }}
                                 >
