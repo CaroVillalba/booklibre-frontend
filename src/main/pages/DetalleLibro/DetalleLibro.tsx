@@ -67,6 +67,7 @@ export const DetalleLibro = () => {
 
     const [reseñas, setReseñas] = useState<Reseña[]>([])
 
+    const { actualizarBibliokarmas } = useContext(MainContext)
    
     const ds = useRef<any>(null); 
 
@@ -90,6 +91,7 @@ export const DetalleLibro = () => {
 
             const fechaDesdeCorrecta = new Date(desdeParam.replace(/-/g, '/'))
             const fechaHastaCorrecta = new Date(hastaParam.replace(/-/g, '/'))
+            
 
             setDates([fechaDesdeCorrecta, fechaHastaCorrecta])
         }
@@ -134,6 +136,9 @@ export const DetalleLibro = () => {
             ...prevLibro,
             estado: "Prestado" 
             }));
+
+            const usuarioActualizado = await usuarioService.getUsuarioPorId(userId);
+            actualizarBibliokarmas(usuarioActualizado.biblioKarmas);
             
             showToast('Reserva realizada con éxito', 'success')
             navigate(`/prestamos`)
