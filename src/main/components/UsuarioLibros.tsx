@@ -110,7 +110,7 @@ export const UsuarioLibros = ({usuarioId}:UsuarioLibrosProps) => {
                         icon="pi pi-plus"
                         iconPos="left"
                         className="p-button-secondary p-button-outlined text-color"
-                        onClick={() => navigate(`/editar-detalles`)}
+                        onClick={() => navigate(`/editar-libro`)}
                     />
                 </div>
                 <Card className="border-round-2xl shadow-1" >
