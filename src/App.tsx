@@ -24,13 +24,13 @@ function AppContent() {
   return (
 
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Navigate to="/home" replace />} />
         <Route element={<LayoutAuth />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Route>
         
-        <Route path="/" element={<LayoutMain />}>
+        <Route element={<LayoutMain />}>
             <Route path="home" element={<HomeUsuario />} />
             <Route path="detalle-libro" element={<DetalleLibro />} />
             <Route path="detalle-libro/:id" element={<DetalleLibro />} />

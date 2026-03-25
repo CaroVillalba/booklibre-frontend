@@ -6,6 +6,7 @@ import { Button } from 'primereact/button'
 import { Badge } from 'primereact/badge'
 import type { MenuItem } from 'primereact/menuitem'
 import './Header.css'
+import { loginService } from '../../services/AuthService'
 
 interface HeaderProps {
   bibliokarmas?: number
@@ -47,8 +48,13 @@ export function Header({ bibliokarmas = 0, onLogout }: HeaderProps) {
     },
   ]
 
+  onLogout = () => {
+    loginService.logout()
+    navigate("/login")
+  }
+
   const start = (
-    <div className="header-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+    <div className="header-logo" onClick={() => navigate('/home')}>
       <span className="header-logo-icon">📚</span>
       <span className="header-logo-text">BookLibre</span>
     </div>
