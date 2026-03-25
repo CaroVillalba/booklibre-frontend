@@ -72,6 +72,10 @@ export class LibroService extends CRUDService<LibroHome> {
 
         await this.api.post(`/libros?duenioId=${duenioId}`, data)
     }
+
+    async eliminarLibro(id:number): Promise<void>{
+        await this.api.delete(`/libros/${id}`)
+    }
 }
 
 export const libroService = new LibroService()
