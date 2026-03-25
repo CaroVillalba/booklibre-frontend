@@ -54,7 +54,7 @@ export function Header({ bibliokarmas = 0, onLogout }: HeaderProps) {
   }
 
   const start = (
-    <div className="header-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+    <div className="header-logo" onClick={() => navigate('/home')}>
       <span className="header-logo-icon">📚</span>
       <span className="header-logo-text">BookLibre</span>
     </div>

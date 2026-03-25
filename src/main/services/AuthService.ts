@@ -51,8 +51,13 @@ export class LoginService {
         if (userId == null)
             throw new UserNotLoggedIn()
 
-        return Number()
+        return Number()   
+    }
+
+    checkLoggedIn(): Boolean {
+        let userId: String | null = sessionStorage.getItem("SESSION_USER_ID")
         
+        return userId != null
     }
 }
 
