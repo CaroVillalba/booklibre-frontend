@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UsuarioDatos } from "../../components/UsuarioDatos";
 import { UsuarioEstadisticas } from "../../components/UsuarioEstadisticas";
 import { UsuarioHeader } from "../../components/UsuarioHeader";
@@ -12,6 +12,12 @@ import { usuarioService } from "../../services/UsuarioService";
 import { useParams } from "react-router-dom";
 import { MensajePublicador } from "../../components/MensajePublicador";
 import { ModalEditarPerfil } from "../../components/ModalEditarPerfil";
+import { AxiosError } from "axios";
+import { MainContext } from "../../../types/MainContext";
+import { ConfirmDialog } from "primereact/confirmdialog"
+
+<ConfirmDialog />
+// import { useToast } from "../../hooks/useToast";
 
 export const PerfilUsuario = () => {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -20,16 +26,31 @@ export const PerfilUsuario = () => {
         useState<UsuarioUpdateRequest | null>(null);
     const [cargando, setCargando] = useState(true);
     const { id } = useParams();
+    // const {showToast} = useToast()
+    const { showToast } = useContext(MainContext);
 
     useEffect(() => {
-        usuarioService
-            .getById(Number(id))
-            .then(setUsuario)
-            .catch((error) =>
-                console.error("error al cargar el usuario", error),
-            )
-            .finally(() => setCargando(false));
-    }, [id]);
+    const fetchUsuario = async () => {
+        try {
+            const data = await usuarioService.getById(Number(id))
+            setUsuario(data)
+        } catch (error: unknown) {
+            console.error("error al cargar el usuario", error)
+
+            if (error instanceof AxiosError) {
+                const mensaje =
+                    error.response?.data?.message || "No se pudo cargar el usuario"
+                showToast(mensaje, "error")
+            } else {
+                showToast("Error inesperado al cargar el usuario", "error")
+            }
+        } finally {
+            setCargando(false)
+        }
+    }
+
+    fetchUsuario()
+}, [id, showToast])
 
     if (cargando) {
         return <div>Cargando perfil...</div>;
@@ -61,27 +82,36 @@ export const PerfilUsuario = () => {
     const cerrarModal = () => {
         setVisibleEditarPerfil(false);
         setUsuarioEditado(null);
-    };
+    }
 
     const handleGuardarPerfil = async (
         usuarioActualizado: UsuarioUpdateRequest,
     ) => {
         if (!usuario.id) return;
-
         try {
             const usuarioGuardado = await usuarioService.updateUsuario(
                 usuario.id,
                 usuarioActualizado,
             );
+
+            showToast("Perfil actualizado correctamente", "success");
             setUsuario(usuarioGuardado);
             cerrarModal();
-        } catch (error) {
-            console.error("error al acutalizar el usuario", error);
+        } catch (error: unknown) {
+            if (error instanceof AxiosError) {
+                const mensaje =
+                    error.response?.data?.message ||
+                    "No se pudo actualizar el usuario";
+                showToast(mensaje, "error");
+            } else {
+                showToast("Error inesperado", "error");
+            }
         }
-    };
+    }
 
     return (
         <div className="p-2 surface-ground perfil-usuario">
+            <ConfirmDialog />
             <UsuarioHeader
                 usuario={usuario}
                 onEditarPerfil={abrirEditarperfil}
