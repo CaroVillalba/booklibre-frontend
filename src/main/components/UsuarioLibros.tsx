@@ -173,7 +173,7 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
                         icon="pi pi-plus"
                         iconPos="left"
                         className="p-button-secondary p-button-outlined text-color"
-                        onClick={() => navigate(`/editar-detalles`)}
+                        onClick={() => navigate(`/editar-libro`)}
                     />
                 </div>
                 <Card className="border-round-2xl shadow-1">
@@ -283,14 +283,15 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
                                 {formatearFecha(libro.fechaAgregado)}
                             </div>
 
-                            {/* ACCIONES */}
-                            <div className="w-2 flex justify-content-center gap-2">
-                                <Button
-                                    icon="pi pi-pencil"
-                                    rounded
-                                    text
-                                    severity="secondary"
-                                />
+                        {/* ACCIONES */}
+                        <div className="w-2 flex justify-content-center gap-2">
+                            <Button
+                                icon="pi pi-pencil"
+                                rounded
+                                text
+                                severity="secondary"
+                                onClick={() => navigate(`/editar-libro/${libro.id}`)}
+                            />
 
                                 <Button
                                     icon="pi pi-trash"
