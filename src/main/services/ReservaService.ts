@@ -21,7 +21,7 @@ export class ReservaService extends CRUDService<Reserva> {
     }
 
     async misPrestamos(): Promise<MisPrestamosResponse> {
-        const userId = loginService.getLoggedUser()  // ← Obtener userId del sessionStorage
+        const userId = loginService.getLoggedUser()  
         
         const response = await this.api.get<MisPrestamosResponse>(
             `/${this.path}/mis-prestamos`,
@@ -31,7 +31,7 @@ export class ReservaService extends CRUDService<Reserva> {
     }
 
     async agregarReseña(reservaId: number, rating: number, texto: string): Promise<void> {
-        const userId = loginService.getLoggedUser()  // ← Obtener userId del sessionStorage
+        const userId = loginService.getLoggedUser()  
         
         await this.api.post(
             `/${this.path}/${reservaId}/reseña`,

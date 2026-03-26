@@ -93,9 +93,9 @@ export const HomeUsuario = () => {
     // Carga inicial
     useOnInit(() => { fetchLibros() })
 
-    // Efecto para re-fetch cuando cambia el orden o dirección
+    
     useEffect(() => {
-        fetchLibros(0) // Reset a página 0 al cambiar orden
+        fetchLibros(0) 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orden, direccion])
 
