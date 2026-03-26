@@ -85,9 +85,11 @@ export const DetalleLibro = () => {
             })
             setLibro(libroDetalle)
 
-            const fechaDesdeCorrecta = new Date(desdeParam.replace(/-/g, '/'))
-            const fechaHastaCorrecta = new Date(hastaParam.replace(/-/g, '/'))
-            
+            const [year, month, day] = desdeParam.split('-').map(Number)
+            const fechaDesdeCorrecta = new Date(year, month - 1, day)
+
+            const [yH, mH, dH] = hastaParam.split('-').map(Number)
+            const fechaHastaCorrecta = new Date(yH, mH - 1, dH)
 
             setDates([fechaDesdeCorrecta, fechaHastaCorrecta])
         }
