@@ -212,6 +212,9 @@ export const EdicionLibro = () => {
                 setLibro(crearLibroVacio())
             }
 
+            //te manda a /home
+            navigate("/home")
+
         } catch(error) {
             showToast(getMensajeError(error), 'error')
         }
