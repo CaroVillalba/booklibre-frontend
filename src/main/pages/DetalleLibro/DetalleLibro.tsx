@@ -20,16 +20,13 @@ import { reseñaService } from '../../services/ReseñaService';
 import { NoReseñasCard } from './ReseñaCard/NoReseñasCard';
 import { reservaService } from '../../services/ReservaService';
 import '../../../toast.css'
-import { getMensajeError, type ErrorResponse } from '../../../utils/errorHandling'
+import { getMensajeError } from '../../../utils/errorHandling'
 import { MainContext } from '../../../types/MainContext';
 import { useNavigate } from "react-router-dom";
 import { InfoItem } from '../../components/DetalleLibroComponentes/InfoItem';
 import { SeccionReserva } from '../../components/DetalleLibroComponentes/SeccionReserva';
 import { loginService } from '../../services/AuthService'
 import { usuarioService } from '../../services/UsuarioService'
-
-
-
 
 export const DetalleLibro = () => {
     const navigate = useNavigate()
@@ -68,7 +65,7 @@ export const DetalleLibro = () => {
     const [reseñas, setReseñas] = useState<Reseña[]>([])
 
     const { actualizarBibliokarmas } = useContext(MainContext)
-   
+
     const ds = useRef<any>(null); 
 
     const headerReseñas = (
@@ -79,7 +76,6 @@ export const DetalleLibro = () => {
         )}
         </>
     )
-
 
     const getLibroDetalle = async() => {
         try {
@@ -99,7 +95,6 @@ export const DetalleLibro = () => {
             showToast(getMensajeError(error), 'error')
         }
     }
-
 
     const getReseñas = async() => {
         try {
@@ -126,8 +121,8 @@ export const DetalleLibro = () => {
 
 
             await reservaService.postReserva({
-                tituloLibro: libro.titulo,
-                nombreLector: usuario.nombre,
+                idLibro: libro.id,
+                idLector: usuario.id,
                 fechaDesde: dates[0], 
                 fechaHasta: dates[1],
             });
@@ -155,7 +150,6 @@ export const DetalleLibro = () => {
         <Button label= " Confirmar reserva " icon= "pi pi-check" iconPos="right" className="p-button-primary p-button-text boton-ancho" onClick={realizarReserva} />
         </>
     )
-
 
     useOnInit(() => {
         getLibroDetalle()

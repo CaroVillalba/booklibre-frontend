@@ -11,8 +11,8 @@ export class ReservaService extends CRUDService<Reserva> {
 
     async postReserva(reserva: Reserva): Promise<void> {
         const payload = {
-            tituloLibro: reserva.tituloLibro,
-            nombreLector: reserva.nombreLector,
+            idLibro: reserva.idLibro,
+            idLector: reserva.idLector,
             fechaDesde: reserva.fechaDesde,
             fechaHasta: reserva.fechaHasta,
         }

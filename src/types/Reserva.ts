@@ -1,7 +1,6 @@
 export interface Reserva {
-    tituloLibro: string;
-    nombreLector: string;
+    idLibro: number;
+    idLector: number;
     fechaDesde: Date;
     fechaHasta: Date;
-
 }

@@ -1,7 +1,7 @@
 export type TipoUsuario = "LECTOR" | "PUBLICADOR" | "LECTOR_PUBLICADOR"
 
 export interface Usuario{
-    id?:number;
+    id:number;
     nombre:string;
     descripcion:string;
     email:string;
