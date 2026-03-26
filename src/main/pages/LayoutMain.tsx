@@ -30,7 +30,7 @@ export const LayoutMain = () => {
     }), [showToast, usuario, actualizarBibliokarmas]);
 
 
-    //check si esta loggeado
+    
     if (!loginService.checkLoggedIn()) {
         return (<Navigate to="/login" replace />)
     }
