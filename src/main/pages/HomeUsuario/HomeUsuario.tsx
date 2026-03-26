@@ -77,6 +77,7 @@ export const HomeUsuario = () => {
                 sortBy: orden,
                 direction: direccion,
             })
+
             
             setLibros(resultado.content)
             setTotalElementos(resultado.totalElements)
@@ -109,13 +110,10 @@ export const HomeUsuario = () => {
     }
 
     const handleOrden = (nuevoOrden: Orden) => {
-        // Si es el mismo campo, cambia la dirección
-        if (nuevoOrden === orden) {
-            setDireccion(prev => prev === "asc" ? "desc" : "asc")
-        } else {
-            setOrden(nuevoOrden)
-            setDireccion("asc")
-        }
+        
+        setOrden(nuevoOrden)
+        setDireccion("asc")
+        
         setPaginaActual(0)
     }
 
