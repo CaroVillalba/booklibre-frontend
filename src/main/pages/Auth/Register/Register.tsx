@@ -70,7 +70,7 @@ export const Register = () => {
         }
         
         if (email != "" && !validateEmail(email)) {
-            console.log("MAIL INVALIDO PELOTUDO DE MRD")
+            console.log("MAIL INVALIDO")
             frontErrors.push("INVALID_EMAIL")
         }
 
