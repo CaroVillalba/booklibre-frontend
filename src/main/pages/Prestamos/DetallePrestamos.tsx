@@ -11,7 +11,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Paginator } from "primereact/paginator";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useNavigate } from "react-router-dom";
-import { reservaService } from "../../services/ReservaService"; // ajustá el path si hace falta
+import { reservaService } from "../../services/ReservaService";
 import type { Prestamo, EstadoPrestamo } from "../../../types/Prestamo";
 import "./DetallePrestamos.css";
 
@@ -99,9 +99,6 @@ const PrestamoCard = ({ prestamo, esPrestadoAMi, onCalificar }: PrestamoCardProp
 
 const ITEMS_POR_PAGINA = 4;
 
-// TODO: reemplazar con el id del usuario autenticado cuando auth esté listo
-const USUARIO_ID_HARDCODEADO = 1;
-
 export const MisPrestamos = () => {
     const navigate = useNavigate();
 
@@ -125,7 +122,7 @@ export const MisPrestamos = () => {
             try {
                 setLoading(true);
                 setError(null);
-                const data = await reservaService.misPrestamos(USUARIO_ID_HARDCODEADO);
+                const data = await reservaService.misPrestamos();  // ← Ya no necesita parámetro
                 setPrestadosAMi(data.prestadosAMi);
                 setPrestadosPorMi(data.prestadosPorMi);
             } catch (e) {
@@ -150,30 +147,29 @@ export const MisPrestamos = () => {
     };
 
     const handleConfirmarCalificacion = async () => {
-    if (!prestamoACalificar) return;
+        if (!prestamoACalificar) return;
 
-    try {
-        await reservaService.agregarReseña(
-            prestamoACalificar.id,
-            puntaje,
-            comentario,
-            USUARIO_ID_HARDCODEADO
-        );
+        try {
+            await reservaService.agregarReseña(
+                prestamoACalificar.id,
+                puntaje,
+                comentario  // ← Ya no necesita el userId como parámetro
+            );
 
-        // opcional: actualizar UI local
-        setPrestamoACalificar(null);
-        setPuntaje(0);
-        setComentario("");
+            // opcional: actualizar UI local
+            setPrestamoACalificar(null);
+            setPuntaje(0);
+            setComentario("");
 
-        // recargar préstamos para reflejar calificación
-        const data = await reservaService.misPrestamos(USUARIO_ID_HARDCODEADO);
-        setPrestadosAMi(data.prestadosAMi);
-        setPrestadosPorMi(data.prestadosPorMi);
+            // recargar préstamos para reflejar calificación
+            const data = await reservaService.misPrestamos();  // ← Ya no necesita parámetro
+            setPrestadosAMi(data.prestadosAMi);
+            setPrestadosPorMi(data.prestadosPorMi);
 
-    } catch (error) {
-        console.error("Error enviando reseña", error);
-    }
-};
+        } catch (error) {
+            console.error("Error enviando reseña", error);
+        }
+    };
 
     const footerDialog = (
         <div className="flex justify-content-end gap-2">

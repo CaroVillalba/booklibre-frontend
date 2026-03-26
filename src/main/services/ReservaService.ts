@@ -3,6 +3,7 @@
 import type { Reserva } from "../../types/Reserva";
 import type { MisPrestamosResponse } from "../../types/Prestamo";
 import { CRUDService } from "./CRUDService";
+import { loginService } from "./AuthService";
 
 export class ReservaService extends CRUDService<Reserva> {
     constructor() {
@@ -19,28 +20,30 @@ export class ReservaService extends CRUDService<Reserva> {
         await this.api.post(`/${this.path}`, payload)
     }
 
-    async misPrestamos(usuarioId: number): Promise<MisPrestamosResponse> {
+    async misPrestamos(): Promise<MisPrestamosResponse> {
+        const userId = loginService.getLoggedUser()  // ← Obtener userId del sessionStorage
+        
         const response = await this.api.get<MisPrestamosResponse>(
             `/${this.path}/mis-prestamos`,
-            { params: { usuarioId } }
+            { params: { usuarioId: userId } }
         )
         return response.data
     }
 
-    // POST /v1/reservas/{id}/reseña?autorId={autorId}
-    // autorId es temporal hasta que auth esté implementado
-    async agregarReseña(reservaId: number, rating: number, texto: string, autorId: number): Promise<void> {
-    await this.api.post(
-        `/${this.path}/${reservaId}/reseña`,
-        {
-            rating,
-            texto,
-            fecha: new Date().toISOString(),
-            autorNombre: "Usuario" // TODO: esto es temporal
-        },
-        { params: { autorId } }
-    )
-}
+    async agregarReseña(reservaId: number, rating: number, texto: string): Promise<void> {
+        const userId = loginService.getLoggedUser()  // ← Obtener userId del sessionStorage
+        
+        await this.api.post(
+            `/${this.path}/${reservaId}/reseña`,
+            {
+                rating,
+                texto,
+                fecha: new Date().toISOString(),
+                autorNombre: "Usuario" // TODO: esto es temporal
+            },
+            { params: { autorId: userId } }
+        )
+    }
 }
 
 export const reservaService = new ReservaService()
