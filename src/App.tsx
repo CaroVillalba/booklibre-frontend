@@ -70,7 +70,8 @@ function AppContent() {
             <Route path="detalle-libro/:id" element={<DetalleLibro />} />
             <Route path="editar-detalles" element={<EdicionLibro />} />
             <Route path="prestamos" element={<MisPrestamos />} />
-            <Route path="perfil/:id" element={<PerfilUsuario />} />
+            <Route path="perfil" element={<PerfilUsuario />} />
+            <Route path="/perfil/*" element={<Navigate to="/perfil" replace />} />
         </Route>
       </Routes>
   )

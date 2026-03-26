@@ -44,7 +44,7 @@ export function Header({ onLogout }: HeaderProps) {
       label: 'Perfil',
       icon: 'pi pi-user',
       className: location.pathname === '/perfil' ? 'nav-item-active' : '',
-      command: () => navigate('/perfil/1'),
+      command: () => navigate('/perfil'),
     },
   ]
 

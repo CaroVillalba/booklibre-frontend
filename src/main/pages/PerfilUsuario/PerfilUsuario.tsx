@@ -9,12 +9,12 @@ import {
     type Usuario,
 } from "../../../types/Usuario";
 import { usuarioService } from "../../services/UsuarioService";
-import { useParams } from "react-router-dom";
 import { MensajePublicador } from "../../components/MensajePublicador";
 import { ModalEditarPerfil } from "../../components/ModalEditarPerfil";
 import { AxiosError } from "axios";
 import { MainContext } from "../../../types/MainContext";
 import { ConfirmDialog } from "primereact/confirmdialog"
+import { loginService } from "../../services/AuthService";
 
 <ConfirmDialog />
 // import { useToast } from "../../hooks/useToast";
@@ -24,15 +24,15 @@ export const PerfilUsuario = () => {
     const [visibleEditarPerfil, setVisibleEditarPerfil] = useState(false);
     const [usuarioEditado, setUsuarioEditado] =
         useState<UsuarioUpdateRequest | null>(null);
-    const [cargando, setCargando] = useState(true);
-    const { id } = useParams();
+    const [cargando, setCargando] = useState(true)
     // const {showToast} = useToast()
     const { showToast } = useContext(MainContext);
 
     useEffect(() => {
     const fetchUsuario = async () => {
         try {
-            const data = await usuarioService.getById(Number(id))
+            const usuarioId = loginService.getLoggedUser()
+            const data = await usuarioService.getById(usuarioId)
             setUsuario(data)
         } catch (error: unknown) {
             console.error("error al cargar el usuario", error)
@@ -50,7 +50,7 @@ export const PerfilUsuario = () => {
     }
 
     fetchUsuario()
-}, [id, showToast])
+}, [ showToast])
 
     if (cargando) {
         return <div>Cargando perfil...</div>;
