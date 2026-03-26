@@ -285,18 +285,24 @@ export const EdicionLibro = () => {
                         <div className="flex flex-column align-items-center gap-3">
                         
                             <div 
-                                className="border-2 border-dashed border-300 border-round p-4 w-full text-center cursor-pointer"
+                                className={`border-2 border-dashed border-300 border-round p-4 w-full text-center cursor-pointer ${
+                                    errores.imgUrl ? "border-red-500 bg-red-50" : "border-300"
+                                }`}
                                 onClick={() => abrirDialogImagen()}
                             >
                                 {libro.imgUrl ? (
                                     <img src={libro.imgUrl} alt="portada" style={{ width: "100%" }} />
                                 ) : (
                                     <div className="flex flex-column align-items-center">
-                                        <i className="pi pi-cloud-upload text-4xl mb-2"></i>
-                                        <p className="m-0">Subir Portada</p>
+                                        <i className={`pi pi-cloud-upload text-4xl mb-2 ${errores.imgUrl ? "text-red-500" : ""}`}></i>
+                                        <p className={`m-0 ${errores.imgUrl ? "text-red-500 font-bold" : ""}`}>Subir Portada</p>
                                     </div>
                                 )}
                             </div>
+                            
+                            {errores.imgUrl && (
+                                <small className="p-error block mt-2 text-center">{errores.imgUrl}</small>
+                            )}
 
                             <Button 
                                 label="Eliminar portada" 
