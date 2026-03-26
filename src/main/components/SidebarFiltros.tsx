@@ -53,6 +53,20 @@ export const SidebarFiltros = (props: Props) => {
         }
     }
 
+    const changeFechaDesde = (fecha: Date | null) => {
+        if (fecha <= fechaHasta)
+            setFechaDesde(fecha)
+        else
+            setFechaDesde(fechaHasta)
+    }
+
+    const changeFechaHasta = (fecha: Date | null) => {
+        if (fecha >= fechaDesde)
+            setFechaHasta(fecha)
+        else 
+            setFechaHasta(fechaDesde)
+    }
+
     return (
         <Card>
             <h3 className="mt-0">Género</h3>
@@ -90,18 +104,19 @@ export const SidebarFiltros = (props: Props) => {
                     <label>Desde </label>
                     <Calendar
                         value={fechaDesde}
-                        onChange={(e) => setFechaDesde(e.value ?? null)}
+                        onChange={(e) => changeFechaDesde(e.value ?? null)}
                         dateFormat="dd/mm/yy"
                         minDate={new Date()}
+                        maxDate={fechaHasta}
                     />
                 </div>
                 <div>
                     <label>Hasta </label>
                     <Calendar
                         value={fechaHasta}
-                        onChange={(e) => setFechaHasta(e.value ?? null)}
+                        onChange={(e) => changeFechaHasta(e.value ?? null)}
                         dateFormat="dd/mm/yy"
-                        minDate={new Date()}
+                        minDate={fechaDesde}
                     />
                 </div>
             </div>
