@@ -1,13 +1,22 @@
 import "./Login.css"
-import { Card } from 'primereact/card';
 import { Checkbox } from "primereact/checkbox";
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
 import { useState } from "react";
 import { loginService } from "../../../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
+import { validateEmail } from "../AuthBase";
+import { AuthBase } from "../AuthBase";
+import { AuthTextField } from "../AuthBase.tsx";
+import { AuthPasswordField } from "../AuthBase.tsx";
+
+export const loginHeader = (
+    <div className="login-header">
+        <h1>📚</h1>
+        <h1>BookLibre</h1>
+        <p>Por favor ingresa tus datos para continuar leyendo.</p>
+    </div>
+)
 
 export const Login = () => {
     var [email, setEmail] = useState("")
@@ -22,22 +31,6 @@ export const Login = () => {
 
     const handleCheckRememberme = () => {
         setRememberme(!rememberme)
-    }
-
-    const handleEmailInput = (e: any) => {
-        setEmail(e.target.value)
-    }
-
-    const handlePasswordInput = (e: any) => {
-        setPassword(e.target.value)
-    }
-
-    const validateEmail = (email: string): Boolean => {
-        //este es un regex
-        //no le den bola al regex... dejen tranquilo al regex...
-        const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g
-
-        return email.match(emailRegex) != null
     }
 
     async function login () {
@@ -56,7 +49,6 @@ export const Login = () => {
         }
         
         if (email != "" && !validateEmail(email)) {
-            console.log("MAIL INVALIDO")
             frontErrors.push("INVALID_EMAIL")
         }
 
@@ -77,51 +69,30 @@ export const Login = () => {
         }
 
         try {
-            var res = await loginService.login({"email": email, "password": password, "rememberMe": false})
+            await loginService.login({"email": email, "password": password, "rememberMe": false})
 
             navigate("/home")
         }
         catch (error: AxiosError) {
-            if (error.response.status == 404) {
-                setLoginErrorMessage("El usuario ingresado no existe.")
-            } 
-            if (error.response.status == 401) {
-                setLoginErrorMessage("La contraseña ingresada es incorrecta.")
-            } 
+            if (error.response.status >= 400 && error.response.status < 500)
+            setLoginErrorMessage(error.response.data)
         }
     }
 
     return (
-        <div className="Login">
-            <Card>
-                <div className="login-header">
-                    <h1>📚</h1>
-                    <h1>BookLibre</h1>
-                    <p>Por favor ingresa tus datos para continuar leyendo.</p>
-                </div>
+        <AuthBase header={loginHeader}>
 
-                <hr/>
-
-                <p><b>Correo electronico:</b></p>
-                <p><InputText className="block-input-text" value={email} onChange={handleEmailInput}></InputText></p>
-                
-                <p id="email-conflict-error" className="error-message-label">{emailErrorMessage}</p>
-
-                <p><b>Contraseña:</b></p>
-                <p><Password className="block-input-text" value={password} onChange={handlePasswordInput} toggleMask></Password></p>
-
-                <p id="password-confirmation-error" className="error-message-label">{passwordErrorMessage}</p>
-
-                <p><Checkbox checked={rememberme} onClick={handleCheckRememberme}></Checkbox> Recordame</p>
-
-                <p id="account-login-error" className="error-message-label">{loginErrorMessage}</p>
-
-                <p><Button className="login-button" onClick={login}>Ingresar</Button></p>
-
-                <p className="center">Aun no tienes una cuenta? <a href="/register">Registrate gratis</a></p>
-            </Card>
+            <AuthTextField label="Correo electronico:" value={email} onChange={setEmail} error={emailErrorMessage}/>
             
-            <p className="center">© PastelReads. Todos los derechos reservados.</p>
-        </div>
+            <AuthPasswordField label="Contraseña:" value={password} onChange={setPassword} error={passwordErrorMessage} />
+
+            <p><Checkbox checked={rememberme} onClick={handleCheckRememberme}></Checkbox> Recordame</p>
+
+            <p id="account-login-error" className="error-message-label">{loginErrorMessage}</p>
+
+            <p><Button className="login-button" onClick={login}>Ingresar</Button></p>
+
+            <p className="center">Aun no tienes una cuenta? <a href="/register">Registrate gratis</a></p>
+        </AuthBase>
     )
 }

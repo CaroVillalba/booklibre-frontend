@@ -1,13 +1,21 @@
 import "../Login/Login.css"
-import { Card } from 'primereact/card';
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
 import { useState } from "react";
 import { registerService } from "../../../services/AuthService";
-import type { RegistroUsuario } from "../../../../types/Usuario.ts";
 import { useNavigate } from "react-router-dom";
 import type { AxiosError } from "axios";
+import { validateEmail } from "../AuthBase.tsx";
+import { AuthBase } from "../AuthBase.tsx";
+import { AuthTextField } from "../AuthBase.tsx";
+import { AuthPasswordField } from "../AuthBase.tsx";
+
+const registerHeader = (
+    <div className="login-header">
+        <h1>📚</h1>
+        <h1>Crea una cuenta</h1>
+        <p>Unete a nuestra comunidad y empieza a leer</p>
+    </div>
+)
 
 export const Register = () => {
     var [name, setName] = useState("")
@@ -20,30 +28,6 @@ export const Register = () => {
     var [emailErrorMessage, setEmailErrorMessage] = useState("")
 
     var navigate = useNavigate()
-
-    const validateEmail = (email: string): Boolean => {
-        //este es un regex
-        //no le den bola al regex... dejen tranquilo al regex...
-        const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g
-
-        return email.match(emailRegex) != null
-    }
-
-    const handleNameInput = (e: any) => {
-        setName(e.target.value)
-    }
-
-    const handleEmailInput = (e: any) => {
-        setEmail(e.target.value)
-    }
-
-    const handlePasswordInput = (e: any) => {
-        setPassword(e.target.value)
-    }
-
-    const handleConfirmPasswordInput = (e: any) => {
-        setConfirmPassword(e.target.value)
-    }
 
     async function register() {
         var frontErrors: string[] = []
@@ -98,14 +82,12 @@ export const Register = () => {
         }
 
         try {
-            var result = await registerService.create({"nombre": name, "email": email, "password": password})
+            await registerService.create({"nombre": name, "email": email, "password": password})
 
             navigate("/login")
         }
         catch (e: AxiosError) {
             var errors = e.response.data.split(",")
-            
-            console.log(errors)
 
             if (errors.includes("USERNAME_ALREADY_EXISTS")) {
                 console.log("Ya hay un usuario con el mismo nombre")
@@ -120,40 +102,18 @@ export const Register = () => {
     }
 
     return (
-        <div className="Register">
-            <Card>
-                <div className="login-header">
-                    <h1>📚</h1>
-                    <h1>Crea una cuenta</h1>
-                    <p>Unete a nuestra comunidad y empieza a leer</p>
-                </div>
+        <AuthBase header={registerHeader}>
+            <AuthTextField label="Nombre completo:" value={name} onChange={setName} error={usernameErrorMessage} /> 
 
-                <hr/>
-
-                <p><b>Nombre completo:</b></p>
-                <p><InputText className="block-input-text" value={name} onChange={handleNameInput}></InputText></p>
-
-                <p id="username-conflict-error" className="error-message-label">{usernameErrorMessage}</p>
-
-                <p><b>Correo electronico:</b></p>
-                <p><InputText className="block-input-text" value={email} onChange={handleEmailInput}></InputText></p>
-
-                <p id="email-conflict-error" className="error-message-label">{emailErrorMessage}</p>
-
-                <p><b>Contraseña:</b></p>
-                <p><Password className="block-input-text" value={password} onChange={handlePasswordInput} toggleMask></Password></p>
-
-                <p><b>Confirmer contraseña:</b></p>
-                <p><Password className="block-input-text" value={confirmPassword} onChange={handleConfirmPasswordInput} toggleMask></Password></p>
-
-                <p id="password-confirmation-error" className="error-message-label">{passwordErrorMessage}</p>
-
-                <p><Button className="login-button" onClick = {register}>Crear cuenta</Button></p>
-
-                <p className="center">Ya tienes una cuenta? <a href="/login">Iniciar sesion</a></p>
-            </Card>
+            <AuthTextField label="Correo electronico:" value={email} onChange={setEmail} error={emailErrorMessage}/>
             
-            <p className="center">© PastelReads. Todos los derechos reservados.</p>
-        </div>
+            <AuthPasswordField label="Contraseña:" value={password} onChange={setPassword} error={""} />
+
+            <AuthPasswordField label="Confirmar contraseña:" value={confirmPassword} onChange={setConfirmPassword} error={passwordErrorMessage} />
+
+            <p><Button className="login-button" onClick={register}>Crear cuenta</Button></p>
+
+            <p className="center">Ya tienes una cuenta? <a href="/login">Iniciar sesion</a></p>
+        </AuthBase>
     )
 }
