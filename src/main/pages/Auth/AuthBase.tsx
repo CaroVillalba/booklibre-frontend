@@ -1,4 +1,3 @@
-import type { ReactNode } from "react"
 import { Card } from "primereact/card"
 import { InputText } from "primereact/inputtext"
 import { Password } from "primereact/password"

@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { useState } from "react";
 import { registerService } from "../../../services/AuthService";
 import { useNavigate } from "react-router-dom";
-import type { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { validateEmail } from "../AuthBase.tsx";
 import { AuthBase } from "../AuthBase.tsx";
 import { AuthTextField } from "../AuthBase.tsx";
@@ -27,6 +27,8 @@ export const Register = () => {
     var [usernameErrorMessage, setUsernameErrorMessage] = useState("")
     var [emailErrorMessage, setEmailErrorMessage] = useState("")
 
+    var [registerErrorMessage, setRegisterErrorMessage] = useState("")
+
     var navigate = useNavigate()
 
     async function register() {
@@ -35,6 +37,7 @@ export const Register = () => {
         setPasswordErrorMessage("")
         setUsernameErrorMessage("")
         setEmailErrorMessage("")
+        setRegisterErrorMessage("")
 
         //toooooooooda la validacion antes de la request
         if (password != confirmPassword) {
@@ -42,19 +45,17 @@ export const Register = () => {
         }
 
         if (name == "" || email == "") {
-            if (name == "") {
+            if (name == "") 
                 frontErrors.push("EMPTY_USERNAME")
-            }
-            if (email == "") {
+            
+            if (email == "") 
                 frontErrors.push("EMPTY_EMAIL")
-            }
-            if (password == "") {
+            
+            if (password == "") 
                 frontErrors.push("EMPTY_PASSWORD")
-            }
         }
         
         if (email != "" && !validateEmail(email)) {
-            console.log("MAIL INVALIDO")
             frontErrors.push("INVALID_EMAIL")
         }
 
@@ -62,22 +63,21 @@ export const Register = () => {
 
         if (frontErrors.length != 0) {
 
-            if (frontErrors.includes("NON_MATCHING_PASSWORDS")) {
+            if (frontErrors.includes("NON_MATCHING_PASSWORDS")) 
                 setPasswordErrorMessage("Las contraseñas ingresadas no coinciden.")
-            }
-            if (frontErrors.includes("EMPTY_PASSWORD")) {
+            
+            if (frontErrors.includes("EMPTY_PASSWORD")) 
                 setPasswordErrorMessage("La contraseña no puede estar vacia.")
-            }
-            if (frontErrors.includes("EMPTY_USERNAME")) {
+            
+            if (frontErrors.includes("EMPTY_USERNAME")) 
                 setUsernameErrorMessage("El nombre de usuario no puede estar vacio.")
-            }
-            if (frontErrors.includes("EMPTY_EMAIL")) {
+            
+            if (frontErrors.includes("EMPTY_EMAIL")) 
                 setEmailErrorMessage("El correo electronico no puede estar vacio.")
-            }
-            if (frontErrors.includes("INVALID_EMAIL")) {
+            
+            if (frontErrors.includes("INVALID_EMAIL")) 
                 setEmailErrorMessage("El correo electronico ingresado es invalido.")
-            }
-
+            
             return
         }
 
@@ -86,17 +86,20 @@ export const Register = () => {
 
             navigate("/login")
         }
-        catch (e: AxiosError) {
-            var errors = e.response.data.split(",")
+        catch (error: any) {
+            if (error instanceof AxiosError && error.response != undefined) {
+                if (error.response.status >= 400 && error.response.status < 500) {
+                    var errors = error.response.data.split(",")
 
-            if (errors.includes("USERNAME_ALREADY_EXISTS")) {
-                console.log("Ya hay un usuario con el mismo nombre")
-                setUsernameErrorMessage("Ya hay un usuario con el mismo nombre")
+                    if (errors.includes("USERNAME_ALREADY_EXISTS")) 
+                        setUsernameErrorMessage("Ya hay un usuario con el mismo nombre")
+
+                    if (errors.includes("EMAIL_ALREADY_EXISTS")) 
+                        setEmailErrorMessage("Ya hay un usuario con el mismo email")
+                }
             }
-
-            if (errors.includes("EMAIL_ALREADY_EXISTS")) {
-                console.log("Ya hay un usuario con el mismo email")
-                setEmailErrorMessage("Ya hay un usuario con el mismo email")
+            else {
+                setRegisterErrorMessage("Error del servidor. Intentelo mas tarde.")
             }
         }
     }
@@ -110,6 +113,8 @@ export const Register = () => {
             <AuthPasswordField label="Contraseña:" value={password} onChange={setPassword} error={""} />
 
             <AuthPasswordField label="Confirmar contraseña:" value={confirmPassword} onChange={setConfirmPassword} error={passwordErrorMessage} />
+
+            <p id="account-login-error" className="error-message-label">{registerErrorMessage}</p>
 
             <p><Button className="login-button" onClick={register}>Crear cuenta</Button></p>
 

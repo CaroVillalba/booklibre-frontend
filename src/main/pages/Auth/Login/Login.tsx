@@ -53,18 +53,15 @@ export const Login = () => {
         }
 
         if (frontErrors.length > 0) {
-            if (frontErrors.includes("EMPTY_EMAIL")) {
+            if (frontErrors.includes("EMPTY_EMAIL")) 
                 setEmailErrorMessage("El correo electronico no puede estar vacio.")
-            }
-
-            if (frontErrors.includes("EMPTY_PASSWORD")) {
+            
+            if (frontErrors.includes("EMPTY_PASSWORD")) 
                 setPasswordErrorMessage("La contraseña no puede estar vacia.")
-            }
-
-            if (frontErrors.includes("INVALID_EMAIL")) {
+            
+            if (frontErrors.includes("INVALID_EMAIL")) 
                 setEmailErrorMessage("El correo electronico ingresado es invalido.")
-            }
-
+            
             return 
         }
 
@@ -73,9 +70,15 @@ export const Login = () => {
 
             navigate("/home")
         }
-        catch (error: AxiosError) {
-            if (error.response.status >= 400 && error.response.status < 500)
-            setLoginErrorMessage(error.response.data)
+        catch (error: any) {
+            if (error instanceof AxiosError && error.response != undefined) {
+                if (error.response.status >= 400 && error.response.status < 500) {
+                    setLoginErrorMessage(error.response.data)
+                }
+            }
+            else {
+                setLoginErrorMessage("Error del servidor. Intentelo mas tarde.")
+            }
         }
     }
 
