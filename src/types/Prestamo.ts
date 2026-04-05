@@ -1,4 +1,4 @@
-// types/Prestamo.ts
+import type { PageDTO } from './PageDTO';
 
 export type EstadoPrestamo = "ACTIVO" | "PROXIMO_A_VENCER" | "DEVUELTO";
 
@@ -16,7 +16,6 @@ export interface Prestamo {
     calificacion?: number | null;
 }
 
-export interface MisPrestamosResponse {
-    prestadosAMi: Prestamo[];
-    prestadosPorMi: Prestamo[];
-}
+export type TipoPrestamo = "PRESTADOS_A_MI" | "PRESTADOS_POR_MI";
+
+export type PrestamosPaginados = PageDTO<Prestamo>;

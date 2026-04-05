@@ -1,7 +1,5 @@
-// services/ReservaService.ts
-
 import type { Reserva } from "../../types/Reserva";
-import type { MisPrestamosResponse } from "../../types/Prestamo";
+import type { Prestamo, PrestamosPaginados, TipoPrestamo } from "../../types/Prestamo";
 import { CRUDService } from "./CRUDService";
 import { loginService } from "./AuthService";
 
@@ -20,18 +18,33 @@ export class ReservaService extends CRUDService<Reserva> {
         await this.api.post(`/${this.path}`, payload)
     }
 
-    async misPrestamos(): Promise<MisPrestamosResponse> {
-        const userId = loginService.getLoggedUser()  
+    async misPrestamos(
+        tipo: TipoPrestamo,
+        busqueda: string = "",
+        page: number = 0,
+        size: number = 4
+    ): Promise<PrestamosPaginados> {
+        const userId = loginService.getLoggedUser()
         
-        const response = await this.api.get<MisPrestamosResponse>(
+        const response = await this.api.get<PrestamosPaginados>(
             `/${this.path}/mis-prestamos`,
-            { params: { usuarioId: userId } }
+            {
+                params: {
+                    usuarioId: userId,
+                    tipo,
+                    busqueda,
+                    page,
+                    size,
+                    sortBy: "fechaDesde",
+                    direction: "desc"
+                }
+            }
         )
         return response.data
     }
 
     async agregarReseña(reservaId: number, rating: number, texto: string): Promise<void> {
-        const userId = loginService.getLoggedUser()  
+        const userId = loginService.getLoggedUser()
         
         await this.api.post(
             `/${this.path}/${reservaId}/reseña`,
@@ -39,7 +52,7 @@ export class ReservaService extends CRUDService<Reserva> {
                 rating,
                 texto,
                 fecha: new Date().toISOString(),
-                autorNombre: "Usuario" // TODO: esto es temporal
+                autorNombre: "Usuario"
             },
             { params: { autorId: userId } }
         )

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
 import { InputText } from "primereact/inputtext";
@@ -11,7 +10,7 @@ import { Paginator } from "primereact/paginator";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useNavigate } from "react-router-dom";
 import { reservaService } from "../../services/ReservaService";
-import type { Prestamo, EstadoPrestamo } from "../../../types/Prestamo";
+import type { Prestamo, EstadoPrestamo, TipoPrestamo } from "../../../types/Prestamo";
 import "./DetallePrestamos.css";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -26,6 +25,8 @@ const formatFecha = (iso: string) => {
     const [year, month, day] = iso.split("-");
     return `${day}/${month}/${year.slice(2)}`;
 };
+
+const ITEMS_POR_PAGINA = 4;
 
 // ── Sub-componente: Tarjeta de préstamo ───────────────────────────────────────
 
@@ -71,7 +72,6 @@ const PrestamoCard = ({ prestamo, esPrestadoAMi, onCalificar }: PrestamoCardProp
                     </span>
                 </div>
 
-                
                 {esPrestadoAMi && prestamo.estado === "DEVUELTO" && !prestamo.calificacion && (
                     <Button
                         label="Calificar"
@@ -82,7 +82,6 @@ const PrestamoCard = ({ prestamo, esPrestadoAMi, onCalificar }: PrestamoCardProp
                     />
                 )}
 
-                
                 {esPrestadoAMi && prestamo.estado === "DEVUELTO" && prestamo.calificacion && (
                     <div className="prestamo-card__calificacion">
                         <Rating value={prestamo.calificacion} readOnly cancel={false} stars={5} />
@@ -95,55 +94,80 @@ const PrestamoCard = ({ prestamo, esPrestadoAMi, onCalificar }: PrestamoCardProp
 
 // ── Componente principal ──────────────────────────────────────────────────────
 
-const ITEMS_POR_PAGINA = 4;
-
 export const MisPrestamos = () => {
     const navigate = useNavigate();
 
     // — Estado de datos —
-    const [prestadosAMi, setPrestadosAMi] = useState<Prestamo[]>([]);
-    const [prestadosPorMi, setPrestadosPorMi] = useState<Prestamo[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [prestamos, setPrestamos] = useState<Prestamo[]>([]);
+    const [totalElements, setTotalElements] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     // — UI —
     const [busqueda, setBusqueda] = useState("");
+    const [busquedaDebounced, setBusquedaDebounced] = useState("");
+    const [tabActiva, setTabActiva] = useState<TipoPrestamo>("PRESTADOS_A_MI");
+    const [paginaActual, setPaginaActual] = useState(0);
+    
     const [prestamoACalificar, setPrestamoACalificar] = useState<Prestamo | null>(null);
     const [puntaje, setPuntaje] = useState<number>(0);
     const [comentario, setComentario] = useState("");
-    const [paginaAMi, setPaginaAMi] = useState(0);
-    const [paginaPorMi, setPaginaPorMi] = useState(0);
 
-    // — Carga inicial —
+    const [activeTabIndex, setActiveTabIndex] = useState(0);
+
+    // — Debounce para búsqueda —
     useEffect(() => {
-        const cargar = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                const data = await reservaService.misPrestamos(); 
-                setPrestadosAMi(data.prestadosAMi);
-                setPrestadosPorMi(data.prestadosPorMi);
-            } catch (e) {
-                setError("No se pudieron cargar los préstamos. Intentá de nuevo más tarde.");
-                console.error(e);
-            } finally {
-                setLoading(false);
-            }
-        };
-        cargar();
-    }, []);
+        const timer = setTimeout(() => {
+            setBusquedaDebounced(busqueda);
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [busqueda]);
 
-    // — Filtro de búsqueda —
-    const filtrar = (lista: Prestamo[]) => {
-        const q = busqueda.toLowerCase();
-        if (!q) return lista;
-        return lista.filter(
-            (p) =>
-                p.tituloLibro.toLowerCase().includes(q) ||
-                p.autorLibro.toLowerCase().includes(q)
-        );
+    // — Cargar préstamos del backend —
+    const cargarPrestamos = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            
+            const data = await reservaService.misPrestamos(
+                tabActiva,
+                busquedaDebounced,
+                paginaActual,
+                ITEMS_POR_PAGINA
+            );
+            
+            setPrestamos(data.content);
+            setTotalElements(data.totalElements);
+            setTotalPages(data.totalPages);
+        } catch (e) {
+            setError("No se pudieron cargar los préstamos. Intentá de nuevo más tarde.");
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
     };
 
+    // — Recargar cuando cambian los filtros —
+    useEffect(() => {
+        cargarPrestamos();
+    }, [tabActiva, busquedaDebounced, paginaActual]);
+
+    // — Al cambiar de tab, resetear página —
+    const handleTabChange = (index: number) => {
+        setActiveTabIndex(index);
+        const nuevoTipo: TipoPrestamo = index === 0 ? "PRESTADOS_A_MI" : "PRESTADOS_POR_MI";
+        setTabActiva(nuevoTipo);
+        setPaginaActual(0);
+    };
+
+    // — Al cambiar búsqueda, resetear página —
+    useEffect(() => {
+        if (busquedaDebounced !== busqueda) return; // Ignorar mientras hace debounce
+        setPaginaActual(0);
+    }, [busquedaDebounced]);
+
+    // — Calificación —
     const handleConfirmarCalificacion = async () => {
         if (!prestamoACalificar) return;
 
@@ -151,19 +175,15 @@ export const MisPrestamos = () => {
             await reservaService.agregarReseña(
                 prestamoACalificar.id,
                 puntaje,
-                comentario  // ← Ya no necesita el userId como parámetro
+                comentario
             );
 
-            // opcional: actualizar UI local
             setPrestamoACalificar(null);
             setPuntaje(0);
             setComentario("");
 
-            // recargar préstamos para reflejar calificación
-            const data = await reservaService.misPrestamos();  // ← Ya no necesita parámetro
-            setPrestadosAMi(data.prestadosAMi);
-            setPrestadosPorMi(data.prestadosPorMi);
-
+            // Recargar préstamos
+            cargarPrestamos();
         } catch (error) {
             console.error("Error enviando reseña", error);
         }
@@ -186,17 +206,18 @@ export const MisPrestamos = () => {
         </div>
     );
 
-    // — Render de lista paginada —
-    const renderLista = (lista: Prestamo[], esPrestadoAMi: boolean) => {
-        const filtrados = filtrar(lista);
-        const paginaActual = esPrestadoAMi ? paginaAMi : paginaPorMi;
-        const onPageChange = esPrestadoAMi
-            ? (e: { first: number }) => setPaginaAMi(e.first)
-            : (e: { first: number }) => setPaginaPorMi(e.first);
+    // — Render de lista —
+    const renderLista = () => {
+        if (loading) {
+            return (
+                <div className="prestamos-empty">
+                    <ProgressSpinner />
+                    <p>Cargando préstamos...</p>
+                </div>
+            );
+        }
 
-        const paginados = filtrados.slice(paginaActual, paginaActual + ITEMS_POR_PAGINA);
-
-        if (filtrados.length === 0) {
+        if (prestamos.length === 0) {
             return (
                 <div className="prestamos-empty">
                     <i className="pi pi-book prestamos-empty__icon" />
@@ -208,21 +229,21 @@ export const MisPrestamos = () => {
         return (
             <>
                 <div className="prestamos-grid">
-                    {paginados.map((p) => (
+                    {prestamos.map((p) => (
                         <PrestamoCard
                             key={p.id}
                             prestamo={p}
-                            esPrestadoAMi={esPrestadoAMi}
+                            esPrestadoAMi={tabActiva === "PRESTADOS_A_MI"}
                             onCalificar={setPrestamoACalificar}
                         />
                     ))}
                 </div>
-                {filtrados.length > ITEMS_POR_PAGINA && (
+                {totalElements > ITEMS_POR_PAGINA && (
                     <Paginator
-                        first={paginaActual}
+                        first={paginaActual * ITEMS_POR_PAGINA}
                         rows={ITEMS_POR_PAGINA}
-                        totalRecords={filtrados.length}
-                        onPageChange={onPageChange}
+                        totalRecords={totalElements}
+                        onPageChange={(e) => setPaginaActual(e.page ?? 0)}
                         className="mis-prestamos__paginator"
                     />
                 )}
@@ -230,22 +251,13 @@ export const MisPrestamos = () => {
         );
     };
 
-    // — Loading / Error states —
-    if (loading) {
-        return (
-            <div className="mis-prestamos mis-prestamos--centered">
-                <ProgressSpinner />
-                <p>Cargando préstamos...</p>
-            </div>
-        );
-    }
-
-    if (error) {
+    // — Error state —
+    if (error && !loading) {
         return (
             <div className="mis-prestamos mis-prestamos--centered">
                 <i className="pi pi-exclamation-triangle" style={{ fontSize: "2rem", color: "var(--red-500)" }} />
                 <p>{error}</p>
-                <Button label="Reintentar" icon="pi pi-refresh" onClick={() => window.location.reload()} />
+                <Button label="Reintentar" icon="pi pi-refresh" onClick={cargarPrestamos} />
             </div>
         );
     }
@@ -274,12 +286,16 @@ export const MisPrestamos = () => {
             </div>
 
             {/* Tabs */}
-            <TabView className="mis-prestamos__tabs w-full">
+            <TabView 
+                activeIndex={activeTabIndex}
+                className="mis-prestamos__tabs w-full"
+                onTabChange={(e) => handleTabChange(e.index)}
+            >
                 <TabPanel header="Prestados a mí">
-                    {renderLista(prestadosAMi, true)}
+                    {renderLista()}
                 </TabPanel>
                 <TabPanel header="Prestados por mí">
-                    {renderLista(prestadosPorMi, false)}
+                    {renderLista()}
                 </TabPanel>
             </TabView>
 
