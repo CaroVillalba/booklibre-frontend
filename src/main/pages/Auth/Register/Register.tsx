@@ -104,8 +104,6 @@ export const Register = () => {
         }
         catch (e: AxiosError) {
             var errors = e.response.data.split(",")
-            
-            console.log(errors)
 
             if (errors.includes("USERNAME_ALREADY_EXISTS")) {
                 console.log("Ya hay un usuario con el mismo nombre")
