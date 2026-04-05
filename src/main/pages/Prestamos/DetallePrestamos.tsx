@@ -1,4 +1,3 @@
-// DetallePrestamos.tsx
 
 import { useState, useEffect } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
@@ -24,7 +23,6 @@ const ESTADO_CONFIG: Record<EstadoPrestamo, { label: string; severity: "success"
 };
 
 const formatFecha = (iso: string) => {
-    // "2025-01-15" → "15/01/25"
     const [year, month, day] = iso.split("-");
     return `${day}/${month}/${year.slice(2)}`;
 };
@@ -73,7 +71,7 @@ const PrestamoCard = ({ prestamo, esPrestadoAMi, onCalificar }: PrestamoCardProp
                     </span>
                 </div>
 
-                {/* Solo se puede calificar si el préstamo fue devuelto y no tiene calificación aún */}
+                
                 {esPrestadoAMi && prestamo.estado === "DEVUELTO" && !prestamo.calificacion && (
                     <Button
                         label="Calificar"
@@ -84,7 +82,7 @@ const PrestamoCard = ({ prestamo, esPrestadoAMi, onCalificar }: PrestamoCardProp
                     />
                 )}
 
-                {/* Si ya tiene calificación, mostramos las estrellas */}
+                
                 {esPrestadoAMi && prestamo.estado === "DEVUELTO" && prestamo.calificacion && (
                     <div className="prestamo-card__calificacion">
                         <Rating value={prestamo.calificacion} readOnly cancel={false} stars={5} />
@@ -122,7 +120,7 @@ export const MisPrestamos = () => {
             try {
                 setLoading(true);
                 setError(null);
-                const data = await reservaService.misPrestamos();  // ← Ya no necesita parámetro
+                const data = await reservaService.misPrestamos(); 
                 setPrestadosAMi(data.prestadosAMi);
                 setPrestadosPorMi(data.prestadosPorMi);
             } catch (e) {

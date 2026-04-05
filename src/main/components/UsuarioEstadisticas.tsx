@@ -1,21 +1,12 @@
 import { Card } from "primereact/card"
-import { useEffect, useState } from "react"
-import { usuarioService } from "../services/UsuarioService"
-import type { UsuarioEstadisticasDTO } from "../../types/Usuario"
 
 interface UsuarioEstadisticasProps{
-    usuarioId: number
+    librosLeidos: number
+    librosPrestados: number
 }
 
-export const UsuarioEstadisticas = ({usuarioId}:UsuarioEstadisticasProps) => {
+export const UsuarioEstadisticas = ({librosLeidos, librosPrestados}:UsuarioEstadisticasProps) => {
 
-    const [estadisticas,setEstadisticas] = useState<UsuarioEstadisticasDTO | null>(null)
-
-    useEffect(()=>{
-        usuarioService.getEstadisticas(usuarioId)
-        .then(setEstadisticas)
-        .catch((error)=>console.log("error al cargar estadisticas",error))
-    },[usuarioId])
 
     return (
         <Card className="border-round-2xl shadow-1">
@@ -25,7 +16,7 @@ export const UsuarioEstadisticas = ({usuarioId}:UsuarioEstadisticasProps) => {
             <div className="col-6">
             <div>
                 <div className="text-2xl font-bold mb-2">
-                {estadisticas?.librosPrestados}
+                {librosPrestados}
                 </div>
                 <div className="text-color-secondary">
                 Libros Prestados
@@ -36,7 +27,7 @@ export const UsuarioEstadisticas = ({usuarioId}:UsuarioEstadisticasProps) => {
             <div className="col-6">
             <div>
                 <div className="text-2xl font-bold mb-2">
-                {estadisticas?.librosLeidos}
+                {librosLeidos}
                 </div>
                 <div className="text-color-secondary">
                 Libros Leídos

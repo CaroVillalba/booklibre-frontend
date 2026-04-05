@@ -52,20 +52,20 @@ export class LibroService extends CRUDService<LibroHome> {
     }
 
     async search(params: LibroSearchParams): Promise<PageResponse<LibroHome>> {
-        const userId = loginService.getLoggedUser()  // ← Obtener userId del sessionStorage
+        const userId = loginService.getLoggedUser()  
 
         const response = await this.api.post<PageResponse<LibroHome>>(
-            `/libros/busqueda?userId=${userId}`,  // ← Enviar userId como query param
+            `/libros/busqueda?userId=${userId}`,  
             params
         )
         return response.data
     }
 
     async getLibroPorId(id: number, params: LibroDetalleParams): Promise<LibroHome> {
-        const userId = loginService.getLoggedUser()  // ← Obtener userId del sessionStorage
+        const userId = loginService.getLoggedUser()  
 
         const response = await this.api.get<LibroHome>(
-            `/libros/detalle-libro/${id}?userId=${userId}`,  // ← Enviar userId
+            `/libros/detalle-libro/${id}?userId=${userId}`,  
             { params }
         )
         return response.data
@@ -88,9 +88,9 @@ export class LibroService extends CRUDService<LibroHome> {
                 : null
         }
 
-        const userId = loginService.getLoggedUser()  // ← Obtener userId del sessionStorage
+        const userId = loginService.getLoggedUser()  
 
-        await this.api.post(`/libros?userId=${userId}`, data)  // ← Enviar userId
+        await this.api.post(`/libros?userId=${userId}`, data)  
     }
 
     async eliminarLibro(id:number): Promise<void>{

@@ -77,6 +77,7 @@ export const HomeUsuario = () => {
                 sortBy: orden,
                 direction: direccion,
             })
+
             
             setLibros(resultado.content)
             setTotalElementos(resultado.totalElements)
@@ -92,9 +93,9 @@ export const HomeUsuario = () => {
     // Carga inicial
     useOnInit(() => { fetchLibros() })
 
-    // Efecto para re-fetch cuando cambia el orden o dirección
+    
     useEffect(() => {
-        fetchLibros(0) // Reset a página 0 al cambiar orden
+        fetchLibros(0) 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orden, direccion])
 
@@ -109,13 +110,10 @@ export const HomeUsuario = () => {
     }
 
     const handleOrden = (nuevoOrden: Orden) => {
-        // Si es el mismo campo, cambia la dirección
-        if (nuevoOrden === orden) {
-            setDireccion(prev => prev === "asc" ? "desc" : "asc")
-        } else {
-            setOrden(nuevoOrden)
-            setDireccion("asc")
-        }
+        
+        setOrden(nuevoOrden)
+        setDireccion("asc")
+        
         setPaginaActual(0)
     }
 

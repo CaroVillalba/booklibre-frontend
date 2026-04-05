@@ -86,10 +86,12 @@ export const Register = () => {
 
             navigate("/login")
         }
+
         catch (error: any) {
             if (error instanceof AxiosError && error.response != undefined) {
                 if (error.response.status >= 400 && error.response.status < 500) {
                     var errors = error.response.data.split(",")
+
 
                     if (errors.includes("USERNAME_ALREADY_EXISTS")) 
                         setUsernameErrorMessage("Ya hay un usuario con el mismo nombre")

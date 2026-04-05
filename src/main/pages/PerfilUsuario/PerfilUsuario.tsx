@@ -125,7 +125,7 @@ export const PerfilUsuario = () => {
                             tipoUsuario={usuario.tipoUsuario}
                         />
                         {usuario.id && (
-                            <UsuarioEstadisticas usuarioId={usuario.id} />
+                            <UsuarioEstadisticas librosLeidos={usuario.librosLeidos} librosPrestados={usuario.librosPrestados} />
                         )}
                     </div>
                 </div>

@@ -12,6 +12,8 @@ export class RegisterService extends CRUDService <RegistroUsuario> {
     }
 }
 
+
+
 export class LoginService {
     protected api: AxiosInstance
     protected path
@@ -25,7 +27,7 @@ export class LoginService {
         })
     }
 
-    //La funcion devuelve el sessionId como una cookie
+    
     async login(loginDto: LoginUsuario): Promise<Number> {
         const res = await axios.get(
             `http://localhost:9000/v1/auth/login?email=${
@@ -33,12 +35,12 @@ export class LoginService {
                 loginDto.password}&rememberMe=${
                 loginDto.rememberMe}`)
         
-        //res devuelve el user id
+        
         if (res) {
             sessionStorage.setItem("SESSION_USER_ID", res.data) //Guarda el user id como cookie
         }
 
-        return Number(res.data) //devuelve el user id
+        return Number(res.data) 
     }
 
     logout() {
