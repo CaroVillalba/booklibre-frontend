@@ -14,6 +14,7 @@ import { EdicionLibro } from './main/pages/EdicionLibro/EdicionLibro'
 import { MisPrestamos } from './main/pages/Prestamos/DetallePrestamos'
 import { LayoutMain } from './main/pages/LayoutMain'
 import { LayoutAuth } from './main/pages/LayoutAuth'
+import { NotFound } from './main/pages/NotFound/NotFound'
 
 
 // Rutas donde NO se muestra el header
@@ -39,6 +40,7 @@ function AppContent() {
             <Route path="prestamos" element={<MisPrestamos />} />
             <Route path="perfil" element={<PerfilUsuario />} />
             <Route path="/perfil/*" element={<Navigate to="/perfil" replace />} />
+            <Route path="*" element={<NotFound/>} />
         </Route>
       </Routes>
   )

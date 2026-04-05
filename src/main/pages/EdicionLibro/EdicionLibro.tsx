@@ -298,6 +298,10 @@ export const EdicionLibro = () => {
                                         <p className={`m-0 ${errores.imgUrl ? "text-red-500 font-bold" : ""}`}>Subir Portada</p>
                                     </div>
                                 )}
+
+                                {errores.imgUrl && (
+                                    <small className="p-error">{errores.imgUrl}</small>
+                                )}
                             </div>
                             
                             {errores.imgUrl && (

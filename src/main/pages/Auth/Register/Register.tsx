@@ -1,13 +1,21 @@
 import "../Login/Login.css"
-import { Card } from 'primereact/card';
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
 import { useState } from "react";
 import { registerService } from "../../../services/AuthService";
-import type { RegistroUsuario } from "../../../../types/Usuario.ts";
 import { useNavigate } from "react-router-dom";
-import type { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import { validateEmail } from "../AuthBase.tsx";
+import { AuthBase } from "../AuthBase.tsx";
+import { AuthTextField } from "../AuthBase.tsx";
+import { AuthPasswordField } from "../AuthBase.tsx";
+
+const registerHeader = (
+    <div className="login-header">
+        <h1>📚</h1>
+        <h1>Crea una cuenta</h1>
+        <p>Unete a nuestra comunidad y empieza a leer</p>
+    </div>
+)
 
 export const Register = () => {
     var [name, setName] = useState("")
@@ -19,31 +27,9 @@ export const Register = () => {
     var [usernameErrorMessage, setUsernameErrorMessage] = useState("")
     var [emailErrorMessage, setEmailErrorMessage] = useState("")
 
+    var [registerErrorMessage, setRegisterErrorMessage] = useState("")
+
     var navigate = useNavigate()
-
-    const validateEmail = (email: string): Boolean => {
-        //este es un regex
-        //no le den bola al regex... dejen tranquilo al regex...
-        const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g
-
-        return email.match(emailRegex) != null
-    }
-
-    const handleNameInput = (e: any) => {
-        setName(e.target.value)
-    }
-
-    const handleEmailInput = (e: any) => {
-        setEmail(e.target.value)
-    }
-
-    const handlePasswordInput = (e: any) => {
-        setPassword(e.target.value)
-    }
-
-    const handleConfirmPasswordInput = (e: any) => {
-        setConfirmPassword(e.target.value)
-    }
 
     async function register() {
         var frontErrors: string[] = []
@@ -51,6 +37,7 @@ export const Register = () => {
         setPasswordErrorMessage("")
         setUsernameErrorMessage("")
         setEmailErrorMessage("")
+        setRegisterErrorMessage("")
 
         //toooooooooda la validacion antes de la request
         if (password != confirmPassword) {
@@ -58,19 +45,17 @@ export const Register = () => {
         }
 
         if (name == "" || email == "") {
-            if (name == "") {
+            if (name == "") 
                 frontErrors.push("EMPTY_USERNAME")
-            }
-            if (email == "") {
+            
+            if (email == "") 
                 frontErrors.push("EMPTY_EMAIL")
-            }
-            if (password == "") {
+            
+            if (password == "") 
                 frontErrors.push("EMPTY_PASSWORD")
-            }
         }
         
         if (email != "" && !validateEmail(email)) {
-            console.log("MAIL INVALIDO")
             frontErrors.push("INVALID_EMAIL")
         }
 
@@ -78,80 +63,64 @@ export const Register = () => {
 
         if (frontErrors.length != 0) {
 
-            if (frontErrors.includes("NON_MATCHING_PASSWORDS")) {
+            if (frontErrors.includes("NON_MATCHING_PASSWORDS")) 
                 setPasswordErrorMessage("Las contraseñas ingresadas no coinciden.")
-            }
-            if (frontErrors.includes("EMPTY_PASSWORD")) {
+            
+            if (frontErrors.includes("EMPTY_PASSWORD")) 
                 setPasswordErrorMessage("La contraseña no puede estar vacia.")
-            }
-            if (frontErrors.includes("EMPTY_USERNAME")) {
+            
+            if (frontErrors.includes("EMPTY_USERNAME")) 
                 setUsernameErrorMessage("El nombre de usuario no puede estar vacio.")
-            }
-            if (frontErrors.includes("EMPTY_EMAIL")) {
+            
+            if (frontErrors.includes("EMPTY_EMAIL")) 
                 setEmailErrorMessage("El correo electronico no puede estar vacio.")
-            }
-            if (frontErrors.includes("INVALID_EMAIL")) {
+            
+            if (frontErrors.includes("INVALID_EMAIL")) 
                 setEmailErrorMessage("El correo electronico ingresado es invalido.")
-            }
-
+            
             return
         }
 
         try {
-            var result = await registerService.create({"nombre": name, "email": email, "password": password})
+            await registerService.create({"nombre": name, "email": email, "password": password})
 
             navigate("/login")
         }
-        catch (e: AxiosError) {
-            var errors = e.response.data.split(",")
 
-            if (errors.includes("USERNAME_ALREADY_EXISTS")) {
-                console.log("Ya hay un usuario con el mismo nombre")
-                setUsernameErrorMessage("Ya hay un usuario con el mismo nombre")
+        catch (error: any) {
+            if (error instanceof AxiosError && error.response != undefined) {
+                if (error.response.status >= 400 && error.response.status < 500) {
+                    var errors = error.response.data.split(",")
+
+
+                    if (errors.includes("USERNAME_ALREADY_EXISTS")) 
+                        setUsernameErrorMessage("Ya hay un usuario con el mismo nombre")
+
+                    if (errors.includes("EMAIL_ALREADY_EXISTS")) 
+                        setEmailErrorMessage("Ya hay un usuario con el mismo email")
+                }
             }
-
-            if (errors.includes("EMAIL_ALREADY_EXISTS")) {
-                console.log("Ya hay un usuario con el mismo email")
-                setEmailErrorMessage("Ya hay un usuario con el mismo email")
+            else {
+                setRegisterErrorMessage("Error del servidor. Intentelo mas tarde.")
             }
         }
     }
 
     return (
-        <div className="Register">
-            <Card>
-                <div className="login-header">
-                    <h1>📚</h1>
-                    <h1>Crea una cuenta</h1>
-                    <p>Unete a nuestra comunidad y empieza a leer</p>
-                </div>
+        <AuthBase header={registerHeader}>
+            <AuthTextField label="Nombre completo:" value={name} onChange={setName} error={usernameErrorMessage} /> 
 
-                <hr/>
-
-                <p><b>Nombre completo:</b></p>
-                <p><InputText className="block-input-text" value={name} onChange={handleNameInput}></InputText></p>
-
-                <p id="username-conflict-error" className="error-message-label">{usernameErrorMessage}</p>
-
-                <p><b>Correo electronico:</b></p>
-                <p><InputText className="block-input-text" value={email} onChange={handleEmailInput}></InputText></p>
-
-                <p id="email-conflict-error" className="error-message-label">{emailErrorMessage}</p>
-
-                <p><b>Contraseña:</b></p>
-                <p><Password className="block-input-text" value={password} onChange={handlePasswordInput} toggleMask></Password></p>
-
-                <p><b>Confirmer contraseña:</b></p>
-                <p><Password className="block-input-text" value={confirmPassword} onChange={handleConfirmPasswordInput} toggleMask></Password></p>
-
-                <p id="password-confirmation-error" className="error-message-label">{passwordErrorMessage}</p>
-
-                <p><Button className="login-button" onClick = {register}>Crear cuenta</Button></p>
-
-                <p className="center">Ya tienes una cuenta? <a href="/login">Iniciar sesion</a></p>
-            </Card>
+            <AuthTextField label="Correo electronico:" value={email} onChange={setEmail} error={emailErrorMessage}/>
             
-            <p className="center">© PastelReads. Todos los derechos reservados.</p>
-        </div>
+            <AuthPasswordField label="Contraseña:" value={password} onChange={setPassword} error={""} />
+
+            <AuthPasswordField label="Confirmar contraseña:" value={confirmPassword} onChange={setConfirmPassword} error={passwordErrorMessage} />
+
+            <p id="account-login-error" className="error-message-label">{registerErrorMessage}</p>
+
+            <p><Button className="login-button" onClick={register}>Crear cuenta</Button></p>
+
+            <p className="center">Ya tienes una cuenta? <a href="/login">Iniciar sesion</a></p>
+        </AuthBase>
     )
 }
