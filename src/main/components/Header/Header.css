@@ -1,0 +1,89 @@
+.header-wrapper {
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.header-menubar {
+  width: 100% !important;
+  border-radius: 0 !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  padding: 0.5rem 1.5rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Logo */
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 1.5rem;
+  cursor: pointer;
+}
+
+.header-logo-icon {
+  font-size: 1.6rem;
+}
+
+.header-logo-text {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--color-primary);
+}
+
+/* Nav items active state */
+.nav-item-active > .p-menuitem-link {
+  background-color: var(--primary-color) !important;
+  border-radius: 6px;
+}
+
+.nav-item-active > .p-menuitem-link .p-menuitem-text,
+.nav-item-active > .p-menuitem-link .p-menuitem-icon {
+  color: var(--primary-color-text) !important;
+}
+
+/* End section */
+.header-end {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Bibliokarmas */
+.bibliokarmas-container {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.4);
+  border-radius: 20px;
+  padding: 0.3rem 0.75rem;
+}
+
+.bibliokarmas-icon {
+  color: #ffc107;
+  font-size: 0.9rem;
+}
+
+.bibliokarmas-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #ffc107;
+  white-space: nowrap;
+}
+
+/* Responsive: ocultar label de bibliokarmas en mobile */
+@media (max-width: 768px) {
+  .bibliokarmas-label {
+    display: none;
+  }
+
+  .header-logo-text {
+    font-size: 1.1rem;
+  }
+}

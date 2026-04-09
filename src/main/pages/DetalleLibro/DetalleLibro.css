@@ -1,0 +1,66 @@
+.p-card{
+    border-radius: 10px;
+}
+
+.p-tag{
+    background: var(--color-primary);
+    color: var(--color-text-primary);
+    font-weight: 750;
+    font-size: 1rem;
+}
+
+.contenido-card{
+    min-height: 200px;
+}
+
+.boton-ancho{
+    width: 100%;
+    border-radius: 10px;
+}
+
+.tag-tipo{
+    background: var(--color-primary);
+    font-weight: 750;
+    font-size: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 18px;
+    width: auto;
+    
+}
+
+.dataScroller-reseñas .p-datascroller-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.87);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1rem;
+}
+
+.dataScroller-reseñas .p-datascroller-content{
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.detalle-libro-container{
+    max-width: 1200px;
+    margin: 0 auto;
+    min-width: calc(100vw - 57px);
+}
+
+.boton-icono .p-datepicker-trigger{
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.boton-icono .p-datepicker-trigger:hover{
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+}

@@ -1,0 +1,27 @@
+.login-header {
+    text-align: center;
+}
+
+.block-input-text {
+    display: block;
+    width: 100%;
+}
+
+.block-input-text input{
+    display: block;
+    width: 100%;
+}
+
+.login-button {
+    display: block;
+    width: 100%;
+}
+
+.center {
+    text-align: center;
+}
+
+.error-message-label {
+    text-align: center;
+    color: #F00;
+}

@@ -1,35 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import "primereact/resources/themes/arya-blue/theme.css"
+import "primereact/resources/primereact.min.css"
+import "primeicons/primeicons.css"
+import "primeflex/primeflex.css"
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+import { DetalleLibro } from './main/pages/DetalleLibro/DetalleLibro'
+import { HomeUsuario } from './main/pages/HomeUsuario/HomeUsuario'
+import { Login } from './main/pages/Auth/Login/Login'
+import { Register } from './main/pages/Auth/Register/Register'
+import { PerfilUsuario } from './main/pages/PerfilUsuario/PerfilUsuario'
+import { EdicionLibro } from './main/pages/EdicionLibro/EdicionLibro'
+import { MisPrestamos } from './main/pages/Prestamos/DetallePrestamos'
+import { LayoutMain } from './main/pages/LayoutMain'
+import { LayoutAuth } from './main/pages/LayoutAuth'
+import { NotFound } from './main/pages/NotFound/NotFound'
+
+
+// Rutas donde NO se muestra el header
+//const RUTAS_SIN_HEADER = ['/login', '/register']
+
+function AppContent() {
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+
+      <Routes>
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route element={<LayoutAuth />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
+        
+        <Route element={<LayoutMain />}>
+            <Route path="home" element={<HomeUsuario />} />
+            <Route path="detalle-libro" element={<DetalleLibro />} />
+            <Route path="detalle-libro/:id" element={<DetalleLibro />} />
+            <Route path="editar-libro" element={<EdicionLibro />} />
+            <Route path="editar-libro/:id" element={<EdicionLibro />} />
+            <Route path="prestamos" element={<MisPrestamos />} />
+            <Route path="perfil" element={<PerfilUsuario />} />
+            <Route path="/perfil/*" element={<Navigate to="/perfil" replace />} />
+            <Route path="*" element={<NotFound/>} />
+        </Route>
+      </Routes>
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
+  )
+}
