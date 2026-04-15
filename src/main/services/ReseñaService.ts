@@ -1,5 +1,6 @@
 import type { Reseña } from "../../types/Reseña";
 import { CRUDService } from "./CRUDService";
+import type { ReseñaPage } from "../../types/Reseña";
 
 export class ReseñaService extends CRUDService<Reseña> {
     constructor() {
@@ -7,8 +8,13 @@ export class ReseñaService extends CRUDService<Reseña> {
     }
 
     // Las reseñas viven dentro de Reserva y se exponen via GET /v1/libros/{id}/reseñas
-    async getReseñasPorLibro(libroId: number): Promise<Reseña[]> {
-        const response = await this.api.get<Reseña[]>(`/${this.path}/${libroId}/reseñas`)
+    async getReseñasPorLibro(libroId: number, pagina: number): Promise<ReseñaPage> {
+        const response = await this.api.get<ReseñaPage>(`/${this.path}/${libroId}/reseñas/${pagina}`)
+        return response.data
+    }
+
+    async getReseñasViewDetalleLibro(libroId: number): Promise<ReseñaPage> {
+        const response = await this.api.get<ReseñaPage>(`/${this.path}/${libroId}/reseñasViewDetalles`)
         return response.data
     }
 }

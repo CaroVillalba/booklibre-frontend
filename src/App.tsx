@@ -12,6 +12,7 @@ import { Register } from './main/pages/Auth/Register/Register'
 import { PerfilUsuario } from './main/pages/PerfilUsuario/PerfilUsuario'
 import { EdicionLibro } from './main/pages/EdicionLibro/EdicionLibro'
 import { MisPrestamos } from './main/pages/Prestamos/DetallePrestamos'
+import { ReseniasLibro } from './main/pages/ReseniasLibro/ReseniasLibro'
 import { LayoutMain } from './main/pages/LayoutMain'
 import { LayoutAuth } from './main/pages/LayoutAuth'
 import { NotFound } from './main/pages/NotFound/NotFound'
@@ -37,6 +38,7 @@ function AppContent() {
             <Route path="detalle-libro/:id" element={<DetalleLibro />} />
             <Route path="editar-libro" element={<EdicionLibro />} />
             <Route path="editar-libro/:id" element={<EdicionLibro />} />
+            <Route path="comentarios-libro/:id" element={<ReseniasLibro />} />
             <Route path="prestamos" element={<MisPrestamos />} />
             <Route path="perfil" element={<PerfilUsuario />} />
             <Route path="/perfil/*" element={<Navigate to="/perfil" replace />} />

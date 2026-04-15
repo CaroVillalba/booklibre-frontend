@@ -27,6 +27,16 @@ import { InfoItem } from '../../components/DetalleLibroComponentes/InfoItem';
 import { SeccionReserva } from '../../components/DetalleLibroComponentes/SeccionReserva';
 import { loginService } from '../../services/AuthService'
 import { usuarioService } from '../../services/UsuarioService'
+import { ReseniasLibro } from '../ReseniasLibro/ReseniasLibro';
+
+// 
+export const itemTemplate = (data: Reseña) => {
+        return (
+            <div className="col-12 p-2">
+                <ReseñaCard reseña={data} />
+            </div>
+        )
+    }
 
 export const DetalleLibro = () => {
     const navigate = useNavigate()
@@ -63,6 +73,7 @@ export const DetalleLibro = () => {
     const [dates, setDates] = useState<Nullable<(Date | null)[]>>(null);
 
     const [reseñas, setReseñas] = useState<Reseña[]>([])
+    const [reseñasTotales, setReseñasTotales] = useState(0)
 
     const { actualizarBibliokarmas } = useContext(MainContext)
 
@@ -72,7 +83,7 @@ export const DetalleLibro = () => {
         <>
         <h1>Reseñas de la comunidad</h1>
         {reseñas.length > 0 && (
-            <Button label="Ver más"  icon="pi pi-arrow-right" iconPos="right" className="p-button-link p-0" onClick={() => ds.current.load()} />
+            <Button label={"Ver más ("+reseñasTotales.toString()+")"}  icon="pi pi-arrow-right" iconPos="right" className="p-button-link p-0" onClick={() => navigate(`/comentarios-libro/${id}`)} />
         )}
         </>
     )
@@ -100,10 +111,9 @@ export const DetalleLibro = () => {
 
     const getReseñas = async() => {
         try {
-            const reseñasObtenidas = await reseñaService.getReseñasPorLibro(Number(id))
-
-            setReseñas(reseñasObtenidas)
-
+            const reseñasObtenidas = await reseñaService.getReseñasViewDetalleLibro(Number(id))
+            setReseñas(reseñasObtenidas.reseniaList)
+            setReseñasTotales(reseñasObtenidas.totalElements)
         }
         catch (error : unknown) {
             showToast(getMensajeError(error), 'error')
@@ -143,8 +153,6 @@ export const DetalleLibro = () => {
         } catch (error: unknown) {
             showToast(getMensajeError(error), 'error')
         }
-
-        
     }
 
     const footer = (
@@ -158,13 +166,7 @@ export const DetalleLibro = () => {
         getReseñas()
     })
 
-    const itemTemplate = (data: Reseña) => {
-        return (
-            <div className="col-12 p-2">
-                <ReseñaCard reseña={data} />
-            </div>
-        )
-    }
+    
 
     const header = (
         <>
@@ -253,8 +255,9 @@ export const DetalleLibro = () => {
                 </div>
             </Card>
             </div>
-
+            
             <div className="surface-ground border-round-xl ">
+                {/*
                 <DataScroller
                     ref={ds}
                     value={reseñas} 
@@ -264,7 +267,8 @@ export const DetalleLibro = () => {
                     header={headerReseñas}
                     className='dataScroller-reseñas'
                     emptyMessage={NoReseñasCard}
-                />
+                />*/}
+                <ReseniasLibro />
             </div>
         </div>
         
