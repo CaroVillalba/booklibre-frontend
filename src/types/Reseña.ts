@@ -6,3 +6,11 @@ export interface Reseña {
     fecha: string       // ISO string, no Date
     autorNombre: string
 }
+
+export interface ReseñaPage {
+    totalElements: number
+    totalPages: number
+    size: number
+    pageNumber: number
+    reseniaList: Array<Reseña>
+}
