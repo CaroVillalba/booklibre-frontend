@@ -82,9 +82,9 @@ export const DetalleLibro = () => {
     const headerReseñas = (
         <>
         <h1>Reseñas de la comunidad</h1>
-        {reseñas.length > 0 && (
+        {/*reseñas.length > 0 && (
             <Button label={"Ver más ("+reseñasTotales.toString()+")"}  icon="pi pi-arrow-right" iconPos="right" className="p-button-link p-0" onClick={() => navigate(`/comentarios-libro/${id}`)} />
-        )}
+        )*/}
         </>
     )
 
@@ -268,7 +268,7 @@ export const DetalleLibro = () => {
                     className='dataScroller-reseñas'
                     emptyMessage={NoReseñasCard}
                 />*/}
-                <ReseniasLibro />
+                <ReseniasLibro header={headerReseñas}/>
             </div>
         </div>
         

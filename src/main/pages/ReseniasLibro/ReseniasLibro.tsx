@@ -14,8 +14,13 @@ import { useRef } from "react"
 import { useOnInit } from "../../hooks/useOnInit"
 import { Paginator } from "primereact/paginator"
 import type { PaginatorPageChangeEvent } from "primereact/paginator"
+import type { ReactNode } from "react"
 
-export const ReseniasLibro = () => {
+interface ReseniasLibroProps {
+    header: ReactNode
+}
+
+export const ReseniasLibro = (props: ReseniasLibroProps) => {
     const navigate = useNavigate()
 
     const { id } = useParams()
@@ -49,6 +54,7 @@ export const ReseniasLibro = () => {
 
     const ds = useRef<any>(null); 
 
+    /*
     const getLibroDetalle = async() => {
         const desdeParam = new Date("1900-1-1").toISOString().split("T")[0]
         const hastaParam = new Date().toISOString().split("T")[0]
@@ -61,6 +67,7 @@ export const ReseniasLibro = () => {
             //showToast(getMensajeError(error), 'error')
         }
     }
+    */
 
     const getReseñas = async(page: number) => {
         try {
@@ -84,14 +91,11 @@ export const ReseniasLibro = () => {
     const handlePageChange = (event: PaginatorPageChangeEvent) => {
         getReseñas(event.page)
     }
-    
 
     useOnInit (() => {
-        getLibroDetalle()
+        //getLibroDetalle()
         getReseñas(0)
     })
-
-    
 
     return (
         <div className="flex flex-column gap-4 p-4 detalle-libro-container">
@@ -104,18 +108,21 @@ export const ReseniasLibro = () => {
                     itemTemplate={itemTemplate} 
                     rows={5}
                     loader={reseñas.length > 0}
-                    //header={headerReseñas}
+                    header={props.header}
                     className='dataScroller-reseñas'
                     emptyMessage={NoReseñasCard}
                 />
             </div>
 
-            <Paginator 
-            first={paginaActual * tamañoPagina}
-            rows={tamañoPagina}
-            totalRecords={reseñasTotales}
-            onPageChange={handlePageChange}
-            />
+            {reseñasTotales > 1 && (
+                <Paginator 
+                first={paginaActual * tamañoPagina}
+                rows={tamañoPagina}
+                totalRecords={reseñasTotales}
+                onPageChange={handlePageChange}
+                />
+            )}
+            
         </div>
     )
 }
