@@ -54,6 +54,8 @@ export class LibroService extends CRUDService<LibroHome> {
     async search(params: LibroSearchParams): Promise<PageResponse<LibroHome>> {
         const userId = loginService.getLoggedUser()  
 
+        console.log('Enviando parámetros de búsqueda:', params)  // Log para depuración
+
         const response = await this.api.post<PageResponse<LibroHome>>(
             `/libros/busqueda?userId=${userId}`,  
             params
