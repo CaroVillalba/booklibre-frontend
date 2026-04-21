@@ -9,6 +9,7 @@ import { loginService } from "../services/AuthService";
 import type { Usuario } from "../../types/Usuario";
 //import { routeConfig } from "../config/routeConfig";
 import { useCallback } from "react";
+import { checkLoggedIn } from "../services/TokenService";
 
 export const LayoutMain = () => {
     const { toast, showToast } = useToast()
@@ -31,9 +32,12 @@ export const LayoutMain = () => {
 
 
     
-    if (!loginService.checkLoggedIn()) {
+    if (!checkLoggedIn()) {
         return (<Navigate to="/login" replace />)
     }
+
+   
+}
 
     return (
 

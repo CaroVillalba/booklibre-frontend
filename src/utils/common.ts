@@ -1,0 +1,22 @@
+import axios, { AxiosError, AxiosHeaders, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios'
+import { clearTokens, getAccessToken, isTokenExpiredError, refreshAccessToken } from './token-service'
+
+
+const axiosInstance = axios.create()
+
+
+export async function httpRequest<T>(request: AxiosRequestConfig): Promise<T> {
+  const headers = (request.headers as AxiosHeaders) ?? new AxiosHeaders()
+
+  const okRequest: AxiosRequestConfig = {
+    ...request,
+    headers,
+    withXSRFToken: true,
+    withCredentials: true,
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    xsrfCookieName: 'XSRF-TOKEN',
+  }
+
+  const response = await axiosInstance(okRequest)
+  return response.data
+}

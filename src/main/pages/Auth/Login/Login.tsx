@@ -9,6 +9,9 @@ import { validateEmail } from "../AuthBase";
 import { AuthBase } from "../AuthBase";
 import { AuthTextField } from "../AuthBase.tsx";
 import { AuthPasswordField } from "../AuthBase.tsx";
+import { getMensajeError } from '../../../../utils/errorHandling.ts'
+import { MainContext } from '../../../../types/MainContext.ts';
+import { useContext } from "react";
 
 export const loginHeader = (
     <div className="login-header">
@@ -25,7 +28,8 @@ export const Login = () => {
 
     var [emailErrorMessage, setEmailErrorMessage] = useState("")
     var [passwordErrorMessage, setPasswordErrorMessage] = useState("")
-    var [loginErrorMessage, setLoginErrorMessage] = useState("")
+    
+    const { showToast } = useContext(MainContext)
 
     var navigate = useNavigate()
 
@@ -36,8 +40,7 @@ export const Login = () => {
     async function login () {
         setEmailErrorMessage("")
         setPasswordErrorMessage("")
-        setLoginErrorMessage("")
-
+       
         var frontErrors: string[] = []
 
         if(email == "") {
@@ -70,15 +73,9 @@ export const Login = () => {
 
             navigate("/home")
         }
-        catch (error: any) {
-            if (error instanceof AxiosError && error.response != undefined) {
-                if (error.response.status >= 400 && error.response.status < 500) {
-                    setLoginErrorMessage(error.response.data)
-                }
-            }
-            else {
-                setLoginErrorMessage("Error del servidor. Intentelo mas tarde.")
-            }
+        catch (error: unknown) {
+            showToast(getMensajeError(error), 'error')
+            
         }
     }
 
@@ -90,8 +87,6 @@ export const Login = () => {
             <AuthPasswordField label="Contraseña:" value={password} onChange={setPassword} error={passwordErrorMessage} />
 
             <p><Checkbox checked={rememberme} onClick={handleCheckRememberme}></Checkbox> Recordame</p>
-
-            <p id="account-login-error" className="error-message-label">{loginErrorMessage}</p>
 
             <p><Button className="login-button" onClick={login}>Ingresar</Button></p>
 

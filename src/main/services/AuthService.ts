@@ -2,8 +2,12 @@ import { CRUDService } from "./CRUDService"
 import type { RegistroUsuario } from "../../types/Usuario";
 import type { AxiosInstance } from "axios";
 import axios from 'axios'
-import type { LoginUsuario } from "../../types/Usuario";
+import type { LoginUsuario } from "../../types/Usuario"
 import { UserNotLoggedIn } from "../exceptions/exceptions"
+import { setTokens, getUserIdFromToken } from "./TokenService"
+import { httpRequest } from '../utils/common'
+import type { LoginResponse } from "../../types/Auth"
+import { TOKEN_KEY } from "../../utils/constants";
 
 
 export class RegisterService extends CRUDService <RegistroUsuario> {
@@ -28,38 +32,22 @@ export class LoginService {
     }
 
     
-    async login(loginDto: LoginUsuario): Promise<Number> {
-        const res = await axios.get(
-            `http://localhost:9000/v1/auth/login?email=${
-                loginDto.email}&pw=${
-                loginDto.password}&rememberMe=${
-                loginDto.rememberMe}`)
-        
-        
-        if (res) {
-            sessionStorage.setItem("SESSION_USER_ID", res.data) //Guarda el user id como cookie
-        }
-
-        return Number(res.data) 
+    async login(loginDto: LoginUsuario): Promise<void> {
+        const response = await httpRequest<LoginResponse>({
+            method: 'POST',
+            url: `${this.apiRoot}/auth/login`,
+            data: {login: loginDto}
+        })
+        const { accessToken, refreshToken } = response
+        setTokens(accessToken, refreshToken)
     }
 
     logout() {
-        sessionStorage.removeItem("SESSION_USER_ID")
+        sessionStorage.removeItem(TOKEN_KEY)
     }
 
-    getLoggedUser(): number {
-        let userId: String | null = sessionStorage.getItem("SESSION_USER_ID")
-        
-        if (userId == null)
-            throw new UserNotLoggedIn()
-
-        return Number(userId)   
-    }
-
-    checkLoggedIn(): Boolean {
-        let userId: String | null = sessionStorage.getItem("SESSION_USER_ID")
-        
-        return userId != null
+    getLoggedUser(): number | null {
+       return getUserIdFromToken() 
     }
 }
 
