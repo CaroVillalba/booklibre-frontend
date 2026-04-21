@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosHeaders, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios'
+import axios, { AxiosHeaders } from 'axios'
+import type { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios'
 
 const axiosInstance = axios.create()
 
