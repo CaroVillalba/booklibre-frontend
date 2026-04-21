@@ -70,7 +70,9 @@ export const Login = () => {
 
         try {
             await loginService.login({"email": email, "password": password, "rememberMe": false})
-
+            // temporal hasta agregar jwt
+            localStorage.setItem("email", email)
+            localStorage.setItem("password", password)
             navigate("/home")
         }
         catch (error: unknown) {
