@@ -37,3 +37,8 @@ export function setTokens(accessToken: string, refreshToken: string): void {
   localStorage.setItem(TOKEN_KEY, accessToken)
   localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
 }
+
+export function isTokenExpiredError(headers?: Record<string, string>): boolean {
+  const wwwAuthenticate = headers?.['www-authenticate'] ?? headers?.['WWW-Authenticate']
+  return !!wwwAuthenticate?.includes('error="invalid_token"')
+}
