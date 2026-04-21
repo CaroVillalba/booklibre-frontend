@@ -36,8 +36,6 @@ export const LayoutMain = () => {
         return (<Navigate to="/login" replace />)
     }
 
-   
-}
 
     return (
 
