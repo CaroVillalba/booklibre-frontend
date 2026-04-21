@@ -17,8 +17,20 @@ export abstract class CRUDService<T, F = undefined> implements InterfaceService<
     constructor(path: string) {
         this.path = path
         this.api = axios.create({
-        baseURL: this.apiRoot,
-        headers: { 'Content-Type': 'application/json' },
+            baseURL: this.apiRoot,
+            headers: { 'Content-Type': 'application/json' },
+        })
+        // solución temporal hasta agregar jwt
+        this.api.interceptors.request.use((config) => {
+            const email = localStorage.getItem("email")
+            const password = localStorage.getItem("password")
+    
+            if (email && password) {
+                const token = btoa(`${email}:${password}`)
+                config.headers.Authorization = `Basic ${token}`
+            }
+    
+            return config
         })
     }
 
