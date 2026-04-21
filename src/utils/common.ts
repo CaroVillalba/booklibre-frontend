@@ -1,5 +1,6 @@
-import axios, { AxiosHeaders } from 'axios'
-import type { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios'
+import axios, { AxiosError, AxiosHeaders } from 'axios'
+import { getAccessToken } from '../main/services/TokenService'
+import type { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios'
 
 const axiosInstance = axios.create()
 
