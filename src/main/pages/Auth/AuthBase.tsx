@@ -1,6 +1,7 @@
 import { Card } from "primereact/card"
 import { InputText } from "primereact/inputtext"
 import { Password } from "primereact/password"
+import { Dropdown } from "primereact/dropdown";
 
 export const validateEmail = (email: string): Boolean => {
     //regex de mail
@@ -65,4 +66,32 @@ export const AuthPasswordField = (props: AuthTextFieldProps) => {
             <p className="error-message-label">{props.error}</p>
         </>
     )
+}
+
+
+interface AuthDropdownProps {
+    label: string;
+    value: string;
+    onChange: Function;
+    options: any[];
+    error?: string;
+}
+
+export const AuthDropdown = (props: AuthDropdownProps) => {
+    return (
+        <>
+            <p><b>{props.label}</b></p>
+            <p>
+                <Dropdown 
+                    value={props.value} 
+                    onChange={(e) => props.onChange(e.value)} 
+                    options={props.options} 
+                    className="w-full" 
+                    style={{ textAlign: 'left' }}
+                    placeholder="Seleccioná una opción"
+                />
+            </p>
+            {props.error && <p className="error-message-label">{props.error}</p>}
+        </>
+    );
 }
