@@ -1,9 +1,7 @@
 import axios, { AxiosError, AxiosHeaders, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios'
 import { clearTokens, getAccessToken, isTokenExpiredError, refreshAccessToken } from './token-service'
 
-
 const axiosInstance = axios.create()
-
 
 export async function httpRequest<T>(request: AxiosRequestConfig): Promise<T> {
   const headers = (request.headers as AxiosHeaders) ?? new AxiosHeaders()

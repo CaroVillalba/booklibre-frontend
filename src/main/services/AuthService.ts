@@ -3,20 +3,16 @@ import type { RegistroUsuario } from "../../types/Usuario";
 import type { AxiosInstance } from "axios";
 import axios from 'axios'
 import type { LoginUsuario } from "../../types/Usuario"
-import { UserNotLoggedIn } from "../exceptions/exceptions"
 import { setTokens, getUserIdFromToken } from "./TokenService"
-import { httpRequest } from '../utils/common'
+import { httpRequest } from '../../utils/common'
 import type { LoginResponse } from "../../types/Auth"
 import { TOKEN_KEY } from "../../utils/constants";
-
 
 export class RegisterService extends CRUDService <RegistroUsuario> {
     constructor() {
         super('auth/register')
     }
 }
-
-
 
 export class LoginService {
     protected api: AxiosInstance
@@ -47,7 +43,7 @@ export class LoginService {
     }
 
     getLoggedUser(): number | null {
-       return getUserIdFromToken() 
+        return getUserIdFromToken() 
     }
 }
 
