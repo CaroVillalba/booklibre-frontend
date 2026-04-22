@@ -25,7 +25,7 @@ export abstract class CRUDService<T, F = undefined> implements InterfaceService<
             const email = localStorage.getItem("email")
             const password = localStorage.getItem("password")
     
-            if (email && password) {
+            if (email && password && email !== "null" && password !== "null") {
                 const token = btoa(`${email}:${password}`)
                 config.headers.Authorization = `Basic ${token}`
             }

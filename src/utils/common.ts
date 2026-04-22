@@ -4,7 +4,6 @@ import type { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios'
 
 const axiosInstance = axios.create()
 
-
 export async function httpRequest<T>(request: AxiosRequestConfig): Promise<T> {
   const headers = (request.headers as AxiosHeaders) ?? new AxiosHeaders()
 
