@@ -1,7 +1,5 @@
 import { getTokenPayload } from '../../utils/jwt'
-import axios from 'axios'
-import { BACKEND_URL, REFRESH_TOKEN_KEY, TOKEN_KEY } from '../../utils/constants'
-
+import { REFRESH_TOKEN_KEY, TOKEN_KEY } from '../../utils/constants'
 
 const listeners = new Set<() => void>()
     let tokensSnapshot = {
@@ -28,7 +26,7 @@ export function getUserIdFromToken(): number | null{
     if (!token) return null
 
     const payload = getTokenPayload(token)
-    const id = payload?.sub || payload?.userId || payload?.id
+    const id = payload?.id || payload?.userId || payload?.sub
     return id ? Number(id) : null
 
 }

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
+import { getAccessToken } from './TokenService'
 
 export interface InterfaceService<T> {
     getAll(): Promise<T[]>;
@@ -22,12 +23,11 @@ export abstract class CRUDService<T, F = undefined> implements InterfaceService<
         })
         // solución temporal hasta agregar jwt
         this.api.interceptors.request.use((config) => {
-            const email = localStorage.getItem("email")
-            const password = localStorage.getItem("password")
+            const token = getAccessToken()
     
-            if (email && password && email !== "null" && password !== "null") {
-                const token = btoa(`${email}:${password}`)
-                config.headers.Authorization = `Basic ${token}`
+            if (token) {
+                const token = getAccessToken()
+                config.headers.Authorization = `Bearer ${token}`
             }
     
             return config
