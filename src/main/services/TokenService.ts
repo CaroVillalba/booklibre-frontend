@@ -21,7 +21,7 @@ export function checkLoggedIn(): boolean {
     return getAccessToken() !== null
 }
 
-export function getUserIdFromToken(): number | null{
+export function getUserIdFromToken(): number | null {
     const token = getAccessToken()
     if (!token) return null
 
