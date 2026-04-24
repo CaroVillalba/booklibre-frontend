@@ -98,7 +98,7 @@ export const ReseniasLibro = (props: ReseniasLibroProps) => {
     })
 
     return (
-        <div className="flex flex-column gap-4 p-4 detalle-libro-container">
+        <div className="flex flex-column gap-4">
             {/*<h1>Reseñas de la comunidad:</h1>*/}
 
             <div className="surface-ground border-round-xl ">
