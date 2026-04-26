@@ -3,7 +3,7 @@ import { Checkbox } from "primereact/checkbox";
 import { Button } from "primereact/button";
 import { useState } from "react";
 import { loginService } from "../../../services/AuthService";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation  } from "react-router-dom";
 import { AxiosError } from "axios";
 import { validateEmail } from "../AuthBase";
 import { AuthBase } from "../AuthBase";
@@ -31,7 +31,9 @@ export const Login = () => {
     
     const { showToast } = useContext(MainContext)
 
-    var navigate = useNavigate()
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from = location.state?.from?.pathname || "/home"
 
     const handleCheckRememberme = () => {
         setRememberme(!rememberme)
@@ -70,10 +72,7 @@ export const Login = () => {
 
         try {
             await loginService.login({"email": email, "password": password, "rememberMe": false})
-            // temporal hasta agregar jwt
-            localStorage.setItem("email", email)
-            localStorage.setItem("password", password)
-            navigate("/home")
+            navigate(from, { replace: true })
         }
         catch (error: unknown) {
             showToast(getMensajeError(error), 'error')
@@ -92,7 +91,7 @@ export const Login = () => {
 
             <p><Button className="login-button" onClick={login}>Ingresar</Button></p>
 
-            <p className="center">Aun no tienes una cuenta? <a href="/register">Registrate gratis</a></p>
+            <p className="center">Aun no tienes una cuenta? <Link to="/register">Registrate gratis</Link></p>
         </AuthBase>
     )
 }

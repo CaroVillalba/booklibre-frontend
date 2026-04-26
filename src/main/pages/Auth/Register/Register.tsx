@@ -2,7 +2,7 @@ import "../Login/Login.css"
 import { Button } from "primereact/button";
 import { useState } from "react";
 import { registerService } from "../../../services/AuthService";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FloatLabel } from "primereact/floatlabel"; // Import FloatLabel from PrimeReact
 import { AxiosError } from "axios";
 import { AuthDropdown, validateEmail } from "../AuthBase.tsx";
@@ -136,7 +136,7 @@ export const Register = () => {
 
             <p><Button className="login-button" onClick={register}>Crear cuenta</Button></p>
 
-            <p className="center">¿Ya tenés una cuenta? <a href="/login">Iniciar sesion</a></p>
+            <p className="center">¿Ya tenés una cuenta? <Link to="/login">Iniciar sesion</Link></p>
         </AuthBase>
     )
 }

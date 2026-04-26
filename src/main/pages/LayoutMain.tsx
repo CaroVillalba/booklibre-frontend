@@ -1,5 +1,5 @@
-import { Outlet, Navigate } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
+import { useState, useMemo, useEffect } from "react";
 import { useToast } from "../hooks/useToast";
 import { Toast } from "../components/common/toast";
 import { Header } from "../components/Header/Header";
@@ -8,11 +8,21 @@ import type { MainContextType } from "../../types/MainContext";
 import type { Usuario } from "../../types/Usuario";
 //import { routeConfig } from "../config/routeConfig";
 import { useCallback } from "react";
-import { checkLoggedIn } from "../services/TokenService";
+import { checkLoggedIn, subscribeToTokens } from "../services/TokenService";
 
 export const LayoutMain = () => {
+    const location = useLocation()
     const { toast, showToast } = useToast()
     const  [ usuario, setUsuario ] = useState<Usuario | null>(null)
+
+    const [logueado, setLogueado] = useState(checkLoggedIn())
+
+    useEffect(()=>{
+        const unsubscribe = subscribeToTokens(()=>{
+            setLogueado(checkLoggedIn())
+        })
+        return unsubscribe
+    },[])
 
     const actualizarBibliokarmas = useCallback((nuevoPuntaje: number) => {
         setUsuario((prevUsuario) => {
@@ -31,8 +41,14 @@ export const LayoutMain = () => {
 
 
     
-    if (!checkLoggedIn()) {
-        return (<Navigate to="/login" replace />)
+    if (!logueado) {
+        return (
+        <Navigate
+            to="/login"
+            replace
+            state={{ from: location }}
+        />
+    )
     }
 
     return (
