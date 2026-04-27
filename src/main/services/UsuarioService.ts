@@ -1,6 +1,6 @@
 import type { LibroUsuario } from "../../types/Libro";
 import type { PageDTO } from "../../types/PageDTO";
-import type { Usuario, UsuarioEstadisticasDTO, UsuarioUpdateRequest } from "../../types/Usuario";
+import type { Usuario, UsuarioUpdateRequest } from "../../types/Usuario";
 import { CRUDService } from "./CRUDService";
 
 class UsuarioService extends CRUDService<Usuario> {
@@ -23,12 +23,6 @@ class UsuarioService extends CRUDService<Usuario> {
         return response.data
     }
 
-    async getEstadisticas(id: number): Promise<UsuarioEstadisticasDTO> {
-        const response = await this.api.get<UsuarioEstadisticasDTO>(
-            `/usuario/${id}/estadisticas`,
-        );
-        return response.data;
-    }
 
     async getLibrosDeUsuario(
         usuarioId: number,

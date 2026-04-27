@@ -12,8 +12,6 @@ import { MainContext } from '../../../types/MainContext';
 import { useContext } from 'react'
 import  { getMensajeError } from './../../../utils/errorHandling';
 import { useOnInit } from '../../hooks/useOnInit'
-import { useState } from 'react'
-import type { Usuario } from '../../../types/Usuario'
 
 interface HeaderProps {
   usuarioNombre?: string
@@ -68,7 +66,7 @@ export function Header({ onLogout }: HeaderProps) {
 
     try {
       const usuarioId = loginService.getLoggedUser()
-      const usuario = await usuarioService.getUsuarioPorId(usuarioId)
+      const usuario = await usuarioService.getUsuarioPorId(usuarioId!)
       setUsuario(usuario)
     }
     catch( error : unknown ){
