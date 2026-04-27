@@ -12,8 +12,10 @@ import { useNavigate } from "react-router-dom";
 import { reservaService } from "../../services/ReservaService";
 import type { Prestamo, EstadoPrestamo, TipoPrestamo } from "../../../types/Prestamo";
 import "./DetallePrestamos.css";
-import { getUserRolesFromToken } from "../../services/TokenService";
+import { getUserIdFromToken, getUserRolesFromToken } from "../../services/TokenService";
 import { useOnInit } from "../../hooks/useOnInit";
+import type { Usuario } from "../../../types/Usuario";
+import { usuarioService } from "../../services/UsuarioService";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -105,6 +107,7 @@ export const MisPrestamos = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [usuario, setUsuario] = useState<Usuario>()
 
     // — UI —
     const [busqueda, setBusqueda] = useState("");
@@ -119,10 +122,15 @@ export const MisPrestamos = () => {
     const [activeTabIndex, setActiveTabIndex] = useState(0);
 
     //Si es solo publicador, que cambie a PRESTADOS_POR_MI
-    useOnInit(() => {
-        if (getUserRolesFromToken() == "PUBLICADOR") {
-            setTabActiva("PRESTADOS_POR_MI")
-            setActiveTabIndex(1);
+    useOnInit(async() => {
+        const u = await usuarioService.getUsuarioPorId(getUserIdFromToken()!!)
+        setUsuario(u)
+
+        if (u.tipoUsuario == "PUBLICADOR") {
+            handleTabChange(1)
+        }
+        else {
+            handleTabChange(0)
         }
     })
 
@@ -301,13 +309,13 @@ export const MisPrestamos = () => {
                 className="mis-prestamos__tabs w-full"
                 onTabChange={(e) => handleTabChange(e.index)}
             >
-                {(getUserRolesFromToken() == "LECTOR" || getUserRolesFromToken() == "LECTOR_PUBLICADOR") && (
+                {(usuario != null) && (usuario.tipoUsuario == "LECTOR" || usuario.tipoUsuario == "LECTOR_PUBLICADOR") && (
                     <TabPanel header="Prestados a mí">
                         {renderLista()}
                     </TabPanel>
                 )}
 
-                {(getUserRolesFromToken() == "PUBLICADOR" || getUserRolesFromToken() == "LECTOR_PUBLICADOR") && (
+                {(usuario != null) && (usuario.tipoUsuario == "PUBLICADOR" || usuario.tipoUsuario == "LECTOR_PUBLICADOR") && (
                     <TabPanel header="Prestados por mí">
                         {renderLista()}
                     </TabPanel>
