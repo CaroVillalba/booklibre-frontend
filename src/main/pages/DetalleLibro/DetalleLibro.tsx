@@ -182,7 +182,7 @@ export const DetalleLibro = () => {
                         <span className="font-bold text-750">
                             {libro.rating.toFixed(1)}
                         </span>
-                    </>
+                    </> 
                 ) : (
                     <span className="font-bold text-750">N/A</span>
                 )}
@@ -249,7 +249,7 @@ export const DetalleLibro = () => {
                         }></InfoItem>
                         <InfoItem label="Estado" value={libro.estado}></InfoItem>
                         <InfoItem label="Rating" value={libro.rating
-                            ? libro.rating : 'N/A'
+                            ? libro.rating.toFixed(2) : 'N/A'
                         }></InfoItem>
                     </div>  
                 </div>
