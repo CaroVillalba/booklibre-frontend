@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import { reservaService } from "../../services/ReservaService";
 import type { Prestamo, EstadoPrestamo, TipoPrestamo } from "../../../types/Prestamo";
 import "./DetallePrestamos.css";
+import { getUserRolesFromToken } from "../../services/TokenService";
+import { useOnInit } from "../../hooks/useOnInit";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -115,6 +117,14 @@ export const MisPrestamos = () => {
     const [comentario, setComentario] = useState("");
 
     const [activeTabIndex, setActiveTabIndex] = useState(0);
+
+    //Si es solo publicador, que cambie a PRESTADOS_POR_MI
+    useOnInit(() => {
+        if (getUserRolesFromToken() == "PUBLICADOR") {
+            setTabActiva("PRESTADOS_POR_MI")
+            setActiveTabIndex(1);
+        }
+    })
 
     // — Debounce para búsqueda —
     useEffect(() => {
@@ -291,12 +301,17 @@ export const MisPrestamos = () => {
                 className="mis-prestamos__tabs w-full"
                 onTabChange={(e) => handleTabChange(e.index)}
             >
-                <TabPanel header="Prestados a mí">
-                    {renderLista()}
-                </TabPanel>
-                <TabPanel header="Prestados por mí">
-                    {renderLista()}
-                </TabPanel>
+                {(getUserRolesFromToken() == "LECTOR" || getUserRolesFromToken() == "LECTOR_PUBLICADOR") && (
+                    <TabPanel header="Prestados a mí">
+                        {renderLista()}
+                    </TabPanel>
+                )}
+
+                {(getUserRolesFromToken() == "PUBLICADOR" || getUserRolesFromToken() == "LECTOR_PUBLICADOR") && (
+                    <TabPanel header="Prestados por mí">
+                        {renderLista()}
+                    </TabPanel>
+                )}
             </TabView>
 
             {/* CTA al catálogo */}
