@@ -1,34 +1,34 @@
-import type { LibroUsuario } from "../../types/Libro";
-import type { PageDTO } from "../../types/PageDTO";
-import type { Usuario, UsuarioEstadisticasDTO, UsuarioUpdateRequest } from "../../types/Usuario";
-import { CRUDService } from "./CRUDService";
+import type { LibroUsuario } from "../../types/Libro"
+import type { PageDTO } from "../../types/PageDTO"
+import type { Usuario, UsuarioUpdateRequest } from "../../types/Usuario"
+import { CRUDService } from "./CRUDService"
+import { refreshAccessToken } from "./TokenAuthService"
 
 class UsuarioService extends CRUDService<Usuario> {
     constructor() {
-        super("usuario");
+        super("usuario")
     }
 
     async getUsuario(): Promise<Usuario[]> {
-        const response = await this.api.get<Usuario[]>(`/${this.path}`);
+        const response = await this.api.get<Usuario[]>(`/${this.path}`)
         return response.data;
     }
 
     async getUsuarioPorId(id: number): Promise<Usuario> {
-        const response = await this.api.get<Usuario>(`/${this.path}/${id}`);
+        const response = await this.api.get<Usuario>(`/${this.path}/${id}`)
         return response.data;
     }
 
     async updateUsuario(id:number, payload:UsuarioUpdateRequest):Promise<Usuario>{
         const response = await this.api.patch(`/usuario/${id}`, payload)
+        try {
+            await refreshAccessToken() // Esto actualiza el localStorage y el snapshot
+        } catch (error) {
+            console.error("Error al refrescar el token tras cambio de rol", error)
+        }
         return response.data
     }
 
-    async getEstadisticas(id: number): Promise<UsuarioEstadisticasDTO> {
-        const response = await this.api.get<UsuarioEstadisticasDTO>(
-            `/usuario/${id}/estadisticas`,
-        );
-        return response.data;
-    }
 
     async getLibrosDeUsuario(
         usuarioId: number,
@@ -50,8 +50,8 @@ class UsuarioService extends CRUDService<Usuario> {
                 },
             },
         );
-        return response.data;
+        return response.data
     }
 }
 
-export const usuarioService = new UsuarioService();
+export const usuarioService = new UsuarioService()

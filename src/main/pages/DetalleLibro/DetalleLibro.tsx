@@ -74,7 +74,8 @@ export const DetalleLibro = () => {
 
     const [reseñas, setReseñas] = useState<Reseña[]>([])
     const [reseñasTotales, setReseñasTotales] = useState(0)
-
+    const [tipoUsuario, setTipoUsuario] = useState<string | null>(null)
+    
     const { actualizarBibliokarmas } = useContext(MainContext)
 
     const ds = useRef<any>(null); 
@@ -127,10 +128,8 @@ export const DetalleLibro = () => {
         }
 
         try {
-            
             const userId = loginService.getLoggedUser()
             const usuario = await usuarioService.getUsuarioPorId(userId)
-
 
             await reservaService.postReserva({
                 idLibro: libro.id,
@@ -140,8 +139,8 @@ export const DetalleLibro = () => {
             });
 
             setLibro((prevLibro) => ({
-            ...prevLibro,
-            estado: "Prestado" 
+                ...prevLibro,
+                estado: "Prestado" 
             }));
 
             const usuarioActualizado = await usuarioService.getUsuarioPorId(userId);
@@ -157,20 +156,29 @@ export const DetalleLibro = () => {
 
     const footer = (
         <>
-        <Button label= " Confirmar reserva " icon= "pi pi-check" iconPos="right" className="p-button-primary p-button-text boton-ancho" onClick={realizarReserva} />
+            <Button label= " Confirmar reserva " icon= "pi pi-check" iconPos="right" className="p-button-primary p-button-text boton-ancho" onClick={realizarReserva} />
         </>
     )
 
     useOnInit(() => {
         getLibroDetalle()
         getReseñas()
-    })
 
-    
+        const fetchUsuario = async () => {
+            try {
+                const userId = loginService.getLoggedUser()
+                const usuario = await usuarioService.getUsuarioPorId(userId)
+                setTipoUsuario(usuario.tipoUsuario)
+            } catch (error) {
+                showToast(getMensajeError(error), 'error')
+            }
+        }
+
+        fetchUsuario()
+    })
 
     const header = (
         <>
-
        {/*  TODO: VER bien el tema de cómo se muestra el género y el rating, porque cuando es CIENCIA_FICCION queda medio "corrido" */}
 
             <div className="p-3 pb-0 flex flex-row gap-3 align-items-center">
@@ -188,22 +196,19 @@ export const DetalleLibro = () => {
                 )}
 
             </div>
-        
         </>
     )
 
     const formatoFecha = (fecha: Date | null) => {
-        if (!fecha) return "-";
-        return fecha.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
-    };
+        if (!fecha) return "-"
+        return fecha.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
+    }
 
     const calcularDuracion = (dateArray: Nullable<(Date | null)[]>) => {
-        if (!dateArray || !dateArray[0] || !dateArray[1]) return 0;
-        const diffTime = Math.abs(dateArray[1].getTime() - dateArray[0].getTime());
-        return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-    };
-
-
+        if (!dateArray || !dateArray[0] || !dateArray[1]) return 0
+        const diffTime = Math.abs(dateArray[1].getTime() - dateArray[0].getTime())
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) 
+    }
 
     return (
         <div className="flex flex-column gap-4 p-4 detalle-libro-container">
@@ -222,25 +227,37 @@ export const DetalleLibro = () => {
 
 
             <div className="flex flex-row align-items-start gap-4 h-auto">
-                <SeccionReserva
-                    dates={dates}
-                    formatoFecha={formatoFecha}
-                    calcularDuracion={calcularDuracion}
-                    footer={footer}
-                >
-                </SeccionReserva>
+                {tipoUsuario != "PUBLICADOR" && (
+                    <SeccionReserva
+                        dates={dates}
+                        formatoFecha={formatoFecha}
+                        calcularDuracion={calcularDuracion}
+                        footer={footer}
+                    />
+                )}
 
-            <Card title="Detalles del libro" className='flex-1' style={{ padding: "1rem"}}>
-                <div className="flex flex-column gap-4">
-                    <div className="flex flex-row justify-content-between align-items-center w-full p-1">
-                        <InfoItem label="Tipo" value={<Tag value={libro.tipo} className='tag-tipo'></Tag>}></InfoItem>
-                        <InfoItem label="Bibliokarmas" value={<Tag value={`+${libro.bibliokarma}`} ></Tag>}></InfoItem>
-                    </div>
-                    <div className="flex flex-row justify-content-between align-items-center w-full p-1">
-                        <InfoItem label="Género" value={libro.genero}></InfoItem>
-                        <InfoItem label="Páginas" value={libro.cantidadPaginas}></InfoItem>
-                        <InfoItem label="Idioma" value={libro.idioma}></InfoItem>
-                        <InfoItem label="Editorial" value={libro.editorial}></InfoItem>
+                <Card title="Detalles del libro" className='flex-1' style={{ padding: "1rem"}}>
+                    <div className="flex flex-column gap-4">
+                        <div className="flex flex-row justify-content-between align-items-center w-full p-1">
+                            <InfoItem label="Tipo" value={<Tag value={libro.tipo} className='tag-tipo'></Tag>}></InfoItem>
+                            <InfoItem label="Bibliokarmas" value={<Tag value={`+${libro.bibliokarma}`} ></Tag>}></InfoItem>
+                        </div>
+                        <div className="flex flex-row justify-content-between align-items-center w-full p-1">
+                            <InfoItem label="Género" value={libro.genero}></InfoItem>
+                            <InfoItem label="Páginas" value={libro.cantidadPaginas}></InfoItem>
+                            <InfoItem label="Idioma" value={libro.idioma}></InfoItem>
+                            <InfoItem label="Editorial" value={libro.editorial}></InfoItem>
+                        </div>
+                        <div className="flex flex-row justify-content-between align-items-center w-full p-1">
+                            <InfoItem label="ISBN-13" value={libro.isbn13}></InfoItem>
+                            <InfoItem label="Publicado" value={libro.fechaPublicacion
+                                ? new Date(libro.fechaPublicacion).toLocaleDateString() : 'N/A'
+                            }></InfoItem>
+                            <InfoItem label="Estado" value={libro.estado}></InfoItem>
+                            <InfoItem label="Rating" value={libro.rating
+                                ? libro.rating : 'N/A'
+                            }></InfoItem>
+                        </div>  
                     </div>
                     <div className="flex flex-row justify-content-between align-items-center w-full p-1">
                         <InfoItem label="ISBN-13" value={libro.isbn13}></InfoItem>

@@ -32,7 +32,7 @@ export const PerfilUsuario = () => {
     const fetchUsuario = async () => {
         try {
             const usuarioId = loginService.getLoggedUser()
-            const data = await usuarioService.getById(usuarioId)
+            const data = await usuarioService.getById(usuarioId!)
             setUsuario(data)
         } catch (error: unknown) {
             console.error("error al cargar el usuario", error)
