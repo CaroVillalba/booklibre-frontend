@@ -1,16 +1,14 @@
-import type { Libro } from './Libro';
-
-export interface Reseña {
+export interface Resenia {
     rating: number      // Double del back → number en TS
     texto: string
     fecha: string       // ISO string, no Date
     autorNombre: string
 }
 
-export interface ReseñaPage {
+export interface ReseniaPage {
     totalElements: number
     totalPages: number
     size: number
     pageNumber: number
-    reseniaList: Array<Reseña>
+    reseniaList: Array<Resenia>
 }

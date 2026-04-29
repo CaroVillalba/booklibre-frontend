@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -12,10 +12,11 @@ import { useNavigate } from "react-router-dom";
 import { reservaService } from "../../services/ReservaService";
 import type { Prestamo, EstadoPrestamo, TipoPrestamo } from "../../../types/Prestamo";
 import "./DetallePrestamos.css";
-import { getUserIdFromToken, getUserRolesFromToken } from "../../services/TokenService";
+import { getUserIdFromToken } from "../../services/TokenService";
 import { useOnInit } from "../../hooks/useOnInit";
 import type { Usuario } from "../../../types/Usuario";
 import { usuarioService } from "../../services/UsuarioService";
+import { MainContext } from "../../../types/MainContext";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -120,10 +121,11 @@ export const MisPrestamos = () => {
     const [comentario, setComentario] = useState("");
 
     const [activeTabIndex, setActiveTabIndex] = useState(0);
-
+    const { showToast } = useContext(MainContext);
+    
     //Si es solo publicador, que cambie a PRESTADOS_POR_MI
     useOnInit(async() => {
-        const u = await usuarioService.getUsuarioPorId(getUserIdFromToken()!!)
+        const u = await usuarioService.getUsuarioPorId(getUserIdFromToken()!)
         setUsuario(u)
 
         if (u.tipoUsuario == "PUBLICADOR") {
@@ -160,7 +162,7 @@ export const MisPrestamos = () => {
             setTotalPages(data.totalPages);
         } catch (e) {
             setError("No se pudieron cargar los préstamos. Intentá de nuevo más tarde.");
-            console.error(e);
+            showToast("Error al cargar préstamos", "error");
         } finally {
             setLoading(false);
         }
@@ -190,7 +192,7 @@ export const MisPrestamos = () => {
         if (!prestamoACalificar) return;
 
         try {
-            await reservaService.agregarReseña(
+            await reservaService.agregarResenia(
                 prestamoACalificar.id,
                 puntaje,
                 comentario
@@ -203,7 +205,7 @@ export const MisPrestamos = () => {
             // Recargar préstamos
             cargarPrestamos();
         } catch (error) {
-            console.error("Error enviando reseña", error);
+            showToast("Error al enviar calificación. Intentá de nuevo más tarde.", "error");
         }
     };
 

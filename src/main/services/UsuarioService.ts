@@ -1,8 +1,8 @@
+import { CRUDService } from "./CRUDService"
+import { refreshAccessToken } from "./TokenAuthService"
 import type { LibroUsuario } from "../../types/Libro"
 import type { PageDTO } from "../../types/PageDTO"
 import type { Usuario, UsuarioUpdateRequest } from "../../types/Usuario"
-import { CRUDService } from "./CRUDService"
-import { refreshAccessToken } from "./TokenAuthService"
 
 class UsuarioService extends CRUDService<Usuario> {
     constructor() {
@@ -28,7 +28,6 @@ class UsuarioService extends CRUDService<Usuario> {
         }
         return response.data
     }
-
 
     async getLibrosDeUsuario(
         usuarioId: number,

@@ -1,7 +1,7 @@
-import type { Reserva } from "../../types/Reserva";
-import type { Prestamo, PrestamosPaginados, TipoPrestamo } from "../../types/Prestamo";
 import { CRUDService } from "./CRUDService";
 import { loginService } from "./AuthService";
+import type { Reserva } from "../../types/Reserva";
+import type { PrestamosPaginados, TipoPrestamo } from "../../types/Prestamo";
 
 export class ReservaService extends CRUDService<Reserva> {
     constructor() {
@@ -43,7 +43,7 @@ export class ReservaService extends CRUDService<Reserva> {
         return response.data
     }
 
-    async agregarReseña(reservaId: number, rating: number, texto: string): Promise<void> {
+    async agregarResenia(reservaId: number, rating: number, texto: string): Promise<void> {
         const userId = loginService.getLoggedUser()
         
         await this.api.post(

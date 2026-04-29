@@ -1,39 +1,33 @@
-import { Card } from 'primereact/card';
-import { Button } from 'primereact/button';
-import { Calendar } from 'primereact/calendar';
-import { useContext, useState } from "react";
-import { Tag } from 'primereact/tag';
-import { Image } from 'primereact/image';
-import './DetalleLibro.css'
-import type { Nullable } from "primereact/ts-helpers";
-import { Rating } from 'primereact/rating';
-import { ScrollPanel } from 'primereact/scrollpanel';
-import type { Reseña } from '../../../types/Reseña';
-import { ReseñaCard } from './ReseñaCard/ReseñaCard';
-import { DataScroller } from 'primereact/datascroller';
-import { useRef } from 'react';
-import type { LibroHome } from '../../../types/Libro';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { useOnInit } from './../../hooks/useOnInit';
-import { libroService } from '../../services/LibroService';
-import { reseñaService } from '../../services/ReseñaService';
-import { NoReseñasCard } from './ReseñaCard/NoReseñasCard';
-import { reservaService } from '../../services/ReservaService';
-import '../../../toast.css'
+import { useState, useContext } from 'react'
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
+import { Card } from 'primereact/card'
+import { Button } from 'primereact/button'
+import { Tag } from 'primereact/tag'
+import { Image } from 'primereact/image'
+import { Rating } from 'primereact/rating'
+import { ScrollPanel } from 'primereact/scrollpanel'
+import { ReseniaCard } from './ReseniaCard/ReseniaCard'
+import { useOnInit } from './../../hooks/useOnInit'
+import { libroService } from '../../services/LibroService'
+import { reseniaService } from '../../services/ReseniaService'
+import { reservaService } from '../../services/ReservaService'
 import { getMensajeError } from '../../../utils/errorHandling'
-import { MainContext } from '../../../types/MainContext';
-import { useNavigate } from "react-router-dom";
-import { InfoItem } from '../../components/DetalleLibroComponentes/InfoItem';
-import { SeccionReserva } from '../../components/DetalleLibroComponentes/SeccionReserva';
+import { MainContext } from '../../../types/MainContext'
+import { InfoItem } from '../../components/DetalleLibroComponentes/InfoItem'
+import { SeccionReserva } from '../../components/DetalleLibroComponentes/SeccionReserva'
 import { loginService } from '../../services/AuthService'
 import { usuarioService } from '../../services/UsuarioService'
-import { ReseniasLibro } from '../ReseniasLibro/ReseniasLibro';
+import { ReseniasLibro } from '../ReseniasLibro/ReseniasLibro'
+import type { Resenia } from '../../../types/Resenia'
+import type { LibroHome } from "../../../types/Libro"
+import type { Nullable } from "primereact/ts-helpers"
+import '../../../toast.css'
+import './DetalleLibro.css'
 
-// 
-export const itemTemplate = (data: Reseña) => {
+export const itemTemplate = (data: Resenia) => {
         return (
             <div className="col-12 p-2">
-                <ReseñaCard reseña={data} />
+                <ReseniaCard resenia={data} />
             </div>
         )
     }
@@ -43,7 +37,6 @@ export const DetalleLibro = () => {
 
     const { id } = useParams()
     const [searchParams] = useSearchParams()
-
 
     const desdeParam = searchParams.get('desde') || new Date().toISOString().split("T")[0]
     const hastaParam = searchParams.get('hasta') || new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split("T")[0]
@@ -72,23 +65,25 @@ export const DetalleLibro = () => {
 
     const [dates, setDates] = useState<Nullable<(Date | null)[]>>(null);
 
-    const [reseñas, setReseñas] = useState<Reseña[]>([])
-    const [reseñasTotales, setReseñasTotales] = useState(0)
+    const [resenias, setResenias] = useState<Resenia[]>([])
+    const [reseniasTotales, setReseniasTotales] = useState(0)
     const [tipoUsuario, setTipoUsuario] = useState<string | null>(null)
     
     const { actualizarBibliokarmas } = useContext(MainContext)
 
-    const ds = useRef<any>(null); 
-
-    const headerReseñas = (
-        <>
-        <h1>Reseñas de la comunidad</h1>
-        {/*reseñas.length > 0 && (
-            <Button label={"Ver más ("+reseñasTotales.toString()+")"}  icon="pi pi-arrow-right" iconPos="right" className="p-button-link p-0" onClick={() => navigate(`/comentarios-libro/${id}`)} />
-        )*/}
-        </>
+    const headerResenias = ( 
+        <> 
+            <h1>Reseñas de la comunidad</h1> 
+            { /*resenias.length > 0 && ( 
+                <Button 
+                    label={"Ver más ("+reseniasTotales.toString()+")"}  icon="pi pi-arrow-right" 
+                    iconPos="right" className="p-button-link p-0" 
+                    onClick={() => navigate(`/comentarios-libro/${id}`)} 
+                /> )*/
+            } 
+        </> 
     )
-
+    
     const getLibroDetalle = async() => {
         try {
             const libroDetalle = await libroService.getLibroPorId(Number(id), {
@@ -110,11 +105,11 @@ export const DetalleLibro = () => {
         }
     }
 
-    const getReseñas = async() => {
+    const getResenias = async() => {
         try {
-            const reseñasObtenidas = await reseñaService.getReseñasViewDetalleLibro(Number(id))
-            setReseñas(reseñasObtenidas.reseniaList)
-            setReseñasTotales(reseñasObtenidas.totalElements)
+            const reseniasObtenidas = await reseniaService.getReseniasViewDetalleLibro(Number(id))
+            setResenias(reseniasObtenidas.reseniaList)
+            setReseniasTotales(reseniasObtenidas.totalElements)
         }
         catch (error : unknown) {
             showToast(getMensajeError(error), 'error')
@@ -162,7 +157,7 @@ export const DetalleLibro = () => {
 
     useOnInit(() => {
         getLibroDetalle()
-        getReseñas()
+        getResenias()
 
         const fetchUsuario = async () => {
             try {
@@ -219,12 +214,11 @@ export const DetalleLibro = () => {
                 </Card>
                 <Card header = {header} className="flex-1" title={libro.titulo} subTitle={libro.autor} style={{ minHeight: "490px", padding: "1rem",}}>
                     <div className="contenido-card">
-                    <p className="text-750 font-bold">Sipnosis</p>
-                    <ScrollPanel style={{ width: '100%', height: '200px', alignContent: 'center'}}>{libro.descripcion}</ScrollPanel>
+                        <p className="text-750 font-bold">Sipnosis</p>
+                        <ScrollPanel style={{ width: '100%', height: '200px', alignContent: 'center'}}>{libro.descripcion}</ScrollPanel>
                     </div>
                 </Card>
             </div>
-
 
             <div className="flex flex-row align-items-start gap-4 h-auto">
                 {tipoUsuario != "PUBLICADOR" && (
@@ -247,17 +241,7 @@ export const DetalleLibro = () => {
                             <InfoItem label="Páginas" value={libro.cantidadPaginas}></InfoItem>
                             <InfoItem label="Idioma" value={libro.idioma}></InfoItem>
                             <InfoItem label="Editorial" value={libro.editorial}></InfoItem>
-                        </div>
-                        <div className="flex flex-row justify-content-between align-items-center w-full p-1">
-                            <InfoItem label="ISBN-13" value={libro.isbn13}></InfoItem>
-                            <InfoItem label="Publicado" value={libro.fechaPublicacion
-                                ? new Date(libro.fechaPublicacion).toLocaleDateString() : 'N/A'
-                            }></InfoItem>
-                            <InfoItem label="Estado" value={libro.estado}></InfoItem>
-                            <InfoItem label="Rating" value={libro.rating
-                                ? libro.rating : 'N/A'
-                            }></InfoItem>
-                        </div>  
+                        </div> 
                     </div>
                     <div className="flex flex-row justify-content-between align-items-center w-full p-1">
                         <InfoItem label="ISBN-13" value={libro.isbn13}></InfoItem>
@@ -269,25 +253,24 @@ export const DetalleLibro = () => {
                             ? libro.rating.toFixed(2) : 'N/A'
                         }></InfoItem>
                     </div>  
-                </div>
-            </Card>
+                </Card>
             </div>
             
             <div className="surface-ground border-round-xl ">
                 {/*
-                <DataScroller
-                    ref={ds}
-                    value={reseñas} 
-                    itemTemplate={itemTemplate} 
-                    rows={2}
-                    loader={reseñas.length > 0}
-                    header={headerReseñas}
-                    className='dataScroller-reseñas'
-                    emptyMessage={NoReseñasCard}
-                />*/}
-                <ReseniasLibro header={headerReseñas}/>
+                    <DataScroller
+                        ref={ds}
+                        value={resenias} 
+                        itemTemplate={itemTemplate} 
+                        rows={2}
+                        loader={reseñas.length > 0}
+                        header={headerResenias}
+                        className='dataScroller-reseñas'
+                        emptyMessage={NoReseniasCard}
+                    />
+                */}
+                <ReseniasLibro header={headerResenias}/>
             </div>
         </div>
-        
     )
 }
