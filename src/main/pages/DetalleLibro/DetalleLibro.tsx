@@ -190,7 +190,7 @@ export const DetalleLibro = () => {
                         <span className="font-bold text-750">
                             {libro.rating.toFixed(1)}
                         </span>
-                    </>
+                    </> 
                 ) : (
                     <span className="font-bold text-750">N/A</span>
                 )}
@@ -259,7 +259,18 @@ export const DetalleLibro = () => {
                             }></InfoItem>
                         </div>  
                     </div>
-                </Card>
+                    <div className="flex flex-row justify-content-between align-items-center w-full p-1">
+                        <InfoItem label="ISBN-13" value={libro.isbn13}></InfoItem>
+                        <InfoItem label="Publicado" value={libro.fechaPublicacion
+                            ? new Date(libro.fechaPublicacion).toLocaleDateString() : 'N/A'
+                        }></InfoItem>
+                        <InfoItem label="Estado" value={libro.estado}></InfoItem>
+                        <InfoItem label="Rating" value={libro.rating
+                            ? libro.rating.toFixed(2) : 'N/A'
+                        }></InfoItem>
+                    </div>  
+                </div>
+            </Card>
             </div>
             
             <div className="surface-ground border-round-xl ">

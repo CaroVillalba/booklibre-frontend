@@ -98,12 +98,14 @@ export function Header({ onLogout }: HeaderProps) {
       </div>
 
       
-      <Menu model={menuItems} popup ref={menuUsuario} />
+      <Menu model={menuItems} popup ref={menuUsuario} id="popup_menu_user"/>
       <Button
         icon="pi pi-user"
         className="p-button-text p-button-rounded p-button-lg"
         onClick={(e) => menuUsuario.current?.toggle(e)}
         aria-label="Menú de usuario"
+        aria-controls="popup_menu_user"
+        aria-haspopup
       />
     </div>
   )

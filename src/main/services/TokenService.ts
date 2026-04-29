@@ -48,6 +48,15 @@ export function getUserIdFromToken(): number | null {
     return id ? Number(id) : null
 }
 
+export function getUserRolesFromToken(): String {
+  const token = getAccessToken()
+  if (!token) return ""
+
+  const payload = getTokenPayload(token)
+  const roles = payload?.roles
+  return roles ? roles : ""
+}
+
 export function setTokens(accessToken: string, refreshToken: string): void {
   localStorage.setItem(TOKEN_KEY, accessToken)
   localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)

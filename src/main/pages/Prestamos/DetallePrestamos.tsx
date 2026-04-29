@@ -12,6 +12,10 @@ import { useNavigate } from "react-router-dom";
 import { reservaService } from "../../services/ReservaService";
 import type { Prestamo, EstadoPrestamo, TipoPrestamo } from "../../../types/Prestamo";
 import "./DetallePrestamos.css";
+import { getUserIdFromToken, getUserRolesFromToken } from "../../services/TokenService";
+import { useOnInit } from "../../hooks/useOnInit";
+import type { Usuario } from "../../../types/Usuario";
+import { usuarioService } from "../../services/UsuarioService";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -103,6 +107,7 @@ export const MisPrestamos = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [usuario, setUsuario] = useState<Usuario>()
 
     // — UI —
     const [busqueda, setBusqueda] = useState("");
@@ -115,6 +120,19 @@ export const MisPrestamos = () => {
     const [comentario, setComentario] = useState("");
 
     const [activeTabIndex, setActiveTabIndex] = useState(0);
+
+    //Si es solo publicador, que cambie a PRESTADOS_POR_MI
+    useOnInit(async() => {
+        const u = await usuarioService.getUsuarioPorId(getUserIdFromToken()!!)
+        setUsuario(u)
+
+        if (u.tipoUsuario == "PUBLICADOR") {
+            handleTabChange(1)
+        }
+        else {
+            handleTabChange(0)
+        }
+    })
 
     // — Debounce para búsqueda —
     useEffect(() => {
@@ -291,12 +309,17 @@ export const MisPrestamos = () => {
                 className="mis-prestamos__tabs w-full"
                 onTabChange={(e) => handleTabChange(e.index)}
             >
-                <TabPanel header="Prestados a mí">
-                    {renderLista()}
-                </TabPanel>
-                <TabPanel header="Prestados por mí">
-                    {renderLista()}
-                </TabPanel>
+                {(usuario != null) && (usuario.tipoUsuario == "LECTOR" || usuario.tipoUsuario == "LECTOR_PUBLICADOR") && (
+                    <TabPanel header="Prestados a mí">
+                        {renderLista()}
+                    </TabPanel>
+                )}
+
+                {(usuario != null) && (usuario.tipoUsuario == "PUBLICADOR" || usuario.tipoUsuario == "LECTOR_PUBLICADOR") && (
+                    <TabPanel header="Prestados por mí">
+                        {renderLista()}
+                    </TabPanel>
+                )}
             </TabView>
 
             {/* CTA al catálogo */}
