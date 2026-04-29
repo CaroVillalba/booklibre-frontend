@@ -39,14 +39,13 @@ export function checkLoggedIn(): boolean {
     return getRefreshToken() !== null
 }
 
-export function getUserIdFromToken(): number | null{
+export function getUserIdFromToken(): number | null {
     const token = getAccessToken()
     if (!token) return null
 
     const payload = getTokenPayload(token)
     const id = payload?.id || payload?.userId || payload?.sub
     return id ? Number(id) : null
-
 }
 
 export function setTokens(accessToken: string, refreshToken: string): void {
