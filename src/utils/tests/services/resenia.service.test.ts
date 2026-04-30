@@ -1,4 +1,4 @@
-import { reseniaService } from "../../main/services/ReseniaService"
+import { reseniaService } from "../../../main/services/ReseniaService"
 import { vi, describe, it, expect, beforeEach } from "vitest"
 
 describe("ReseniaService", () => {

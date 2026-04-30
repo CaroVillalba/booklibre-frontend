@@ -1,4 +1,4 @@
-import { usuarioService } from "../../main/services/UsuarioService"
+import { usuarioService } from "../../../main/services/UsuarioService"
 import { vi, describe, it, expect } from "vitest"
 
 vi.mock("../../main/services/TokenAuthService", () => ({

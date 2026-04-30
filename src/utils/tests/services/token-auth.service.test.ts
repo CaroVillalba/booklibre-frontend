@@ -1,6 +1,6 @@
 import axios from "axios"
-import { refreshAccessToken } from "../../main/services/TokenAuthService"
-import { getAccessToken } from "../../main/services/TokenService"
+import { refreshAccessToken } from "../../../main/services/TokenAuthService"
+import { getAccessToken } from "../../../main/services/TokenService"
 import { vi, describe, it, expect, beforeEach } from "vitest"
 
 vi.mock("axios")

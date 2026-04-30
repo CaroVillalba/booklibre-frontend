@@ -1,5 +1,5 @@
-import { libroService } from "../../main/services/LibroService"
-import { loginService } from "../../main/services/AuthService"
+import { libroService } from "../../../main/services/LibroService"
+import { loginService } from "../../../main/services/AuthService"
 import { vi, describe, it, expect, beforeEach } from "vitest"
 
 describe("LibroService", () => {

@@ -7,16 +7,16 @@ import {
     getUserIdFromToken,
     getUserRolesFromToken,
     isTokenExpiredError
-} from "../../main/services/TokenService"
-import { REFRESH_TOKEN_KEY, TOKEN_KEY } from "../constants"
+} from "../../../main/services/TokenService"
+import { REFRESH_TOKEN_KEY, TOKEN_KEY } from "../../constants"
 
 import { vi, describe, it, expect, beforeEach } from "vitest"
 
-vi.mock("../../utils/jwt", () => ({
+vi.mock("../../../utils/jwt", () => ({
     getTokenPayload: vi.fn()
 }))
 
-import { getTokenPayload } from "../../utils/jwt"
+import { getTokenPayload } from "../../jwt"
 
 describe("TokenService", () => {
 

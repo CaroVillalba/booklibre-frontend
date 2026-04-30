@@ -1,11 +1,11 @@
 import { vi, describe, it, expect, beforeEach } from "vitest"
 import axios from "axios"
-import { refreshAccessToken } from "../../main/services/TokenAuthService"
-import * as TokenService from "../../main/services/TokenService"
+import { refreshAccessToken } from "../../../main/services/TokenAuthService"
+import * as TokenService from "../../../main/services/TokenService"
 
 vi.mock("axios")
 
-vi.mock("../../main/services/TokenService", () => {
+vi.mock("../../../main/services/TokenService", () => {
     return {
         getRefreshToken: vi.fn(),
         setTokens: vi.fn(),
