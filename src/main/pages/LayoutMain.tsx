@@ -1,14 +1,12 @@
 import { Outlet, Navigate, useLocation } from "react-router-dom";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useToast } from "../hooks/useToast";
 import { Toast } from "../components/common/toast";
 import { Header } from "../components/Header/Header";
 import { MainContext } from "../../types/MainContext";
 import type { MainContextType } from "../../types/MainContext";
 import type { Usuario } from "../../types/Usuario";
-//import { routeConfig } from "../config/routeConfig";
-import { useCallback } from "react";
-import { checkLoggedIn, subscribeToTokens } from "../services/TokenService";
+import { checkLoggedIn, getUserRolesFromToken, subscribeToTokens } from "../services/TokenService";
 
 export const LayoutMain = () => {
     const location = useLocation()
@@ -31,7 +29,6 @@ export const LayoutMain = () => {
         });
     }, []);
 
-    
     const contextValue: MainContextType = useMemo(() => ({
         showToast,
         usuario,
@@ -39,20 +36,28 @@ export const LayoutMain = () => {
         actualizarBibliokarmas,
     }), [showToast, usuario, actualizarBibliokarmas]);
 
-
-    
     if (!logueado) {
         return (
-        <Navigate
-            to="/login"
-            replace
-            state={{ from: location }}
-        />
-    )
+            <Navigate
+                to="/login"
+                replace
+                state={{ from: location }}
+            />
+        )
+    }
+
+    const role = getUserRolesFromToken()
+
+    const isEditarLibro = location.pathname.startsWith("/editar-libro")
+
+    if (
+        isEditarLibro &&
+        !["PUBLICADOR", "LECTOR_PUBLICADOR"].includes(role)
+    ) {
+        return <Navigate to="/home" replace />
     }
 
     return (
-
         <MainContext.Provider value={contextValue}>
             <Header />
             <main className="main-content">

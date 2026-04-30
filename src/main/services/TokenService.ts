@@ -48,7 +48,7 @@ export function getUserIdFromToken(): number | null {
     return id ? Number(id) : null
 }
 
-export function getUserRolesFromToken(): String {
+export function getUserRolesFromToken(): string {
   const token = getAccessToken()
   if (!token) return ""
 

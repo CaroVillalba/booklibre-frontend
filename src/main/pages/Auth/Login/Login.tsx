@@ -4,7 +4,6 @@ import { Button } from "primereact/button";
 import { useState } from "react";
 import { loginService } from "../../../services/AuthService";
 import { Link, useNavigate, useLocation  } from "react-router-dom";
-import { AxiosError } from "axios";
 import { validateEmail } from "../AuthBase";
 import { AuthBase } from "../AuthBase";
 import { AuthTextField } from "../AuthBase.tsx";
@@ -22,12 +21,12 @@ export const loginHeader = (
 )
 
 export const Login = () => {
-    var [email, setEmail] = useState("")
-    var [password, setPassword] = useState("")
-    var [rememberme, setRememberme] = useState(false)
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [rememberme, setRememberme] = useState(false)
 
-    var [emailErrorMessage, setEmailErrorMessage] = useState("")
-    var [passwordErrorMessage, setPasswordErrorMessage] = useState("")
+    const [emailErrorMessage, setEmailErrorMessage] = useState("")
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState("")
     
     const { showToast } = useContext(MainContext)
 
@@ -42,8 +41,8 @@ export const Login = () => {
     async function login () {
         setEmailErrorMessage("")
         setPasswordErrorMessage("")
-       
-        var frontErrors: string[] = []
+
+        const frontErrors: string[] = []
 
         if(email == "") {
             frontErrors.push("EMPTY_EMAIL")
@@ -91,7 +90,7 @@ export const Login = () => {
 
             <p><Button className="login-button" onClick={login}>Ingresar</Button></p>
 
-            <p className="center">Aun no tienes una cuenta? <Link to="/register">Registrate gratis</Link></p>
+            <p className="center">¿Todavía no tenés una cuenta? <Link to="/register">Registrate gratis</Link></p>
         </AuthBase>
     )
 }

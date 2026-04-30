@@ -3,13 +3,11 @@ import { Button } from "primereact/button";
 import { useState } from "react";
 import { registerService } from "../../../services/AuthService";
 import { Link, useNavigate } from "react-router-dom";
-import { FloatLabel } from "primereact/floatlabel"; // Import FloatLabel from PrimeReact
 import { AxiosError } from "axios";
 import { AuthDropdown, validateEmail } from "../AuthBase.tsx";
 import { AuthBase } from "../AuthBase.tsx";
 import { AuthTextField } from "../AuthBase.tsx";
 import { AuthPasswordField } from "../AuthBase.tsx";
-import { Dropdown } from "primereact/dropdown";
 
 const registerHeader = (
     <div className="login-header">

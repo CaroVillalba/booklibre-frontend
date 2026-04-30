@@ -16,16 +16,10 @@ import { LayoutMain } from './main/pages/LayoutMain'
 import { LayoutAuth } from './main/pages/LayoutAuth'
 import { NotFound } from './main/pages/NotFound/NotFound'
 
-
-// Rutas donde NO se muestra el header
-//const RUTAS_SIN_HEADER = ['/login', '/register']
-
 function AppContent() {
-
   return (
-
       <Routes>
-        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/" element={<Navigate to="/home" />} />
         <Route element={<LayoutAuth />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

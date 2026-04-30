@@ -23,8 +23,6 @@ export function Header({ onLogout }: HeaderProps) {
   const location = useLocation()
   const menuUsuario = useRef<Menu>(null)
 
-  
-
   const navItems: MenuItem[] = [
     {
       label: 'Inicio',
