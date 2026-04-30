@@ -47,7 +47,7 @@ export class ReservaService extends CRUDService<Reserva> {
         const userId = loginService.getLoggedUser()
         
         await this.api.post(
-            `/${this.path}/${reservaId}/reseña`,
+            `/${this.path}/${reservaId}/resenia`,
             {
                 rating,
                 texto,
