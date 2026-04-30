@@ -11,22 +11,22 @@ import {
     getUserRolesFromToken, 
     subscribeToTokens,
     isSessionExpired,
-    setSessionExpired  // ← AGREGAR
+    setSessionExpired  
 } from "../services/TokenService";
-import { SessionExpiredModal } from "../components/SessionExpiredModal";  // ← AGREGAR
+import { SessionExpiredModal } from "../components/SessionExpiredModal";  
 
 export const LayoutMain = () => {
     const location = useLocation()
     const { toast, showToast } = useToast()
     const [usuario, setUsuario] = useState<Usuario | null>(null)
     const [logueado, setLogueado] = useState(checkLoggedIn())
-    const [showSessionExpiredModal, setShowSessionExpiredModal] = useState(false)  // ← AGREGAR
+    const [showSessionExpiredModal, setShowSessionExpiredModal] = useState(false)  
 
     useEffect(() => {
         const unsubscribe = subscribeToTokens(() => {
             setLogueado(checkLoggedIn())
             
-            // ← AGREGAR ESTO
+            
             if (isSessionExpired()) {
                 setShowSessionExpiredModal(true)
             }
@@ -48,13 +48,13 @@ export const LayoutMain = () => {
         actualizarBibliokarmas,
     }), [showToast, usuario, actualizarBibliokarmas]);
 
-    // ← AGREGAR este handler
+    
     const handleCloseSessionModal = () => {
         setShowSessionExpiredModal(false)
-        setSessionExpired(false)  // Reset del flag
+        setSessionExpired(false)  
     }
 
-    // ← MODIFICAR ESTO: si está mostrando el modal, no redirigir todavía
+    
     if (!logueado && !showSessionExpiredModal) {
         return (
             <Navigate
@@ -77,7 +77,7 @@ export const LayoutMain = () => {
 
     return (
         <MainContext.Provider value={contextValue}>
-            {/* ← AGREGAR EL MODAL */}
+            
             <SessionExpiredModal 
                 visible={showSessionExpiredModal}
                 onClose={handleCloseSessionModal}

@@ -105,7 +105,7 @@ export const DetalleLibro = () => {
         }
     }
 
-    const getResenias = async() => {
+    /* const getResenias = async() => {
         try {
             const reseniasObtenidas = await reseniaService.getReseniasViewDetalleLibro(Number(id))
             setResenias(reseniasObtenidas.reseniaList)
@@ -114,7 +114,7 @@ export const DetalleLibro = () => {
         catch (error : unknown) {
             showToast(getMensajeError(error), 'error')
         }
-    }
+    } */
 
     const realizarReserva = async () => {
         if (!dates || !dates[0] || !dates[1]) {
@@ -157,7 +157,7 @@ export const DetalleLibro = () => {
 
     useOnInit(() => {
         getLibroDetalle()
-        getResenias()
+        /* getResenias() */
 
         const fetchUsuario = async () => {
             try {
