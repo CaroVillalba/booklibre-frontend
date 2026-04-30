@@ -6,21 +6,33 @@ import { Header } from "../components/Header/Header";
 import { MainContext } from "../../types/MainContext";
 import type { MainContextType } from "../../types/MainContext";
 import type { Usuario } from "../../types/Usuario";
-import { checkLoggedIn, getUserRolesFromToken, subscribeToTokens } from "../services/TokenService";
+import { 
+    checkLoggedIn, 
+    getUserRolesFromToken, 
+    subscribeToTokens,
+    isSessionExpired,
+    setSessionExpired  // ← AGREGAR
+} from "../services/TokenService";
+import { SessionExpiredModal } from "../components/SessionExpiredModal";  // ← AGREGAR
 
 export const LayoutMain = () => {
     const location = useLocation()
     const { toast, showToast } = useToast()
-    const  [ usuario, setUsuario ] = useState<Usuario | null>(null)
-
+    const [usuario, setUsuario] = useState<Usuario | null>(null)
     const [logueado, setLogueado] = useState(checkLoggedIn())
+    const [showSessionExpiredModal, setShowSessionExpiredModal] = useState(false)  // ← AGREGAR
 
-    useEffect(()=>{
-        const unsubscribe = subscribeToTokens(()=>{
+    useEffect(() => {
+        const unsubscribe = subscribeToTokens(() => {
             setLogueado(checkLoggedIn())
+            
+            // ← AGREGAR ESTO
+            if (isSessionExpired()) {
+                setShowSessionExpiredModal(true)
+            }
         })
         return unsubscribe
-    },[])
+    }, [])
 
     const actualizarBibliokarmas = useCallback((nuevoPuntaje: number) => {
         setUsuario((prevUsuario) => {
@@ -36,7 +48,14 @@ export const LayoutMain = () => {
         actualizarBibliokarmas,
     }), [showToast, usuario, actualizarBibliokarmas]);
 
-    if (!logueado) {
+    // ← AGREGAR este handler
+    const handleCloseSessionModal = () => {
+        setShowSessionExpiredModal(false)
+        setSessionExpired(false)  // Reset del flag
+    }
+
+    // ← MODIFICAR ESTO: si está mostrando el modal, no redirigir todavía
+    if (!logueado && !showSessionExpiredModal) {
         return (
             <Navigate
                 to="/login"
@@ -47,7 +66,6 @@ export const LayoutMain = () => {
     }
 
     const role = getUserRolesFromToken()
-
     const isEditarLibro = location.pathname.startsWith("/editar-libro")
 
     if (
@@ -59,6 +77,12 @@ export const LayoutMain = () => {
 
     return (
         <MainContext.Provider value={contextValue}>
+            {/* ← AGREGAR EL MODAL */}
+            <SessionExpiredModal 
+                visible={showSessionExpiredModal}
+                onClose={handleCloseSessionModal}
+            />
+            
             <Header />
             <main className="main-content">
                 <Outlet context={{}} />
