@@ -6,14 +6,9 @@ export class ReseniaService extends CRUDService<Resenia> {
         super('libros')
     }
 
-    // Las reseñas viven dentro de Reserva y se exponen via GET /v1/libros/{id}/reseñas
+    // Las reseñas viven dentro de Reserva y se exponen via GET /v1/libros/{id}/resenias
     async getReseniasPorLibro(libroId: number, pagina: number): Promise<ReseniaPage> {
-        const response = await this.api.get<ReseniaPage>(`/${this.path}/${libroId}/reseñas/${pagina}`)
-        return response.data
-    }
-
-    async getReseniasViewDetalleLibro(libroId: number): Promise<ReseniaPage> {
-        const response = await this.api.get<ReseniaPage>(`/${this.path}/${libroId}/reseñasViewDetalles`)
+        const response = await this.api.get<ReseniaPage>(`/${this.path}/${libroId}/resenias/${pagina}`)
         return response.data
     }
 }
