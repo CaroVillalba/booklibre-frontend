@@ -1,5 +1,5 @@
 export interface Libro {
-    id: number
+    id: string
     imgUrl?: string
     titulo: string
     tipo: string
@@ -24,17 +24,17 @@ export type LibroHome = Libro & {
 }
 
 export interface LibroUsuario{
-    id?:number,
+    id?: string,
     titulo: string,
     disponible:boolean,
     imgUrl: string,
     fechaAgregado:string,
-    autor:string,
+    autor: string,
     genero: string
 }
 
 export interface LibroForm  {
-    id?: number
+    id?: string
     imgUrl?: string
     titulo: string
     tipo: string

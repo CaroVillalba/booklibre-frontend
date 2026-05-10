@@ -1,5 +1,5 @@
 export interface Reserva {
-    idLibro: number;
+    idLibro: string;
     idLector: number;
     fechaDesde: Date;
     fechaHasta: Date;
