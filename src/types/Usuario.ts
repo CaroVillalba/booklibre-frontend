@@ -19,6 +19,7 @@ export interface RegistroUsuario {
     nombre: string;
     email: string;
     password: string;
+    tipoUsuario: string;
 }
 
 export interface UsuarioUpdateRequest {

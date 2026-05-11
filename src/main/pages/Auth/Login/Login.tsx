@@ -3,12 +3,14 @@ import { Checkbox } from "primereact/checkbox";
 import { Button } from "primereact/button";
 import { useState } from "react";
 import { loginService } from "../../../services/AuthService";
-import { useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
+import { Link, useNavigate, useLocation  } from "react-router-dom";
 import { validateEmail } from "../AuthBase";
 import { AuthBase } from "../AuthBase";
 import { AuthTextField } from "../AuthBase.tsx";
 import { AuthPasswordField } from "../AuthBase.tsx";
+import { getMensajeError } from '../../../../utils/errorHandling.ts'
+import { MainContext } from '../../../../types/MainContext.ts';
+import { useContext } from "react";
 
 export const loginHeader = (
     <div className="login-header">
@@ -19,15 +21,18 @@ export const loginHeader = (
 )
 
 export const Login = () => {
-    var [email, setEmail] = useState("")
-    var [password, setPassword] = useState("")
-    var [rememberme, setRememberme] = useState(false)
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [rememberme, setRememberme] = useState(false)
 
-    var [emailErrorMessage, setEmailErrorMessage] = useState("")
-    var [passwordErrorMessage, setPasswordErrorMessage] = useState("")
-    var [loginErrorMessage, setLoginErrorMessage] = useState("")
+    const [emailErrorMessage, setEmailErrorMessage] = useState("")
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState("")
+    
+    const { showToast } = useContext(MainContext)
 
-    var navigate = useNavigate()
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from = location.state?.from?.pathname || "/home"
 
     const handleCheckRememberme = () => {
         setRememberme(!rememberme)
@@ -36,9 +41,8 @@ export const Login = () => {
     async function login () {
         setEmailErrorMessage("")
         setPasswordErrorMessage("")
-        setLoginErrorMessage("")
 
-        var frontErrors: string[] = []
+        const frontErrors: string[] = []
 
         if(email == "") {
             frontErrors.push("EMPTY_EMAIL")
@@ -67,18 +71,11 @@ export const Login = () => {
 
         try {
             await loginService.login({"email": email, "password": password, "rememberMe": false})
-
-            navigate("/home")
+            navigate(from, { replace: true })
         }
-        catch (error: any) {
-            if (error instanceof AxiosError && error.response != undefined) {
-                if (error.response.status >= 400 && error.response.status < 500) {
-                    setLoginErrorMessage(error.response.data)
-                }
-            }
-            else {
-                setLoginErrorMessage("Error del servidor. Intentelo mas tarde.")
-            }
+        catch (error: unknown) {
+            showToast(getMensajeError(error), 'error')
+            
         }
     }
 
@@ -91,11 +88,9 @@ export const Login = () => {
 
             <p><Checkbox checked={rememberme} onClick={handleCheckRememberme}></Checkbox> Recordame</p>
 
-            <p id="account-login-error" className="error-message-label">{loginErrorMessage}</p>
-
             <p><Button className="login-button" onClick={login}>Ingresar</Button></p>
 
-            <p className="center">Aun no tienes una cuenta? <a href="/register">Registrate gratis</a></p>
+            <p className="center">¿Todavía no tenés una cuenta? <Link to="/register">Registrate gratis</Link></p>
         </AuthBase>
     )
 }

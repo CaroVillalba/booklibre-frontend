@@ -2,9 +2,9 @@ import "../Login/Login.css"
 import { Button } from "primereact/button";
 import { useState } from "react";
 import { registerService } from "../../../services/AuthService";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
-import { validateEmail } from "../AuthBase.tsx";
+import { AuthDropdown, validateEmail } from "../AuthBase.tsx";
 import { AuthBase } from "../AuthBase.tsx";
 import { AuthTextField } from "../AuthBase.tsx";
 import { AuthPasswordField } from "../AuthBase.tsx";
@@ -12,27 +12,35 @@ import { AuthPasswordField } from "../AuthBase.tsx";
 const registerHeader = (
     <div className="login-header">
         <h1>📚</h1>
-        <h1>Crea una cuenta</h1>
-        <p>Unete a nuestra comunidad y empieza a leer</p>
+        <h1>Creá una cuenta</h1>
+        <p>Unite a nuestra comunidad y empezá a leer</p>
     </div>
 )
 
 export const Register = () => {
-    var [name, setName] = useState("")
-    var [email, setEmail] = useState("")
-    var [password, setPassword] = useState("")
-    var [confirmPassword, setConfirmPassword] = useState("")
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
 
-    var [passwordErrorMessage, setPasswordErrorMessage] = useState("")
-    var [usernameErrorMessage, setUsernameErrorMessage] = useState("")
-    var [emailErrorMessage, setEmailErrorMessage] = useState("")
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState("")
+    const [usernameErrorMessage, setUsernameErrorMessage] = useState("")
+    const [emailErrorMessage, setEmailErrorMessage] = useState("")
 
-    var [registerErrorMessage, setRegisterErrorMessage] = useState("")
+    const [registerErrorMessage, setRegisterErrorMessage] = useState("")
 
-    var navigate = useNavigate()
+    const [rol, setRol] = useState("")
+
+    const rolOptions = [
+        { label: 'Solo quiero leer', value: 'LECTOR' },
+        { label: 'Solo quiero publicar', value: 'PUBLICADOR' },
+        { label: 'Quiero hacer ambas', value: 'LECTOR_PUBLICADOR' }
+    ]
+
+    const navigate = useNavigate()
 
     async function register() {
-        var frontErrors: string[] = []
+        const frontErrors: string[] = []
 
         setPasswordErrorMessage("")
         setUsernameErrorMessage("")
@@ -47,10 +55,8 @@ export const Register = () => {
         if (name == "" || email == "") {
             if (name == "") 
                 frontErrors.push("EMPTY_USERNAME")
-            
             if (email == "") 
                 frontErrors.push("EMPTY_EMAIL")
-            
             if (password == "") 
                 frontErrors.push("EMPTY_PASSWORD")
         }
@@ -59,10 +65,7 @@ export const Register = () => {
             frontErrors.push("INVALID_EMAIL")
         }
 
-        
-
         if (frontErrors.length != 0) {
-
             if (frontErrors.includes("NON_MATCHING_PASSWORDS")) 
                 setPasswordErrorMessage("Las contraseñas ingresadas no coinciden.")
             
@@ -82,16 +85,20 @@ export const Register = () => {
         }
 
         try {
-            await registerService.create({"nombre": name, "email": email, "password": password})
+            await registerService.create({
+                nombre: name,
+                email: email,
+                password: password,
+                tipoUsuario: rol
+            })
 
             navigate("/login")
         }
 
-        catch (error: any) {
+        catch (error: unknown) {
             if (error instanceof AxiosError && error.response != undefined) {
                 if (error.response.status >= 400 && error.response.status < 500) {
-                    var errors = error.response.data.split(",")
-
+                    const errors = error.response.data.split(",")
 
                     if (errors.includes("USERNAME_ALREADY_EXISTS")) 
                         setUsernameErrorMessage("Ya hay un usuario con el mismo nombre")
@@ -118,9 +125,16 @@ export const Register = () => {
 
             <p id="account-login-error" className="error-message-label">{registerErrorMessage}</p>
 
+            <AuthDropdown 
+                label="Tipo de usuario:" 
+                value={rol} 
+                onChange={setRol} 
+                options={rolOptions} 
+            />
+
             <p><Button className="login-button" onClick={register}>Crear cuenta</Button></p>
 
-            <p className="center">Ya tienes una cuenta? <a href="/login">Iniciar sesion</a></p>
+            <p className="center">¿Ya tenés una cuenta? <Link to="/login">Iniciar sesion</Link></p>
         </AuthBase>
     )
 }

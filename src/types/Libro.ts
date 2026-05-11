@@ -1,16 +1,16 @@
 export interface Libro {
-    id: number
+    id: string
     imgUrl?: string
     titulo: string
     tipo: string
     descripcion: string
     genero: string
     autor: string
-    cantidadPaginas: number | null //idem abajo
+    cantidadPaginas: number | null
     isbn13: string
     idioma: string
     editorial: string
-    fechaPublicacion: Date | null //TODO: ¿Por qué esto es NULL si es una info estática? Es solamente la fecha en que se publicó el libro, no la fecha en que se agregó a la plataforma. Debería ser siempre una fecha válida, no null. Revisar esto después.
+    fechaPublicacion: Date | null
     estado: string
     duenioId: number | null
     duenioNombre: string      
@@ -24,7 +24,7 @@ export type LibroHome = Libro & {
 }
 
 export interface LibroUsuario{
-    id?:number,
+    id?:string,
     titulo: string,
     disponible:boolean,
     imgUrl: string,
@@ -34,7 +34,7 @@ export interface LibroUsuario{
 }
 
 export interface LibroForm  {
-    id?: number
+    id?: string
     imgUrl?: string
     titulo: string
     tipo: string

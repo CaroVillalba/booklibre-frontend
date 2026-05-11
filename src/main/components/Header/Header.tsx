@@ -12,8 +12,6 @@ import { MainContext } from '../../../types/MainContext';
 import { useContext } from 'react'
 import  { getMensajeError } from './../../../utils/errorHandling';
 import { useOnInit } from '../../hooks/useOnInit'
-import { useState } from 'react'
-import type { Usuario } from '../../../types/Usuario'
 
 interface HeaderProps {
   usuarioNombre?: string
@@ -24,8 +22,6 @@ export function Header({ onLogout }: HeaderProps) {
   const navigate = useNavigate()
   const location = useLocation()
   const menuUsuario = useRef<Menu>(null)
-
-  
 
   const navItems: MenuItem[] = [
     {
@@ -68,7 +64,7 @@ export function Header({ onLogout }: HeaderProps) {
 
     try {
       const usuarioId = loginService.getLoggedUser()
-      const usuario = await usuarioService.getUsuarioPorId(usuarioId)
+      const usuario = await usuarioService.getUsuarioPorId(usuarioId!)
       setUsuario(usuario)
     }
     catch( error : unknown ){
@@ -100,12 +96,14 @@ export function Header({ onLogout }: HeaderProps) {
       </div>
 
       
-      <Menu model={menuItems} popup ref={menuUsuario} />
+      <Menu model={menuItems} popup ref={menuUsuario} id="popup_menu_user"/>
       <Button
         icon="pi pi-user"
         className="p-button-text p-button-rounded p-button-lg"
         onClick={(e) => menuUsuario.current?.toggle(e)}
         aria-label="Menú de usuario"
+        aria-controls="popup_menu_user"
+        aria-haspopup
       />
     </div>
   )
