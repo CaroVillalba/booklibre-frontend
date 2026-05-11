@@ -31,7 +31,7 @@ export const ReseniasLibro = (props: ReseniasLibroProps) => {
 
     const getResenias = async(page: number) => {
         try {
-            const reseniasObtenidas = await reseniaService.getReseniasPorLibro(Number(id),page)
+            const reseniasObtenidas = await reseniaService.getReseniasPorLibro(id!!,page)
             setResenias(reseniasObtenidas.reseniaList)
             setTamanioPagina(reseniasObtenidas.size)
             setPaginaActual(reseniasObtenidas.pageNumber)
