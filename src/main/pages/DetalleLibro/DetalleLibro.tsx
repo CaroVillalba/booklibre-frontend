@@ -86,7 +86,7 @@ export const DetalleLibro = () => {
     
     const getLibroDetalle = async() => {
         try {
-            const libroDetalle = await libroService.getLibroPorId(id ?? '', {
+            const libroDetalle = await libroService.getLibroPorId(id!!, {
                 desde: desdeParam, 
                 hasta: hastaParam,
             })
@@ -105,7 +105,8 @@ export const DetalleLibro = () => {
         }
     }
 
-    const getResenias = async() => {
+    /*
+     const getResenias = async() => {
         try {
             const reseniasObtenidas = await reseniaService.getReseniasViewDetalleLibro(Number(id))
             setResenias(reseniasObtenidas.reseniaList)
@@ -114,7 +115,8 @@ export const DetalleLibro = () => {
         catch (error : unknown) {
             showToast(getMensajeError(error), 'error')
         }
-    }
+    } 
+    */
 
     const realizarReserva = async () => {
         if (!dates || !dates[0] || !dates[1]) {
@@ -124,7 +126,7 @@ export const DetalleLibro = () => {
 
         try {
             const userId = loginService.getLoggedUser()
-            const usuario = await usuarioService.getUsuarioPorId(userId ?? 0)
+            const usuario = await usuarioService.getUsuarioPorId(userId!!)
 
             await reservaService.postReserva({
                 idLibro: libro.id,
@@ -138,7 +140,7 @@ export const DetalleLibro = () => {
                 estado: "Prestado" 
             }));
 
-            const usuarioActualizado = await usuarioService.getUsuarioPorId(userId ?? 0);
+            const usuarioActualizado = await usuarioService.getUsuarioPorId(userId!!);
             actualizarBibliokarmas(usuarioActualizado.biblioKarmas);
             
             showToast('Reserva realizada con éxito', 'success')
@@ -157,12 +159,12 @@ export const DetalleLibro = () => {
 
     useOnInit(() => {
         getLibroDetalle()
-        getResenias()
+        /* getResenias() */
 
         const fetchUsuario = async () => {
             try {
                 const userId = loginService.getLoggedUser()
-                const usuario = await usuarioService.getUsuarioPorId(userId ?? 0)
+                const usuario = await usuarioService.getUsuarioPorId(userId!!)
                 setTipoUsuario(usuario.tipoUsuario)
             } catch (error) {
                 showToast(getMensajeError(error), 'error')

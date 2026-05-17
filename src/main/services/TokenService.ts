@@ -10,6 +10,8 @@ let tokensSnapshot = {
     refreshCount: 0,
 }
 
+let sessionExpired = false
+
 function updateSnapshot() {
   tokensSnapshot = {
     ...tokensSnapshot,
@@ -63,11 +65,16 @@ export function setTokens(accessToken: string, refreshToken: string): void {
   notifyListeners()
 }
 
-export function clearTokens(): void{
-  localStorage.removeItem(TOKEN_KEY)
-  localStorage.removeItem(REFRESH_TOKEN_KEY)
-  tokensSnapshot = {...tokensSnapshot, refreshCount: 0}
-  notifyListeners()
+export function clearTokens(sessionEnded: boolean = false): void {
+    localStorage.removeItem(TOKEN_KEY)
+    localStorage.removeItem(REFRESH_TOKEN_KEY)
+    tokensSnapshot = { ...tokensSnapshot, refreshCount: 0 }
+    
+    if (sessionEnded) {
+        setSessionExpired(true)
+    }
+    
+    notifyListeners()
 }
 
 export function incrementRefreshCount():void{
@@ -86,4 +93,13 @@ export function subscribeToTokens(callback : ()=> void): ()=>void{
 export function isTokenExpiredError(headers?: Record<string, string>): boolean {
   const wwwAuthenticate = headers?.['www-authenticate'] ?? headers?.['WWW-Authenticate']
   return !!wwwAuthenticate?.includes('error="invalid_token"')
+}
+
+export function setSessionExpired(expired: boolean): void {
+    sessionExpired = expired
+    notifyListeners()
+}
+
+export function isSessionExpired(): boolean {
+    return sessionExpired
 }

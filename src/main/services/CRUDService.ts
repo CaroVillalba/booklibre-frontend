@@ -99,11 +99,10 @@ export abstract class CRUDService<T, F = undefined> implements InterfaceService<
 
                     return this.api(originalRequest)
                 } catch (refreshError) {
-                    processQueue(refreshError,null)
-                    clearTokens()
-                    // window.location.replace('/login')
+                    processQueue(refreshError, null)
+                    clearTokens(true)  // ← CAMBIÁ ESTO: pasale true para indicar que es por sesión expirada
                     return Promise.reject(refreshError)
-                }finally{
+                } finally {
                     isRefreshing = false
                 }
             }
