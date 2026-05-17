@@ -134,7 +134,7 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
         setTotalPages(data.totalPages);
     }
 
-    const handleEliminarLibro = async (idLibro: number) => {
+    const handleEliminarLibro = async (idLibro: string) => {
         try {
             await libroService.eliminarLibro(idLibro);
             showToast("Libro eliminado correctamente", "success");
@@ -151,7 +151,7 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
         }
     }
 
-    const confirmarEliminar = (idLibro: number) => {
+    const confirmarEliminar = (idLibro: string) => {
     confirmDialog({
         message: "¿Seguro que querés eliminar este libro?",
         header: "Confirmar eliminación",
@@ -238,7 +238,10 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
 
                     {/* libros */}
                     {libros.map((libro) => (
-                        <div className="flex align-items-center px-3 py-2 border-bottom-1 surface-border justify-content-between">
+                        <div
+                            key={libro.id}
+                            className="flex align-items-center px-3 py-2 border-bottom-1 surface-border justify-content-between"
+                        >
                             {/* TITULO Y AUTOR */}
                             <div className="w-5">
                                 <div className="flex align-items-center gap-3">

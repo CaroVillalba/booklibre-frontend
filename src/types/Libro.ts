@@ -24,12 +24,12 @@ export type LibroHome = Libro & {
 }
 
 export interface LibroUsuario{
-    id?:string,
+    id?: string,
     titulo: string,
     disponible:boolean,
     imgUrl: string,
     fechaAgregado:string,
-    autor:string,
+    autor: string,
     genero: string
 }
 
