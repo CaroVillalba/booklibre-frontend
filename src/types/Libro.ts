@@ -23,6 +23,19 @@ export type LibroHome = Libro & {
     bibliokarma: number
 }
 
+export interface ReseniaEmbebida {
+    autorId: number
+    autorNombre: string
+    rating: number
+    texto: string
+}
+
+export type LibroDetalle = Libro & {
+    rating?: number
+    bibliokarma: number
+    resenias: ReseniaEmbebida[]
+}
+
 export interface LibroUsuario{
     id?: string,
     titulo: string,
