@@ -8,7 +8,8 @@ import type { LibroUsuario } from "../../types/Libro";
 import { MainContext } from "../../types/MainContext";
 import { libroService } from "../services/LibroService";
 import { AxiosError } from "axios";
-import { confirmDialog } from "primereact/confirmdialog"
+import { confirmDialog } from "primereact/confirmdialog";
+import { getMensajeError } from "../../utils/errorHandling";
 
 interface UsuarioLibrosProps {
     usuarioId: number;
@@ -43,12 +44,12 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
                 setTotalElements(data.totalElements);
                 setTotalPages(data.totalPages);
             } catch (error) {
-                console.error("Error al cargar libros del usuario", error);
+                showToast(getMensajeError(error), "error")
             }
         };
 
         cargarLibros();
-    }, [usuarioId, page, size, sortBy, direction, estado]);
+    }, [usuarioId, page, size, sortBy, direction, estado, showToast]);
 
     const cambiarOrden = (campo: string) => {
         let nuevoSortBy = sortBy;

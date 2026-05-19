@@ -1,6 +1,3 @@
-import { TOKEN_KEY } from "./constants"
-
-
 export function getTokenPayload(token: string) {
   try {
     
@@ -16,8 +13,7 @@ export function getTokenPayload(token: string) {
     )
 
     return JSON.parse(jsonPayload)
-  } catch (error) {
-    console.error("Error decodificando el token:", error)
+  } catch {
     return null
   }
 }

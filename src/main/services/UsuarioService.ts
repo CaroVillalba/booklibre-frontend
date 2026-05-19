@@ -23,8 +23,8 @@ class UsuarioService extends CRUDService<Usuario> {
         const response = await this.api.patch(`/usuario/${id}`, payload)
         try {
             await refreshAccessToken() // Esto actualiza el localStorage y el snapshot
-        } catch (error) {
-            console.error("Error al refrescar el token tras cambio de rol", error)
+        } catch {
+            throw new Error("No se pudo actualizar la sesión")
         }
         return response.data
     }
