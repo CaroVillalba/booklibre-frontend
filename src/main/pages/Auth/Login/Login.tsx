@@ -4,7 +4,7 @@ import { Button } from "primereact/button";
 import { useState } from "react";
 import { loginService } from "../../../services/AuthService";
 import { Link, useNavigate, useLocation  } from "react-router-dom";
-import { validateEmail } from "../AuthBase";
+import { validateEmail } from "../../../../utils/validateEmail.ts";
 import { AuthBase } from "../AuthBase";
 import { AuthTextField } from "../AuthBase.tsx";
 import { AuthPasswordField } from "../AuthBase.tsx";
@@ -12,7 +12,7 @@ import { getMensajeError } from '../../../../utils/errorHandling.ts'
 import { MainContext } from '../../../../types/MainContext.ts';
 import { useContext } from "react";
 
-export const loginHeader = (
+const loginHeader = (
     <div className="login-header">
         <h1>📚</h1>
         <h1>BookLibre</h1>
@@ -57,6 +57,8 @@ export const Login = () => {
         }
 
         if (frontErrors.length > 0) {
+            showToast("Por favor corregí los errores en el formulario.", 'warning')
+
             if (frontErrors.includes("EMPTY_EMAIL")) 
                 setEmailErrorMessage("El correo electronico no puede estar vacio.")
             
@@ -75,22 +77,25 @@ export const Login = () => {
         }
         catch (error: unknown) {
             showToast(getMensajeError(error), 'error')
-            
         }
     }
 
     return (
         <AuthBase header={loginHeader}>
+            <form onSubmit={(e) => {
+                e.preventDefault()
+                login()
+            }}>
+                <AuthTextField label="Correo electronico:" value={email} onChange={setEmail} error={emailErrorMessage}/>
+                
+                <AuthPasswordField label="Contraseña:" value={password} onChange={setPassword} error={passwordErrorMessage} />
 
-            <AuthTextField label="Correo electronico:" value={email} onChange={setEmail} error={emailErrorMessage}/>
-            
-            <AuthPasswordField label="Contraseña:" value={password} onChange={setPassword} error={passwordErrorMessage} />
+                <p><Checkbox checked={rememberme} onClick={handleCheckRememberme}></Checkbox> Recordame</p>
 
-            <p><Checkbox checked={rememberme} onClick={handleCheckRememberme}></Checkbox> Recordame</p>
+                <p><Button className="login-button" type="submit">Ingresar</Button></p>
 
-            <p><Button className="login-button" onClick={login}>Ingresar</Button></p>
-
-            <p className="center">¿Todavía no tenés una cuenta? <Link to="/register">Registrate gratis</Link></p>
+                <p className="center">¿Todavía no tenés una cuenta? <Link to="/register">Registrate gratis</Link></p>
+            </form>
         </AuthBase>
     )
 }

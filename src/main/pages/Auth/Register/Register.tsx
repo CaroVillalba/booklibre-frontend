@@ -1,13 +1,15 @@
 import "../Login/Login.css"
 import { Button } from "primereact/button";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { registerService } from "../../../services/AuthService";
 import { Link, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
-import { AuthDropdown, validateEmail } from "../AuthBase.tsx";
+import { AuthDropdown } from "../AuthBase.tsx";
 import { AuthBase } from "../AuthBase.tsx";
 import { AuthTextField } from "../AuthBase.tsx";
 import { AuthPasswordField } from "../AuthBase.tsx";
+import { validateEmail } from "../../../../utils/validateEmail.ts";
+import { MainContext } from '../../../../types/MainContext.ts';
 
 const registerHeader = (
     <div className="login-header">
@@ -22,14 +24,14 @@ export const Register = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [rol, setRol] = useState("")
+
+    const { showToast } = useContext(MainContext)
 
     const [passwordErrorMessage, setPasswordErrorMessage] = useState("")
     const [usernameErrorMessage, setUsernameErrorMessage] = useState("")
     const [emailErrorMessage, setEmailErrorMessage] = useState("")
-
-    const [registerErrorMessage, setRegisterErrorMessage] = useState("")
-
-    const [rol, setRol] = useState("")
+    const [rolErrorMessage, setRolErrorMessage] = useState("")
 
     const rolOptions = [
         { label: 'Solo quiero leer', value: 'LECTOR' },
@@ -45,9 +47,8 @@ export const Register = () => {
         setPasswordErrorMessage("")
         setUsernameErrorMessage("")
         setEmailErrorMessage("")
-        setRegisterErrorMessage("")
+        setRolErrorMessage("")
 
-        //toooooooooda la validacion antes de la request
         if (password != confirmPassword) {
             frontErrors.push("NON_MATCHING_PASSWORDS")
         }
@@ -65,7 +66,13 @@ export const Register = () => {
             frontErrors.push("INVALID_EMAIL")
         }
 
+        if (rol == "") {
+            frontErrors.push("EMPTY_ROLE")
+        }
+
         if (frontErrors.length != 0) {
+            showToast("Revisá los campos del formulario.", "warning")
+
             if (frontErrors.includes("NON_MATCHING_PASSWORDS")) 
                 setPasswordErrorMessage("Las contraseñas ingresadas no coinciden.")
             
@@ -81,6 +88,9 @@ export const Register = () => {
             if (frontErrors.includes("INVALID_EMAIL")) 
                 setEmailErrorMessage("El correo electronico ingresado es invalido.")
             
+            if (frontErrors.includes("EMPTY_ROLE"))
+                setRolErrorMessage("Debe seleccionar un tipo de usuario.")
+
             return
         }
 
@@ -92,6 +102,8 @@ export const Register = () => {
                 tipoUsuario: rol
             })
 
+            showToast("Cuenta creada correctamente.", "success")
+
             navigate("/login")
         }
 
@@ -102,39 +114,45 @@ export const Register = () => {
 
                     if (errors.includes("USERNAME_ALREADY_EXISTS")) 
                         setUsernameErrorMessage("Ya hay un usuario con el mismo nombre")
+                        showToast("Ya hay un usuario con ese nombre.", "error")
 
                     if (errors.includes("EMAIL_ALREADY_EXISTS")) 
                         setEmailErrorMessage("Ya hay un usuario con el mismo email")
+                        showToast("Ya hay un usuario con ese email.", "error")
                 }
             }
             else {
-                setRegisterErrorMessage("Error del servidor. Intentelo mas tarde.")
+                showToast("Error del servidor. Intentelo mas tarde.", "error")
             }
         }
     }
 
     return (
         <AuthBase header={registerHeader}>
-            <AuthTextField label="Nombre completo:" value={name} onChange={setName} error={usernameErrorMessage} /> 
+            <form onSubmit={(e) => {
+                e.preventDefault()
+                register()
+            }}>
+                <AuthTextField label="Nombre completo:" value={name} onChange={setName} error={usernameErrorMessage} /> 
 
-            <AuthTextField label="Correo electronico:" value={email} onChange={setEmail} error={emailErrorMessage}/>
-            
-            <AuthPasswordField label="Contraseña:" value={password} onChange={setPassword} error={""} />
+                <AuthTextField label="Correo electronico:" value={email} onChange={setEmail} error={emailErrorMessage}/>
+                
+                <AuthPasswordField label="Contraseña:" value={password} onChange={setPassword} error={""} />
 
-            <AuthPasswordField label="Confirmar contraseña:" value={confirmPassword} onChange={setConfirmPassword} error={passwordErrorMessage} />
+                <AuthPasswordField label="Confirmar contraseña:" value={confirmPassword} onChange={setConfirmPassword} error={passwordErrorMessage} />
 
-            <p id="account-login-error" className="error-message-label">{registerErrorMessage}</p>
+                <AuthDropdown 
+                    label="Tipo de usuario:" 
+                    value={rol} 
+                    onChange={setRol} 
+                    options={rolOptions} 
+                    error={rolErrorMessage}
+                />
 
-            <AuthDropdown 
-                label="Tipo de usuario:" 
-                value={rol} 
-                onChange={setRol} 
-                options={rolOptions} 
-            />
+                <p><Button className="login-button" type="submit">Crear cuenta</Button></p>
 
-            <p><Button className="login-button" onClick={register}>Crear cuenta</Button></p>
-
-            <p className="center">¿Ya tenés una cuenta? <Link to="/login">Iniciar sesion</Link></p>
+                <p className="center">¿Ya tenés una cuenta? <Link to="/login">Iniciar sesion</Link></p>
+            </form>
         </AuthBase>
     )
 }
