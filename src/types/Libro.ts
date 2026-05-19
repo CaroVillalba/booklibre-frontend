@@ -30,7 +30,8 @@ export interface LibroUsuario{
     imgUrl: string,
     fechaAgregado:string,
     autor:string,
-    genero: string
+    genero: string,
+    clicks:number
 }
 
 export interface LibroForm  {

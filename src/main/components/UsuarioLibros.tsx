@@ -134,7 +134,7 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
         setTotalPages(data.totalPages);
     }
 
-    const handleEliminarLibro = async (idLibro: number) => {
+    const handleEliminarLibro = async (idLibro: string) => {
         try {
             await libroService.eliminarLibro(idLibro);
             showToast("Libro eliminado correctamente", "success");
@@ -151,7 +151,7 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
         }
     }
 
-    const confirmarEliminar = (idLibro: number) => {
+    const confirmarEliminar = (idLibro: string) => {
     confirmDialog({
         message: "¿Seguro que querés eliminar este libro?",
         header: "Confirmar eliminación",
@@ -233,6 +233,13 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
                             <span>AGREGADO</span>
                             <i className={getSortIcon("fechaAgregado")}></i>
                         </button>
+                        <button
+                            className="w-2 flex align-items-center gap-2 bg-transparent border-none cursor-pointer flex gap-2"
+                            onClick={() => {cambiarOrden("clicks")}}
+                        >
+                            <span>CLICKS</span>
+                            {<i className={getSortIcon("clicks")}></i>}
+                        </button>
                         <div className="w-2 text-center">ACCIONES</div>
                     </div>
 
@@ -281,6 +288,11 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
                             {/* AGREGADO */}
                             <div className="w-2 text-center">
                                 {formatearFecha(libro.fechaAgregado)}
+                            </div>
+
+                            {/* CLICKS */}
+                            <div className="w-2 text-center">
+                                {libro.clicks}
                             </div>
 
                         {/* ACCIONES */}
