@@ -1,4 +1,4 @@
-import type { LibroHome, LibroForm } from '../../types/Libro'
+import type { LibroHome, LibroForm, LibroDetalle } from '../../types/Libro'
 import { CRUDService } from './CRUDService'
 import { loginService } from './AuthService'
 
@@ -61,10 +61,10 @@ export class LibroService extends CRUDService<LibroHome> {
         return response.data
     }
 
-    async getLibroPorId(id: string, params: LibroDetalleParams): Promise<LibroHome> {
+    async getLibroPorId(id: string, params: LibroDetalleParams): Promise<LibroDetalle> {
         const userId = loginService.getLoggedUser()  
 
-        const response = await this.api.get<LibroHome>(
+        const response = await this.api.get<LibroDetalle>(
             `/libros/detalle-libro/${id}?userId=${userId}`,  
             { params }
         )
