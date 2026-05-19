@@ -71,12 +71,11 @@ export class LibroService extends CRUDService<LibroHome> {
         return response.data
     }
 
-    async getLibroParaEdicion(id: string): Promise<LibroForm> {
-        const userId = loginService.getLoggedUser()
-        
+    async getLibroParaEdicion(id: string): Promise<LibroForm> {        
         const response = await this.api.get<LibroForm>(
-            `/libros/${id}/edicion?userId=${userId}`
+            `/libros/${id}/edicion`
         )
+        console.log(response.data)
         return response.data
     }
 
