@@ -159,7 +159,7 @@ export const EdicionLibro = () => {
     const cargarDatosIniciales = async () => {
         if (id) {
             try {
-                const data = await libroService.getLibroParaEdicion(Number(id))
+                const data = await libroService.getLibroParaEdicion(id ?? '')
                 setLibro({
                     ...data,
                     fechaPublicacion: data.fechaPublicacion ? new Date(data.fechaPublicacion) : null

@@ -9,7 +9,6 @@ import { ScrollPanel } from 'primereact/scrollpanel'
 import { ReseniaCard } from './ReseniaCard/ReseniaCard'
 import { useOnInit } from './../../hooks/useOnInit'
 import { libroService } from '../../services/LibroService'
-import { reseniaService } from '../../services/ReseniaService'
 import { reservaService } from '../../services/ReservaService'
 import { getMensajeError } from '../../../utils/errorHandling'
 import { MainContext } from '../../../types/MainContext'
@@ -106,7 +105,7 @@ export const DetalleLibro = () => {
     }
 
     /*
-     const getResenias = async() => {
+    const getResenias = async() => {
         try {
             const reseniasObtenidas = await reseniaService.getReseniasViewDetalleLibro(Number(id))
             setResenias(reseniasObtenidas.reseniaList)

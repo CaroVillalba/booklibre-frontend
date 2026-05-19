@@ -24,7 +24,7 @@ export type LibroHome = Libro & {
 }
 
 export interface LibroUsuario{
-    id?:string,
+    id?: string,
     titulo: string,
     disponible:boolean,
     imgUrl: string,
