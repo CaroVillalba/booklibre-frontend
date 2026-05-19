@@ -112,7 +112,7 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
     }
 
     const desde = totalElements === 0 ? 0 : page * size + 1;
-    const hasta = page * size + libros.length;
+    const hasta = Math.min(page * size + libros.length, totalElements);
 
     const getSortIcon = (campo: string) => {
         if (sortBy !== campo) return "pi pi-sort-alt";
