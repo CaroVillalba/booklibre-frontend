@@ -1,6 +1,5 @@
 import type { LibroHome, LibroForm, LibroDetalle } from '../../types/Libro'
 import { CRUDService } from './CRUDService'
-import { loginService } from './AuthService'
 
 export interface LibroSearchParams {
     titulo?: string
@@ -52,20 +51,16 @@ export class LibroService extends CRUDService<LibroHome> {
     }
 
     async search(params: LibroSearchParams): Promise<PageResponse<LibroHome>> {
-        const userId = loginService.getLoggedUser()  
-
         const response = await this.api.post<PageResponse<LibroHome>>(
-            `/libros/busqueda?userId=${userId}`,  
+            `/libros/busqueda`,  
             params
         )
         return response.data
     }
 
     async getLibroPorId(id: string, params: LibroDetalleParams): Promise<LibroDetalle> {
-        const userId = loginService.getLoggedUser()  
-
         const response = await this.api.get<LibroDetalle>(
-            `/libros/detalle-libro/${id}?userId=${userId}`,  
+            `/libros/detalle-libro/${id}`,  
             { params }
         )
         return response.data
@@ -75,7 +70,6 @@ export class LibroService extends CRUDService<LibroHome> {
         const response = await this.api.get<LibroForm>(
             `/libros/${id}/edicion`
         )
-        console.log(response.data)
         return response.data
     }
 
@@ -86,10 +80,7 @@ export class LibroService extends CRUDService<LibroHome> {
                 ? libro.fechaPublicacion.toISOString().split("T")[0]
                 : null
         }
-
-        const userId = loginService.getLoggedUser()  
-
-        await this.api.post(`/libros?userId=${userId}`, data)  
+        await this.api.post(`/libros`, data)  
     }
 
     async eliminarLibro(id:string): Promise<void>{
