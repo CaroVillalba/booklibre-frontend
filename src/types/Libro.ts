@@ -29,8 +29,9 @@ export interface LibroUsuario{
     disponible:boolean,
     imgUrl: string,
     fechaAgregado:string,
-    autor: string,
-    genero: string
+    autor:string,
+    genero: string,
+    clicks:number
 }
 
 export interface LibroForm  {
