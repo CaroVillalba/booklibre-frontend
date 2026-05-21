@@ -210,6 +210,7 @@ export const HomeUsuario = () => {
                                     onClick={() => {
                                         const desde = toISODate(fechaDesde ?? hoy)
                                         const hasta = toISODate(fechaHasta ?? maniana)
+                                        libroService.logClickLibro(libro.id)
                                         navigate(`/detalle-libro/${libro.id}?desde=${desde}&hasta=${hasta}`)
                                     }}
                                 >
