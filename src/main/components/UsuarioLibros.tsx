@@ -49,7 +49,7 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
         };
 
         cargarLibros();
-    }, [usuarioId, page, size, sortBy, direction, estado, showToast]);
+    }, [usuarioId, page, size, sortBy, direction, estado]);
 
     const cambiarOrden = (campo: string) => {
         let nuevoSortBy = sortBy;
@@ -222,10 +222,10 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
                         </button>
                         <button
                             className="w-2 flex align-items-center gap-2 bg-transparent border-none cursor-pointer flex gap-2"
-                            onClick={() => cambiarOrden("disponibilidad")}
+                            onClick={() => cambiarOrden("estaDisponible")}
                         >
                             <span>DISPONIBLE</span>
-                            <i className={getSortIcon("disponibilidad")}></i>
+                            <i className={getSortIcon("estaDisponible")}></i>
                         </button>
                         <button
                             className="w-2 flex align-items-center gap-2 bg-transparent border-none cursor-pointer flex gap-2"
@@ -236,10 +236,10 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
                         </button>
                         <button
                             className="w-2 flex align-items-center gap-2 bg-transparent border-none cursor-pointer flex gap-2"
-                            onClick={() => {cambiarOrden("clicks")}}
+                            onClick={() => {cambiarOrden("clickCount")}}
                         >
                             <span>CLICKS</span>
-                            {<i className={getSortIcon("clicks")}></i>}
+                            {<i className={getSortIcon("clickCount")}></i>}
                         </button>
                         <div className="w-2 text-center">ACCIONES</div>
                     </div>
