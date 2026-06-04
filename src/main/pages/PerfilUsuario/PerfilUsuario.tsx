@@ -35,8 +35,6 @@ export const PerfilUsuario = () => {
             const data = await usuarioService.getById(usuarioId!)
             setUsuario(data)
         } catch (error: unknown) {
-            console.error("error al cargar el usuario", error)
-
             if (error instanceof AxiosError) {
                 const mensaje =
                     error.response?.data?.message || "No se pudo cargar el usuario"

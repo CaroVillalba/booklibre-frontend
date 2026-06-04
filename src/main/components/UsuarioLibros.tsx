@@ -8,7 +8,8 @@ import type { LibroUsuario } from "../../types/Libro";
 import { MainContext } from "../../types/MainContext";
 import { libroService } from "../services/LibroService";
 import { AxiosError } from "axios";
-import { confirmDialog } from "primereact/confirmdialog"
+import { confirmDialog } from "primereact/confirmdialog";
+import { getMensajeError } from "../../utils/errorHandling";
 
 interface UsuarioLibrosProps {
     usuarioId: number;
@@ -43,7 +44,7 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
                 setTotalElements(data.totalElements);
                 setTotalPages(data.totalPages);
             } catch (error) {
-                console.error("Error al cargar libros del usuario", error);
+                showToast(getMensajeError(error), "error")
             }
         };
 
@@ -112,7 +113,7 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
     }
 
     const desde = totalElements === 0 ? 0 : page * size + 1;
-    const hasta = page * size + libros.length;
+    const hasta = Math.min(page * size + libros.length, totalElements);
 
     const getSortIcon = (campo: string) => {
         if (sortBy !== campo) return "pi pi-sort-alt";
@@ -134,7 +135,7 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
         setTotalPages(data.totalPages);
     }
 
-    const handleEliminarLibro = async (idLibro: number) => {
+    const handleEliminarLibro = async (idLibro: string) => {
         try {
             await libroService.eliminarLibro(idLibro);
             showToast("Libro eliminado correctamente", "success");
@@ -151,7 +152,7 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
         }
     }
 
-    const confirmarEliminar = (idLibro: number) => {
+    const confirmarEliminar = (idLibro: string) => {
     confirmDialog({
         message: "¿Seguro que querés eliminar este libro?",
         header: "Confirmar eliminación",
@@ -221,10 +222,10 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
                         </button>
                         <button
                             className="w-2 flex align-items-center gap-2 bg-transparent border-none cursor-pointer flex gap-2"
-                            onClick={() => cambiarOrden("disponibilidad")}
+                            onClick={() => cambiarOrden("estaDisponible")}
                         >
                             <span>DISPONIBLE</span>
-                            <i className={getSortIcon("disponibilidad")}></i>
+                            <i className={getSortIcon("estaDisponible")}></i>
                         </button>
                         <button
                             className="w-2 flex align-items-center gap-2 bg-transparent border-none cursor-pointer flex gap-2"
@@ -233,12 +234,22 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
                             <span>AGREGADO</span>
                             <i className={getSortIcon("fechaAgregado")}></i>
                         </button>
+                        <button
+                            className="w-2 flex align-items-center gap-2 bg-transparent border-none cursor-pointer flex gap-2"
+                            onClick={() => {cambiarOrden("clickCount")}}
+                        >
+                            <span>CLICKS</span>
+                            {<i className={getSortIcon("clickCount")}></i>}
+                        </button>
                         <div className="w-2 text-center">ACCIONES</div>
                     </div>
 
                     {/* libros */}
                     {libros.map((libro) => (
-                        <div className="flex align-items-center px-3 py-2 border-bottom-1 surface-border justify-content-between">
+                        <div
+                            key={libro.id}
+                            className="flex align-items-center px-3 py-2 border-bottom-1 surface-border justify-content-between"
+                        >
                             {/* TITULO Y AUTOR */}
                             <div className="w-5">
                                 <div className="flex align-items-center gap-3">
@@ -281,6 +292,11 @@ export const UsuarioLibros = ({ usuarioId }: UsuarioLibrosProps) => {
                             {/* AGREGADO */}
                             <div className="w-2 text-center">
                                 {formatearFecha(libro.fechaAgregado)}
+                            </div>
+
+                            {/* CLICKS */}
+                            <div className="w-2 text-center">
+                                {libro.clicks}
                             </div>
 
                         {/* ACCIONES */}

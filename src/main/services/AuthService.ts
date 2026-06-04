@@ -27,7 +27,6 @@ export class LoginService {
     }
 
     async login(loginDto: LoginUsuario): Promise<void> {
-        console.log('Login DTO:', loginDto) // Debug: Verificar el contenido del DTO
         const response = await httpRequest<LoginResponse>({
             method: 'POST',
             url: `${this.apiRoot}/auth/login`,

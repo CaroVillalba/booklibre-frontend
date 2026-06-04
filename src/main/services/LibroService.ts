@@ -1,6 +1,5 @@
-import type { LibroHome, LibroForm } from '../../types/Libro'
+import type { LibroHome, LibroForm, LibroDetalle } from '../../types/Libro'
 import { CRUDService } from './CRUDService'
-import { loginService } from './AuthService'
 
 export interface LibroSearchParams {
     titulo?: string
@@ -52,30 +51,24 @@ export class LibroService extends CRUDService<LibroHome> {
     }
 
     async search(params: LibroSearchParams): Promise<PageResponse<LibroHome>> {
-        const userId = loginService.getLoggedUser()  
-
         const response = await this.api.post<PageResponse<LibroHome>>(
-            `/libros/busqueda?userId=${userId}`,  
+            `/libros/busqueda`,  
             params
         )
         return response.data
     }
 
-    async getLibroPorId(id: string, params: LibroDetalleParams): Promise<LibroHome> {
-        const userId = loginService.getLoggedUser()  
-
-        const response = await this.api.get<LibroHome>(
-            `/libros/detalle-libro/${id}?userId=${userId}`,  
+    async getLibroPorId(id: string, params: LibroDetalleParams): Promise<LibroDetalle> {
+        const response = await this.api.get<LibroDetalle>(
+            `/libros/detalle-libro/${id}`,  
             { params }
         )
         return response.data
     }
 
-    async getLibroParaEdicion(id: number): Promise<LibroForm> {
-        const userId = loginService.getLoggedUser()
-        
+    async getLibroParaEdicion(id: string): Promise<LibroForm> {        
         const response = await this.api.get<LibroForm>(
-            `/libros/${id}/edicion?userId=${userId}`
+            `/libros/${id}/edicion`
         )
         return response.data
     }
@@ -87,13 +80,10 @@ export class LibroService extends CRUDService<LibroHome> {
                 ? libro.fechaPublicacion.toISOString().split("T")[0]
                 : null
         }
-
-        const userId = loginService.getLoggedUser()  
-
-        await this.api.post(`/libros?userId=${userId}`, data)  
+        await this.api.post(`/libros`, data)  
     }
 
-    async eliminarLibro(id:number): Promise<void>{
+    async eliminarLibro(id:string): Promise<void>{
         await this.api.delete(`/libros/${id}`)
     }
 }

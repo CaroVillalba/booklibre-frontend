@@ -91,7 +91,16 @@ export const EdicionLibro = () => {
     const reglas: Regla<LibroForm>[] = [
         {
             campo: "imgUrl",
-            validar: (v) => typeof v === 'string' && /^(https?:\/\/.*\.(png|jpg|jpeg|gif|svg))$/i.test(v || ""),
+            validar: (v) => {
+                if (typeof v !== 'string' || !v.trim()) return false
+            
+                try {
+                    const url = new URL(v)
+                    return ['http:', 'https:'].includes(url.protocol)
+                } catch {
+                    return false
+                }
+            },
             mensaje: "Debe ser una URL válida de imagen"
         },
         {
@@ -159,7 +168,7 @@ export const EdicionLibro = () => {
     const cargarDatosIniciales = async () => {
         if (id) {
             try {
-                const data = await libroService.getLibroParaEdicion(Number(id))
+                const data = await libroService.getLibroParaEdicion(id ?? '')
                 setLibro({
                     ...data,
                     fechaPublicacion: data.fechaPublicacion ? new Date(data.fechaPublicacion) : null
@@ -346,6 +355,7 @@ export const EdicionLibro = () => {
                                     value={libro.tipo}
                                     onChange={(e) => updateCampo("tipo", e.target.value)}
                                     className={errores.tipo ? "p-invalid" : ""}
+                                    disabled={!!id}
                                 />
                             
                                 {errores.tipo && (

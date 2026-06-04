@@ -9,7 +9,6 @@ import { ScrollPanel } from 'primereact/scrollpanel'
 import { ReseniaCard } from './ReseniaCard/ReseniaCard'
 import { useOnInit } from './../../hooks/useOnInit'
 import { libroService } from '../../services/LibroService'
-import { reseniaService } from '../../services/ReseniaService'
 import { reservaService } from '../../services/ReservaService'
 import { getMensajeError } from '../../../utils/errorHandling'
 import { MainContext } from '../../../types/MainContext'
@@ -19,7 +18,7 @@ import { loginService } from '../../services/AuthService'
 import { usuarioService } from '../../services/UsuarioService'
 import { ReseniasLibro } from '../ReseniasLibro/ReseniasLibro'
 import type { Resenia } from '../../../types/Resenia'
-import type { LibroHome } from "../../../types/Libro"
+import type { LibroDetalle } from "../../../types/Libro"
 import type { Nullable } from "primereact/ts-helpers"
 import '../../../toast.css'
 import './DetalleLibro.css'
@@ -41,7 +40,7 @@ export const DetalleLibro = () => {
     const desdeParam = searchParams.get('desde') || new Date().toISOString().split("T")[0]
     const hastaParam = searchParams.get('hasta') || new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split("T")[0]
 
-    const [libro, setLibro] = useState<LibroHome>({
+    const [libro, setLibro] = useState<LibroDetalle>({
         id: "",
         imgUrl: "",
         titulo: "",
@@ -59,14 +58,13 @@ export const DetalleLibro = () => {
         bibliokarma: 0,
         duenioId: null,
         duenioNombre: "",
+        resenias: []
     })
 
     const { showToast } = useContext(MainContext)
 
     const [dates, setDates] = useState<Nullable<(Date | null)[]>>(null);
 
-    const [resenias, setResenias] = useState<Resenia[]>([])
-    const [reseniasTotales, setReseniasTotales] = useState(0)
     const [tipoUsuario, setTipoUsuario] = useState<string | null>(null)
     
     const { actualizarBibliokarmas } = useContext(MainContext)
@@ -106,7 +104,7 @@ export const DetalleLibro = () => {
     }
 
     /*
-     const getResenias = async() => {
+    const getResenias = async() => {
         try {
             const reseniasObtenidas = await reseniaService.getReseniasViewDetalleLibro(Number(id))
             setResenias(reseniasObtenidas.reseniaList)
@@ -123,7 +121,6 @@ export const DetalleLibro = () => {
             showToast('Por favor, selecciona un rango de fechas válido', 'warning')
             return;
         }
-
         try {
             const userId = loginService.getLoggedUser()
             const usuario = await usuarioService.getUsuarioPorId(userId!!)
@@ -271,7 +268,7 @@ export const DetalleLibro = () => {
                         emptyMessage={NoReseniasCard}
                     />
                 */}
-                <ReseniasLibro header={headerResenias}/>
+                <ReseniasLibro header={headerResenias} reseniasEmbebidas={libro.resenias}/>
             </div>
         </div>
     )

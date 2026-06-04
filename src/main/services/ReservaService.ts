@@ -2,6 +2,7 @@ import { CRUDService } from "./CRUDService";
 import { loginService } from "./AuthService";
 import type { Reserva } from "../../types/Reserva";
 import type { PrestamosPaginados, TipoPrestamo } from "../../types/Prestamo";
+import * as TokenService from "./TokenService";
 
 export class ReservaService extends CRUDService<Reserva> {
     constructor() {
@@ -24,20 +25,23 @@ export class ReservaService extends CRUDService<Reserva> {
         page: number = 0,
         size: number = 4
     ): Promise<PrestamosPaginados> {
-        const userId = loginService.getLoggedUser()
+        const token = TokenService.getAccessToken()
+
         
         const response = await this.api.get<PrestamosPaginados>(
             `/${this.path}/mis-prestamos`,
             {
                 params: {
-                    usuarioId: userId,
                     tipo,
                     busqueda,
                     page,
                     size,
                     sortBy: "fechaDesde",
                     direction: "desc"
-                }
+                },
+                headers: {
+                Authorization: `Bearer ${token}`
+            }
             }
         )
         return response.data
